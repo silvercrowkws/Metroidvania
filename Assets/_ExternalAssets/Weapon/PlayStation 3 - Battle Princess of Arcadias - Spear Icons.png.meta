@@ -1,0 +1,1297 @@
+fileFormatVersion: 2
+guid: 6a987ac84d43aad47ac725993228b602
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 914
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d9b3b4f0dcc78d4fa0528dc71f1657b
+      internalID: 797547667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_1
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 914
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3870cf565e1682043910f1000554de51
+      internalID: 571685477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_2
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 914
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 76cb2e6ee945d4d43a556579b1bef5c9
+      internalID: 1140931265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_3
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 914
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cab067823fe46274a824ed1f4801728c
+      internalID: 566007921
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_4
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 914
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1f76e10302e38f4b91bf0d6c7c7f23a
+      internalID: -1110154825
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_5
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 914
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e281b369b208fb142bd03c9275e43149
+      internalID: 854738104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_6
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 914
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cbc6cd471f1ac454abc7596558dc7efb
+      internalID: -830589694
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_7
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 914
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9803f962a0823b9419343e72fcf22d4c
+      internalID: 352129333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 786
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eab08ef0c53c1cd47a89adf0c77763d8
+      internalID: -1201304675
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_9
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 786
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e211012575bd2cf4b957b34657c79d03
+      internalID: 369775467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_10
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 786
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: acb6f01a5c5d0a1448740801f1d16b5c
+      internalID: -640712756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_11
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 786
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 187445832039dd940aa551b47f219312
+      internalID: 1531759600
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_12
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 786
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5cd2076ea9e04ea49a091ad23d68c66b
+      internalID: -1430116051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_13
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 786
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ad1d6778ff4315247b252d5fc358a70e
+      internalID: 76351770
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_14
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 786
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a044cb2275eef9248a420cde3cdc1470
+      internalID: -1990737690
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_15
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 786
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c6ee25063421d7b46b35770f44506a61
+      internalID: -662030459
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 658
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ebde54db8b824cd4899dd7e4502536d0
+      internalID: -1014207357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_17
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 658
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5089519f0f0d0564cae1c8cb0bd6399c
+      internalID: -95338451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_18
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 658
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52784e1d1dbe76a479178f5394563c18
+      internalID: 858393842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_19
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 658
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e2588d160f823447807c928c5a734cb
+      internalID: 2032396245
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_20
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 658
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 73e67bb9b70a1d34abf678ead3acc545
+      internalID: -1067614849
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_21
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 658
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 15d14663f541ec842b6b7da9c98a9b80
+      internalID: -1915266604
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_22
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 658
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d7f9fb02d491c12439405b4c6e6d504c
+      internalID: -2103692467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_23
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 658
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9592b0091c4e61e4fa4d32d8266e032e
+      internalID: -292021891
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 530
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe7f07dc06dc8da4cb1cfa997f93c6a5
+      internalID: 530587496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_25
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 530
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7859d632173f89248b6ce8548ab70eb1
+      internalID: -1620763270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_26
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 530
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b865e207df2102546bd60fcbd5a613d1
+      internalID: 1453532177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_27
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 530
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 93f3bff60b1d99541a45d33ff750321f
+      internalID: -49751729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_28
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 530
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c0a680d819ce124686edb2155c241d8
+      internalID: 1971245099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_29
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 530
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bc3626c1cc3fa264e9c9cce9160a4b42
+      internalID: -1015291388
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_30
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 530
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ec4ae09d1179bd45a3e34b24af7b727
+      internalID: -822643410
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_31
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 530
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be4a260d9eed066418efa432f8751642
+      internalID: -1521549812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_32
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 402
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9df9b5302cc822542b4e9cf61987d600
+      internalID: -2087317628
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_33
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 402
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e4e9e9c93448abc49ae4612d0ef32914
+      internalID: 108390104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_34
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 402
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 30af091b09286474da374c0a442420a2
+      internalID: 1874470122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_35
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 402
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd3c170df0a6f3d43943d25361df2742
+      internalID: -997478287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_36
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 402
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e86bb57838069d4ab3e174b31f0aff2
+      internalID: 1260586439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_37
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 402
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b51aacb6598aba4f929ffce4550cf92
+      internalID: -794982656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_38
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 402
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fefe5deb207a27d42bcff67bb484a28f
+      internalID: 174386008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_39
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 402
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8eda182f7ff6c744e8e4f3cb5d498e6f
+      internalID: 744490060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_40
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 274
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d064c2ed5cbd3ef4d925bf31fe1dd285
+      internalID: -129824894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_41
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 274
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e1dc8257554d6d4ba32fc8df981cf41
+      internalID: -465980320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_42
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 274
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 896432bda4c734f4ebb038cb0ac8c376
+      internalID: 340204996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_43
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 274
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b08209dff036d0141a3e3e2788626da5
+      internalID: 2096508965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_44
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 274
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 04f3d2e24af11424795917ae2c03d34d
+      internalID: -720151707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_45
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 274
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fbe1f1657fb9c074786d5cf822efa53e
+      internalID: 1684803189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_46
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 274
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8da4b930dac7a4044bd696a1c8217a18
+      internalID: -1467804627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_47
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 274
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bb219791959f62e4eb481b3b74340ac6
+      internalID: -453310761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_48
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 146
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ddd36060066ba44391d5b088981cc89
+      internalID: 1444093140
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_49
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 146
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b34fb545819d72418c8786e70eacb37
+      internalID: 330775099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_50
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 146
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a11d159a660a4d4d94eb361104ea8dd
+      internalID: -185975788
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayStation 3 - Battle Princess of Arcadias - Spear Icons_51
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 146
+        width: 128
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c73702a78a67df4482f579df9f01675
+      internalID: -2055664117
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_0: 797547667
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_1: 571685477
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_10: -640712756
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_11: 1531759600
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_12: -1430116051
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_13: 76351770
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_14: -1990737690
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_15: -662030459
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_16: -1014207357
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_17: -95338451
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_18: 858393842
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_19: 2032396245
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_2: 1140931265
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_20: -1067614849
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_21: -1915266604
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_22: -2103692467
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_23: -292021891
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_24: 530587496
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_25: -1620763270
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_26: 1453532177
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_27: -49751729
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_28: 1971245099
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_29: -1015291388
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_3: 566007921
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_30: -822643410
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_31: -1521549812
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_32: -2087317628
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_33: 108390104
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_34: 1874470122
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_35: -997478287
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_36: 1260586439
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_37: -794982656
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_38: 174386008
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_39: 744490060
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_4: -1110154825
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_40: -129824894
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_41: -465980320
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_42: 340204996
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_43: 2096508965
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_44: -720151707
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_45: 1684803189
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_46: -1467804627
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_47: -453310761
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_48: 1444093140
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_49: 330775099
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_5: 854738104
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_50: -185975788
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_51: -2055664117
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_6: -830589694
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_7: 352129333
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_8: -1201304675
+      PlayStation 3 - Battle Princess of Arcadias - Spear Icons_9: 369775467
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
