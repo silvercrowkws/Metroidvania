@@ -8,6 +8,7 @@ TagManager:
   - Wall
   - Key
   - Door
+  - Monster
   layers:
   - Default
   - TransparentFX
@@ -65,4 +66,7 @@ TagManager:
     locked: 0
   - name: Key
     uniqueID: 408952947
+    locked: 0
+  - name: Monster
+    uniqueID: 4258745463
     locked: 0

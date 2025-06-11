@@ -1,0 +1,1834 @@
+fileFormatVersion: 2
+guid: 3f18ff16cb98bf94e9c0320df232381b
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 50
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Idle_0
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 216
+        width: 82
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e0ec57dead471ad4c86538f28e4eb656
+      internalID: -2085440296
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle_1
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 216
+        width: 82
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67e71fe4da026e047a7a9a94f168cdbd
+      internalID: -127712817
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle_2
+      rect:
+        serializedVersion: 2
+        x: 177
+        y: 216
+        width: 82
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7aaf3e170f987dd4aab839c178115cf8
+      internalID: 1891384678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle_3
+      rect:
+        serializedVersion: 2
+        x: 262
+        y: 216
+        width: 82
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 608baae560ed48c49993eb46bf48f747
+      internalID: -439734778
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle_4
+      rect:
+        serializedVersion: 2
+        x: 347
+        y: 216
+        width: 82
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8e45be811f5a7154c8f3c40b2a07f0de
+      internalID: -234678537
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle_5
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 216
+        width: 82
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 538b238736b9b1349be02bbb30c8c6ea
+      internalID: -159440396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle_6
+      rect:
+        serializedVersion: 2
+        x: 517
+        y: 216
+        width: 82
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 569f8aee9b2e00b4d9a0265eb2b61855
+      internalID: 808470218
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle_7
+      rect:
+        serializedVersion: 2
+        x: 602
+        y: 216
+        width: 82
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e0f69cbdb264c01409a11dadd92c7117
+      internalID: -708668728
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle_8
+      rect:
+        serializedVersion: 2
+        x: 687
+        y: 216
+        width: 82
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 871400969eb1d5646a528c4ec87cda48
+      internalID: 599611987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle_9
+      rect:
+        serializedVersion: 2
+        x: 772
+        y: 216
+        width: 82
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 496268688252aca4da9ccae93181f048
+      internalID: -23658674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle_10
+      rect:
+        serializedVersion: 2
+        x: 857
+        y: 216
+        width: 82
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a703364c63407e840b64198f740e0d85
+      internalID: 1435788787
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Flying_0
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 107
+        width: 85
+        height: 75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d4ed0ea958b7a9d478afa0103befad77
+      internalID: 210121996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Flying_1
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 107
+        width: 85
+        height: 75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 72460b0169dfaff4082c5b99bd4c5707
+      internalID: -280626386
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Flying_2
+      rect:
+        serializedVersion: 2
+        x: 175
+        y: 107
+        width: 85
+        height: 75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2f970a989f5ee234b983d9f8d87ff54e
+      internalID: 1673648913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Flying_3
+      rect:
+        serializedVersion: 2
+        x: 260
+        y: 107
+        width: 85
+        height: 75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1d97df320b1fb964cb10d1a29389a226
+      internalID: 387179720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Flying_4
+      rect:
+        serializedVersion: 2
+        x: 345
+        y: 107
+        width: 85
+        height: 75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce3e54260a51bbd41880d99d217e32f0
+      internalID: 1499790299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 10
+        width: 88
+        height: 75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5222957aeaa01104493d632ebbef2d65
+      internalID: -1226807920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack_1
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 10
+        width: 88
+        height: 75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8b116d3588ad07439878369fd38e562
+      internalID: 1312247553
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack_2
+      rect:
+        serializedVersion: 2
+        x: 179
+        y: 10
+        width: 115
+        height: 75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e50a3c0b984548439625af59bd1be74
+      internalID: -1042511831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack_3
+      rect:
+        serializedVersion: 2
+        x: 297
+        y: 10
+        width: 115
+        height: 75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 58b8760eed012d842af06b266397d214
+      internalID: -578936117
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_73
+      rect:
+        serializedVersion: 2
+        x: 537
+        y: 43
+        width: 13
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52ad310daa1bd40498056eedf6f746c9
+      internalID: -686979103
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_74
+      rect:
+        serializedVersion: 2
+        x: 553
+        y: 43
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5bc3da4ad1c26f0479c726b6b0c1c579
+      internalID: -1553865564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_75
+      rect:
+        serializedVersion: 2
+        x: 560
+        y: 43
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 423666b13441a3149991f15de1c4b842
+      internalID: 549808404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_76
+      rect:
+        serializedVersion: 2
+        x: 568
+        y: 43
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a43bdde3c32b034499258b8b44f04dd0
+      internalID: 1887230391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_77
+      rect:
+        serializedVersion: 2
+        x: 579
+        y: 43
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f5168f1748aecc647a2cada279699b6d
+      internalID: -398699573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_78
+      rect:
+        serializedVersion: 2
+        x: 595
+        y: 43
+        width: 16
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8af6d8f402cf42849bdbc3967cb8d98b
+      internalID: -1586144710
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_79
+      rect:
+        serializedVersion: 2
+        x: 617
+        y: 43
+        width: 12
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 17ac35e06069b954fb1bd851599199e1
+      internalID: -1148764843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_80
+      rect:
+        serializedVersion: 2
+        x: 631
+        y: 43
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af8a18c2f94144149bfa3535a1a88d4b
+      internalID: 1308570282
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_81
+      rect:
+        serializedVersion: 2
+        x: 643
+        y: 43
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 137b2b760b7acf642a15631695b3a1ee
+      internalID: -2098126698
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_82
+      rect:
+        serializedVersion: 2
+        x: 659
+        y: 43
+        width: 6
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06d1feb5bc925c145a55c9a9f7e458fb
+      internalID: 1914714365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_83
+      rect:
+        serializedVersion: 2
+        x: 668
+        y: 43
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1deacdcf2af8e9847b300d0414f2a9da
+      internalID: 1283822069
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_84
+      rect:
+        serializedVersion: 2
+        x: 680
+        y: 43
+        width: 16
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0badfb6049d5a0c44b9ac4b4d1a92a3b
+      internalID: 807725373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_85
+      rect:
+        serializedVersion: 2
+        x: 697
+        y: 43
+        width: 15
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b704b4ddaea1c6d4c82d03096c7818e3
+      internalID: 1064015615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_86
+      rect:
+        serializedVersion: 2
+        x: 720
+        y: 43
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 81f96e49bea7a404b90fb9883b5572ff
+      internalID: 1631547919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_87
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 43
+        width: 7
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5241d12836ba6e64591b88aeee19add9
+      internalID: -662881235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_88
+      rect:
+        serializedVersion: 2
+        x: 746
+        y: 43
+        width: 8
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 70f917bd13fb8204188a0cbe77643b60
+      internalID: 530183152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_89
+      rect:
+        serializedVersion: 2
+        x: 755
+        y: 43
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 146d7d0e86cbd734583fb7775df2bf75
+      internalID: 1746310849
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_90
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 43
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b2cb6393ad20dc45aaef12941a1fdb1
+      internalID: -1828135779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_91
+      rect:
+        serializedVersion: 2
+        x: 775
+        y: 43
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cb1d29ee417a050469ec8213e9211642
+      internalID: -1663885880
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_92
+      rect:
+        serializedVersion: 2
+        x: 788
+        y: 43
+        width: 16
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 576a94c4a475f0347803721d8082cbb2
+      internalID: -1912870000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_93
+      rect:
+        serializedVersion: 2
+        x: 806
+        y: 43
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 28d7d702e5ca7c24d8be664be8e94f76
+      internalID: -1214320853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_94
+      rect:
+        serializedVersion: 2
+        x: 820
+        y: 43
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0199d95ab96ed9444bfabf915a1289a4
+      internalID: 1756401818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_95
+      rect:
+        serializedVersion: 2
+        x: 827
+        y: 43
+        width: 23
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ff2e0e5035f1bd640b2743553baf1a19
+      internalID: 757935971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_96
+      rect:
+        serializedVersion: 2
+        x: 857
+        y: 43
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 62910ef8c8a1f344c959fc3f34da450b
+      internalID: 787860077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_97
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 43
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ad1897fa12d2e3a4dafd3653aadda42c
+      internalID: -702221352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_98
+      rect:
+        serializedVersion: 2
+        x: 882
+        y: 43
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 838878db1c3fe29418bc919adb73678e
+      internalID: 1339910857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_99
+      rect:
+        serializedVersion: 2
+        x: 895
+        y: 43
+        width: 11
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e10e2770d411e224fb25b99c91efdb4f
+      internalID: -724713815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_100
+      rect:
+        serializedVersion: 2
+        x: 909
+        y: 43
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7bfcc734980925b4887c07805b03e6a1
+      internalID: -1849142241
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_101
+      rect:
+        serializedVersion: 2
+        x: 922
+        y: 43
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6bf58d15d3923f4aaa6deb4ddea1182
+      internalID: -947384155
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_102
+      rect:
+        serializedVersion: 2
+        x: 929
+        y: 43
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 234b5d11a04f1fe41843d1ba7e8a3852
+      internalID: 2093461610
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_103
+      rect:
+        serializedVersion: 2
+        x: 539
+        y: 14
+        width: 15
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7763889acd531b3478cb41d951399fd7
+      internalID: 1241274217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_104
+      rect:
+        serializedVersion: 2
+        x: 558
+        y: 10
+        width: 10
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2b66f64e8e6e5294e90ab6ccf3a99a19
+      internalID: 1544802731
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_105
+      rect:
+        serializedVersion: 2
+        x: 571
+        y: 10
+        width: 10
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d112c3fcf4339b4b869792d931434eb
+      internalID: 1077122125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_106
+      rect:
+        serializedVersion: 2
+        x: 583
+        y: 14
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 12e2630bc0ee73b45b227a769d5f77de
+      internalID: -1241206175
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_107
+      rect:
+        serializedVersion: 2
+        x: 595
+        y: 14
+        width: 10
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 756970a3e8982374f97f84ab7d03baec
+      internalID: 542997233
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_108
+      rect:
+        serializedVersion: 2
+        x: 614
+        y: 14
+        width: 10
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce18f59cf40763e4ba36e664644d02d1
+      internalID: 1057363274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_109
+      rect:
+        serializedVersion: 2
+        x: 625
+        y: 10
+        width: 10
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c4f82850eec8d048830009418ae2eb2
+      internalID: 53824416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_110
+      rect:
+        serializedVersion: 2
+        x: 642
+        y: 14
+        width: 18
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 543fdb701b05979488d60209f883d1d2
+      internalID: -1828397673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_111
+      rect:
+        serializedVersion: 2
+        x: 664
+        y: 14
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc016f9daadd3c343bfff2a93eb4a026
+      internalID: -1545169654
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_112
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 14
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7ea839da29cd8041b9c28e35266364a
+      internalID: 1692871429
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_113
+      rect:
+        serializedVersion: 2
+        x: 685
+        y: 14
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8a3b39a7a9158ae4689d1d2d6848d65e
+      internalID: 452059130
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_114
+      rect:
+        serializedVersion: 2
+        x: 694
+        y: 14
+        width: 17
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a7ff9c6a3cd4af342a370504fd7bbc04
+      internalID: 537099980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_115
+      rect:
+        serializedVersion: 2
+        x: 718
+        y: 14
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ea6944303fab54548a91ae4d77e42212
+      internalID: 370455746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_116
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 14
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ffab6327b3dd974080503f1ef233385
+      internalID: 1108078690
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_117
+      rect:
+        serializedVersion: 2
+        x: 739
+        y: 14
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec78cfb91db4dca4c976822d918d76fc
+      internalID: 588869538
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_118
+      rect:
+        serializedVersion: 2
+        x: 751
+        y: 14
+        width: 10
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1bb3c354dfa45f14e9a79639fcfc11a2
+      internalID: -1466593719
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_119
+      rect:
+        serializedVersion: 2
+        x: 765
+        y: 14
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 33f2336e3721f484b970473927df47ba
+      internalID: -1061284687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_120
+      rect:
+        serializedVersion: 2
+        x: 784
+        y: 14
+        width: 12
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1a9fa5b99a0dea54fbcd03fe16fdd2f9
+      internalID: 511912174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_121
+      rect:
+        serializedVersion: 2
+        x: 803
+        y: 14
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 659f48e478287324cbd91b013105769e
+      internalID: 2137885046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_122
+      rect:
+        serializedVersion: 2
+        x: 817
+        y: 10
+        width: 10
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ea693946346f5a46b9312ddeda15dbf
+      internalID: -1483017909
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_123
+      rect:
+        serializedVersion: 2
+        x: 828
+        y: 14
+        width: 12
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f54e78fc5bd948d47919a134b3b1f017
+      internalID: 1834313822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_124
+      rect:
+        serializedVersion: 2
+        x: 842
+        y: 14
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: edd994f7d2529e24e89de425af0f76ef
+      internalID: -455879017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_125
+      rect:
+        serializedVersion: 2
+        x: 856
+        y: 14
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9581d816fecccd49adccc5e9e24e65b
+      internalID: 404096357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Arzette The Jewel of Faramore - Poulture_126
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 14
+        width: 23
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5965d683d68788948aa57c5bb1647a12
+      internalID: 2012761743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Attack_0: -1226807920
+      Attack_1: 1312247553
+      Attack_2: -1042511831
+      Attack_3: -578936117
+      Flying_0: 210121996
+      Flying_1: -280626386
+      Flying_2: 1673648913
+      Flying_3: 387179720
+      Flying_4: 1499790299
+      Idle_0: -2085440296
+      Idle_1: -127712817
+      Idle_10: 1435788787
+      Idle_2: 1891384678
+      Idle_3: -439734778
+      Idle_4: -234678537
+      Idle_5: -159440396
+      Idle_6: 808470218
+      Idle_7: -708668728
+      Idle_8: 599611987
+      Idle_9: -23658674
+      PC Computer - Arzette The Jewel of Faramore - Poulture_0: -1353696720
+      PC Computer - Arzette The Jewel of Faramore - Poulture_1: -1123135244
+      PC Computer - Arzette The Jewel of Faramore - Poulture_10: 589605953
+      PC Computer - Arzette The Jewel of Faramore - Poulture_100: -1849142241
+      PC Computer - Arzette The Jewel of Faramore - Poulture_101: -947384155
+      PC Computer - Arzette The Jewel of Faramore - Poulture_102: 2093461610
+      PC Computer - Arzette The Jewel of Faramore - Poulture_103: 1241274217
+      PC Computer - Arzette The Jewel of Faramore - Poulture_104: 1544802731
+      PC Computer - Arzette The Jewel of Faramore - Poulture_105: 1077122125
+      PC Computer - Arzette The Jewel of Faramore - Poulture_106: -1241206175
+      PC Computer - Arzette The Jewel of Faramore - Poulture_107: 542997233
+      PC Computer - Arzette The Jewel of Faramore - Poulture_108: 1057363274
+      PC Computer - Arzette The Jewel of Faramore - Poulture_109: 53824416
+      PC Computer - Arzette The Jewel of Faramore - Poulture_11: -926458858
+      PC Computer - Arzette The Jewel of Faramore - Poulture_110: -1828397673
+      PC Computer - Arzette The Jewel of Faramore - Poulture_111: -1545169654
+      PC Computer - Arzette The Jewel of Faramore - Poulture_112: 1692871429
+      PC Computer - Arzette The Jewel of Faramore - Poulture_113: 452059130
+      PC Computer - Arzette The Jewel of Faramore - Poulture_114: 537099980
+      PC Computer - Arzette The Jewel of Faramore - Poulture_115: 370455746
+      PC Computer - Arzette The Jewel of Faramore - Poulture_116: 1108078690
+      PC Computer - Arzette The Jewel of Faramore - Poulture_117: 588869538
+      PC Computer - Arzette The Jewel of Faramore - Poulture_118: -1466593719
+      PC Computer - Arzette The Jewel of Faramore - Poulture_119: -1061284687
+      PC Computer - Arzette The Jewel of Faramore - Poulture_12: -1371326316
+      PC Computer - Arzette The Jewel of Faramore - Poulture_120: 511912174
+      PC Computer - Arzette The Jewel of Faramore - Poulture_121: 2137885046
+      PC Computer - Arzette The Jewel of Faramore - Poulture_122: -1483017909
+      PC Computer - Arzette The Jewel of Faramore - Poulture_123: 1834313822
+      PC Computer - Arzette The Jewel of Faramore - Poulture_124: -455879017
+      PC Computer - Arzette The Jewel of Faramore - Poulture_125: 404096357
+      PC Computer - Arzette The Jewel of Faramore - Poulture_126: 2012761743
+      PC Computer - Arzette The Jewel of Faramore - Poulture_13: 434441058
+      PC Computer - Arzette The Jewel of Faramore - Poulture_14: 1183719271
+      PC Computer - Arzette The Jewel of Faramore - Poulture_15: 1019660760
+      PC Computer - Arzette The Jewel of Faramore - Poulture_16: -1097589138
+      PC Computer - Arzette The Jewel of Faramore - Poulture_17: 1225469279
+      PC Computer - Arzette The Jewel of Faramore - Poulture_18: 2003621007
+      PC Computer - Arzette The Jewel of Faramore - Poulture_19: -1131778367
+      PC Computer - Arzette The Jewel of Faramore - Poulture_2: -763831846
+      PC Computer - Arzette The Jewel of Faramore - Poulture_20: -110788198
+      PC Computer - Arzette The Jewel of Faramore - Poulture_21: 2065316909
+      PC Computer - Arzette The Jewel of Faramore - Poulture_22: -2135583982
+      PC Computer - Arzette The Jewel of Faramore - Poulture_23: -1927513737
+      PC Computer - Arzette The Jewel of Faramore - Poulture_24: -2007382351
+      PC Computer - Arzette The Jewel of Faramore - Poulture_25: -757545299
+      PC Computer - Arzette The Jewel of Faramore - Poulture_26: -297217608
+      PC Computer - Arzette The Jewel of Faramore - Poulture_27: 190321634
+      PC Computer - Arzette The Jewel of Faramore - Poulture_28: 601342778
+      PC Computer - Arzette The Jewel of Faramore - Poulture_29: 1480030149
+      PC Computer - Arzette The Jewel of Faramore - Poulture_3: 1898296550
+      PC Computer - Arzette The Jewel of Faramore - Poulture_30: -1849776520
+      PC Computer - Arzette The Jewel of Faramore - Poulture_31: -1066954714
+      PC Computer - Arzette The Jewel of Faramore - Poulture_32: 1406262834
+      PC Computer - Arzette The Jewel of Faramore - Poulture_33: 1031107479
+      PC Computer - Arzette The Jewel of Faramore - Poulture_34: 870089427
+      PC Computer - Arzette The Jewel of Faramore - Poulture_35: 363970682
+      PC Computer - Arzette The Jewel of Faramore - Poulture_36: 807542887
+      PC Computer - Arzette The Jewel of Faramore - Poulture_37: -2649224
+      PC Computer - Arzette The Jewel of Faramore - Poulture_38: -331684733
+      PC Computer - Arzette The Jewel of Faramore - Poulture_39: -925937365
+      PC Computer - Arzette The Jewel of Faramore - Poulture_4: -920215031
+      PC Computer - Arzette The Jewel of Faramore - Poulture_40: 462758881
+      PC Computer - Arzette The Jewel of Faramore - Poulture_41: -1345473296
+      PC Computer - Arzette The Jewel of Faramore - Poulture_42: 2045552244
+      PC Computer - Arzette The Jewel of Faramore - Poulture_43: 1880032371
+      PC Computer - Arzette The Jewel of Faramore - Poulture_5: -1395461482
+      PC Computer - Arzette The Jewel of Faramore - Poulture_55: -125148322
+      PC Computer - Arzette The Jewel of Faramore - Poulture_56: 319526219
+      PC Computer - Arzette The Jewel of Faramore - Poulture_57: 667510162
+      PC Computer - Arzette The Jewel of Faramore - Poulture_58: 805037270
+      PC Computer - Arzette The Jewel of Faramore - Poulture_6: -1434816196
+      PC Computer - Arzette The Jewel of Faramore - Poulture_64: -407305264
+      PC Computer - Arzette The Jewel of Faramore - Poulture_65: -1086075222
+      PC Computer - Arzette The Jewel of Faramore - Poulture_66: -1988989936
+      PC Computer - Arzette The Jewel of Faramore - Poulture_67: 1380793507
+      PC Computer - Arzette The Jewel of Faramore - Poulture_68: -933750496
+      PC Computer - Arzette The Jewel of Faramore - Poulture_7: -1466740360
+      PC Computer - Arzette The Jewel of Faramore - Poulture_73: -686979103
+      PC Computer - Arzette The Jewel of Faramore - Poulture_74: -1553865564
+      PC Computer - Arzette The Jewel of Faramore - Poulture_75: 549808404
+      PC Computer - Arzette The Jewel of Faramore - Poulture_76: 1887230391
+      PC Computer - Arzette The Jewel of Faramore - Poulture_77: -398699573
+      PC Computer - Arzette The Jewel of Faramore - Poulture_78: -1586144710
+      PC Computer - Arzette The Jewel of Faramore - Poulture_79: -1148764843
+      PC Computer - Arzette The Jewel of Faramore - Poulture_8: -641454749
+      PC Computer - Arzette The Jewel of Faramore - Poulture_80: 1308570282
+      PC Computer - Arzette The Jewel of Faramore - Poulture_81: -2098126698
+      PC Computer - Arzette The Jewel of Faramore - Poulture_82: 1914714365
+      PC Computer - Arzette The Jewel of Faramore - Poulture_83: 1283822069
+      PC Computer - Arzette The Jewel of Faramore - Poulture_84: 807725373
+      PC Computer - Arzette The Jewel of Faramore - Poulture_85: 1064015615
+      PC Computer - Arzette The Jewel of Faramore - Poulture_86: 1631547919
+      PC Computer - Arzette The Jewel of Faramore - Poulture_87: -662881235
+      PC Computer - Arzette The Jewel of Faramore - Poulture_88: 530183152
+      PC Computer - Arzette The Jewel of Faramore - Poulture_89: 1746310849
+      PC Computer - Arzette The Jewel of Faramore - Poulture_9: 940815811
+      PC Computer - Arzette The Jewel of Faramore - Poulture_90: -1828135779
+      PC Computer - Arzette The Jewel of Faramore - Poulture_91: -1663885880
+      PC Computer - Arzette The Jewel of Faramore - Poulture_92: -1912870000
+      PC Computer - Arzette The Jewel of Faramore - Poulture_93: -1214320853
+      PC Computer - Arzette The Jewel of Faramore - Poulture_94: 1756401818
+      PC Computer - Arzette The Jewel of Faramore - Poulture_95: 757935971
+      PC Computer - Arzette The Jewel of Faramore - Poulture_96: 787860077
+      PC Computer - Arzette The Jewel of Faramore - Poulture_97: -702221352
+      PC Computer - Arzette The Jewel of Faramore - Poulture_98: 1339910857
+      PC Computer - Arzette The Jewel of Faramore - Poulture_99: -724713815
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

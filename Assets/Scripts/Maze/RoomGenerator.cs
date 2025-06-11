@@ -9,6 +9,7 @@ public class RoomGenerator : MonoBehaviour
     [SerializeField] private Transform roomParent;      // 부모 오브젝트
     [SerializeField] private GameObject doorPrefab;     // Door 프리팹
     [SerializeField] private GameObject keyPrefab;      // Key 프리팹
+    [SerializeField] private GameObject monster_0;      // monster_0 프리팹
 
     [Tooltip("미로의 반지름(방 개수는 반지름에 따라 1:3², 2:5², 3:7², 4:9², 5:11², 6: 13², 7:15², 8:17²... 뒷배경이 반지름 8까지 커버 가능함)")]
     [SerializeField] public int radius = 4;
@@ -50,9 +51,12 @@ public class RoomGenerator : MonoBehaviour
         GenerateMazeWithInitialOpening();
         SpawnDoorInRandomRoom();    // 미로 생성 후 랜덤 Room에 Door 생성
         SpawnKeyInRandomRoom();     // 미로 생성 후 랜덤 Room에 Key 생성
+        SpawnMonsterInRandomRoom(); // 미로 생성 후 랜덤 Room에 Monster_0 생성
     }
 
-    // 방 생성: 6x6 간격으로 배치
+    /// <summary>
+    /// 방 생성: 6x6 간격으로 배치
+    /// </summary>
     private void GenerateRooms()
     {
         foreach (var pos in mazePositions)
@@ -72,7 +76,9 @@ public class RoomGenerator : MonoBehaviour
         }
     }
 
-    // 시작 방의 벽 하나를 무작위로 열고 DFS 시작
+    /// <summary>
+    /// 시작 방의 벽 하나를 무작위로 열고 DFS 시작
+    /// </summary>
     private void GenerateMazeWithInitialOpening()
     {
         Vector2Int startPos = Vector2Int.zero;
@@ -95,7 +101,10 @@ public class RoomGenerator : MonoBehaviour
         }
     }
 
-    // DFS로 미로 생성
+    /// <summary>
+    /// DFS로 미로 생성
+    /// </summary>
+    /// <param name="currentPos"></param>
     private void GenerateMaze(Vector2Int currentPos)
     {
         visited.Add(currentPos);
@@ -117,7 +126,11 @@ public class RoomGenerator : MonoBehaviour
         }
     }
 
-    // 사각형 격자에 맞는 좌표 생성 (6의 배수로)
+    /// <summary>
+    /// 사각형 격자에 맞는 좌표 생성 (6의 배수로)
+    /// </summary>
+    /// <param name="radius"></param>
+    /// <returns></returns>
     private List<Vector2Int> GenerateOrderedRectangularPositions(int radius)
     {
         List<Vector2Int> positions = new();
@@ -148,7 +161,11 @@ public class RoomGenerator : MonoBehaviour
         return positions;
     }
 
-    // 반대 방향 반환
+    /// <summary>
+    /// 반대 방향 반환
+    /// </summary>
+    /// <param name="dir"></param>
+    /// <returns></returns>
     private Direction GetOppositeDirection(Direction dir)
     {
         return dir switch
@@ -211,6 +228,35 @@ public class RoomGenerator : MonoBehaviour
 
             GameObject keyObj = Instantiate(keyPrefab, spawnPosition, Quaternion.identity, landObjectTransform);
             keyObj.name = $"Key_{i + 1}";
+        }
+    }
+
+    /// <summary>
+    /// 미로 내 랜덤 Room 5개에만 Monster 생성
+    /// </summary>
+    private void SpawnMonsterInRandomRoom()
+    {
+        // wallBottom이 활성화된 Room만 필터링
+        var validRooms = roomDictionary.Values
+            .Where(room => room.wallBottom != null && room.wallBottom.activeSelf)
+            .ToList();
+
+        if (validRooms.Count < 3) return;
+
+        // 랜덤하게 섞고 3개 선택
+        var selectedRooms = validRooms.OrderBy(_ => Random.value).Take(5).ToList();
+
+        for (int i = 0; i < selectedRooms.Count; i++)
+        {
+            Room selectedRoom = selectedRooms[i];
+
+            // LandObject 위치 찾기 (Room 구조에 맞게 수정)
+            Transform landObjectTransform = selectedRoom.transform.GetChild(1).GetChild(0);
+
+            Vector3 spawnPosition = new Vector3(landObjectTransform.position.x, landObjectTransform.position.y + 0.6f, landObjectTransform.position.z);
+
+            GameObject monster_0_Obj = Instantiate(monster_0, spawnPosition, Quaternion.identity, landObjectTransform);
+            monster_0_Obj.name = $"Monster_0_{i + 1}";
         }
     }
 }
