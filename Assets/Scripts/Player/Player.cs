@@ -555,19 +555,24 @@ public class Player : MonoBehaviour
         if(collision.gameObject.CompareTag("Ground"))
         {
             isGround = true;
-            // 땅에 있고, 대쉬 중이 아니면
-            if (isGround && !isDash && !isCrawl)
+            // 점프 중이 아닐 때만 Idle/Walk 트리거를 준다
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            if (!stateInfo.IsName("Jump") && !isDash && !isCrawl)
             {
-                // 움직임이 있으면
-                if (moveInput.magnitude != 0)
+                // 땅에 있고, 대쉬 중이 아니면
+                if (isGround && !isDash && !isCrawl)
                 {
-                    ResetTrigger();
-                    animator.SetTrigger("Walk");
-                }
-                else
-                {
-                    ResetTrigger();
-                    animator.SetTrigger("Idle");
+                    // 움직임이 있으면
+                    if (moveInput.magnitude != 0)
+                    {
+                        ResetTrigger();
+                        animator.SetTrigger("Walk");
+                    }
+                    else
+                    {
+                        ResetTrigger();
+                        animator.SetTrigger("Idle");
+                    }
                 }
             }
         }
