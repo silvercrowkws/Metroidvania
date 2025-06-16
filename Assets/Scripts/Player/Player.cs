@@ -118,9 +118,10 @@ public class Player : MonoBehaviour
     public float radius = 1.25f;
 
     /// <summary>
-    /// 무기가 움직이는 속도(1초에 180도 움직임)
+    /// 무기가 움직이는 속도
+    /// 각도 변화 속도(1초에 180도 움직임)
     /// </summary>
-    public float weaponSpeed = 180f;  // 각도 변화 속도 (도 단위, 예: 90도는 1초에 한 바퀴)
+    public float weaponSpeed = 360f;
 
     /// <summary>
     /// 현재 각도

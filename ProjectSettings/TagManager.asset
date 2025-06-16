@@ -9,6 +9,8 @@ TagManager:
   - Key
   - Door
   - Monster
+  - chaseRange
+  - disengageRange
   layers:
   - Default
   - TransparentFX
@@ -69,4 +71,7 @@ TagManager:
     locked: 0
   - name: Monster
     uniqueID: 4258745463
+    locked: 0
+  - name: Range
+    uniqueID: 981370383
     locked: 0

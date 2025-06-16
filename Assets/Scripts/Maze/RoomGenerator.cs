@@ -179,12 +179,14 @@ public class RoomGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// 미로 내 랜덤 Room 1개에만 Door 생성
+    /// 미로 내 랜덤 Room 1개에만 Door 생성(0,0 제외)
     /// </summary>
     private void SpawnDoorInRandomRoom()
     {
-        // wallBottom이 활성화된 Room만 필터링
-        var validRooms = roomDictionary.Values
+        // wallBottom이 활성화된 Room만 필터링, Room_0_0(0,0) 제외
+        var validRooms = roomDictionary
+            .Where(kv => kv.Key != Vector2Int.zero)
+            .Select(kv => kv.Value)
             .Where(room => room.wallBottom != null && room.wallBottom.activeSelf)
             .ToList();
 
@@ -203,12 +205,14 @@ public class RoomGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// 미로 내 랜덤 Room 3개에만 Key 생성
+    /// 미로 내 랜덤 Room 3개에만 Key 생성(0,0 제외)
     /// </summary>
     private void SpawnKeyInRandomRoom()
     {
-        // wallBottom이 활성화된 Room만 필터링
-        var validRooms = roomDictionary.Values
+        // wallBottom이 활성화된 Room만 필터링, Room_0_0(0,0) 제외
+        var validRooms = roomDictionary
+            .Where(kv => kv.Key != Vector2Int.zero)
+            .Select(kv => kv.Value)
             .Where(room => room.wallBottom != null && room.wallBottom.activeSelf)
             .ToList();
 
@@ -232,12 +236,14 @@ public class RoomGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// 미로 내 랜덤 Room 5개에만 Monster 생성
+    /// 미로 내 랜덤 Room 5개에만 Monster 생성(0,0 제외)
     /// </summary>
     private void SpawnMonsterInRandomRoom()
     {
-        // wallBottom이 활성화된 Room만 필터링
-        var validRooms = roomDictionary.Values
+        // wallBottom이 활성화된 Room만 필터링, Room_0_0(0,0) 제외
+        var validRooms = roomDictionary
+            .Where(kv => kv.Key != Vector2Int.zero)
+            .Select(kv => kv.Value)
             .Where(room => room.wallBottom != null && room.wallBottom.activeSelf)
             .ToList();
 

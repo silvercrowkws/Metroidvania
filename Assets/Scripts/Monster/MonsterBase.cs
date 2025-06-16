@@ -94,6 +94,28 @@ public class MonsterBase : MonoBehaviour
     /// 스프라이트 랜더러
     /// </summary>
     protected SpriteRenderer spriteRenderer;
+    
+    /// <summary>
+    /// 몬스터의 소환된 위치 저장
+    /// </summary>
+    protected Vector3 spawnPosition;
+
+    /// <summary>
+    /// 몬스터가 추격중인지 확인하는 bool 변수
+    /// </summary>
+    public bool isChasing = false;
+
+    /// <summary>
+    /// 플레이어의 트랜스폼
+    /// </summary>
+    public Transform playerTransform;
+
+    /// <summary>
+    /// 몬스터가 플레이어를 추격 및 공격하는 범위
+    /// </summary>
+    public GameObject chaseRange;
+
+    //ChaseRangeTrigger chaseRamgeTrigger;
 
 
     protected virtual void Awake()
@@ -127,6 +149,9 @@ public class MonsterBase : MonoBehaviour
     {
         gameManager = GameManager.Instance;
 
+        Player player = gameManager.Player;
+        playerTransform = player.transform;
+
         animator = GetComponent<Animator>();
 
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -151,6 +176,11 @@ public class MonsterBase : MonoBehaviour
             dieEffectInstance.SetActive(false);                            // 기본적으로 비활성화(사망 시 활성화)
         }
 
+        animator.speed = 1f;        // 활성화 될 때 애니메이션 속도 정상화
+        maxHP = currentHP;          // 체력 정상화
+
+
+
         onMonsterDie += OnMonsterDie;
         // 만약 몬스터의 HP가 0이되면 사망 연출 활성화?
         // 만약 몬스터의 HP가 0이 되면 
@@ -158,12 +188,71 @@ public class MonsterBase : MonoBehaviour
 
     protected virtual void OnDisable()
     {
+        dieEffectInstance.SetActive(false);     // 폭발 비활성화
         onMonsterDie -= OnMonsterDie;
     }
 
     protected virtual void Start()
     {
+        spawnPosition = transform.position;
+    }
 
+    protected virtual void Update()
+    {
+        if (isChasing && playerTransform != null)
+        {
+            float distance = Vector3.Distance(transform.position, playerTransform.position);
+
+            // 추격 종료 조건: 플레이어와의 거리가 5 이상
+            if (distance >= 5f)
+            {
+                isChasing = false;
+                playerTransform = null;
+            }
+            else
+            {
+                // 추격 중일 때 Moving 트리거
+                ResetTrigger();
+                animator.SetTrigger("Moving");
+
+                // 플레이어를 바라보도록 Flip X 처리 (기본 오른쪽)
+                if (playerTransform.position.x < transform.position.x)
+                    spriteRenderer.flipX = true;
+                else
+                    spriteRenderer.flipX = false;
+
+                Vector3 dir = (playerTransform.position - transform.position).normalized;
+                transform.position += dir * moveSpeed * Time.deltaTime;
+            }
+        }
+        else
+        {
+            // 추격 중이 아니면 원위치로 돌아감
+            if (Vector3.Distance(transform.position, spawnPosition) > 0.1f)
+            {
+                // 원위치로 돌아가는 중에는 Moving 트리거
+                ResetTrigger();
+                animator.SetTrigger("Moving");
+
+                // 원위치 방향으로 Flip X 처리 (기본 오른쪽)
+                if (spawnPosition.x < transform.position.x)
+                    spriteRenderer.flipX = true;
+                else
+                    spriteRenderer.flipX = false;
+
+                Vector3 dir = (spawnPosition - transform.position).normalized;
+                transform.position += dir * moveSpeed * Time.deltaTime;
+            }
+            else
+            {
+                // 원위치 도착 시 Idle 트리거
+                ResetTrigger();
+                animator.SetTrigger("Idle");
+
+                // Idle 시 기본 방향(오른쪽)으로 Flip X 해제
+                spriteRenderer.flipX = false;
+            }
+        }
     }
 
     /// <summary>
@@ -222,5 +311,26 @@ public class MonsterBase : MonoBehaviour
 
         yield return new WaitForSeconds(0.8f);
         this.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// 적 본체 피격 처리
+    /// </summary>
+    /// <param name="collision"></param>
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        /*// 예시: 플레이어 공격에 맞았을 때
+        if (collision.CompareTag("PlayerAttack"))
+        {
+            // 피격 처리
+            HP -= 10f;
+        }*/
+    }
+
+    protected virtual void ResetTrigger()
+    {
+        animator.ResetTrigger("Idle");
+        animator.ResetTrigger("Moving");
+        animator.ResetTrigger("Attack");
     }
 }

@@ -172,7 +172,7 @@ MonoBehaviour:
   doorPrefab: {fileID: 546653982712998797, guid: 7c37505655047504db4b077aadcdb91a, type: 3}
   keyPrefab: {fileID: 6023572433624502454, guid: 967c60376a83e474e80cb1c1b9253040, type: 3}
   monster_0: {fileID: 1642112140218739397, guid: f1d674cc5b9f87143b285b129246ceec, type: 3}
-  radius: 2
+  radius: 4
   seed: -1
 --- !u!1 &519420028
 GameObject:
@@ -546,7 +546,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3780669451438762985, guid: 21b8e4f126fabd343b2abc924882f5e2, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8932496139517563216, guid: 21b8e4f126fabd343b2abc924882f5e2, type: 3}
       propertyPath: m_LocalPosition.x
