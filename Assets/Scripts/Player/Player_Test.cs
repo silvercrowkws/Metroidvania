@@ -5,23 +5,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
-public class Player : MonoBehaviour
+public class Player_Test : MonoBehaviour
 {
     /// <summary>
     /// 애니메이터
     /// </summary>
     Animator animator;
-
-    /// <summary>
-    /// 스프라이트 렌더러
-    /// </summary>
-    SpriteRenderer spriteRenderer;
-
-    /// <summary>
-    /// 점프에서 떨어질 때의 스프라이트(지금은 안씀)
-    /// </summary>
-    Sprite jumpDown;
 
     /// <summary>
     /// 플레이어 인풋 액션
@@ -36,19 +27,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 박스 콜라이더
     /// </summary>
-    BoxCollider2D boxCollider;
-
-    // 기본 상태의 오프셋과 사이즈
-    float defaultOffsetX = 0;
-    float defaultOffsetY = 0;
-    float defaultSizeX = 0.5f;
-    float defaultSizeY = 1.1f;
-
-    // 기어가는 상태의 오프셋과 사이즈
-    float crawlOffsetX = 0;
-    float crawlOffsetY = -0.2497f;
-    float crawlSizeX = 0.5f;
-    float crawlSizeY = 0.6f;
+    BoxCollider2D box;
 
     /// <summary>
     /// 현재 입력값을 저장하기 위한 변수
@@ -68,22 +47,17 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 점프 파워
     /// </summary>
-    public float jumpPower = 5f;
+    public float jumpPower = 7.5f;
 
     /// <summary>
     /// 대쉬 파워
     /// </summary>
-    public float dashPower = 5f;
+    public float dashPower = 15f;
 
     /// <summary>
     /// 캐릭터가 땅에 있는지 확인하기 위한 bool 변수
     /// </summary>
     public bool isGround = false;
-
-    /// <summary>
-    /// 점프 가능한지 확인하기 위한 bool 변수
-    /// </summary>
-    //bool jumpAble = false;
 
     /// <summary>
     /// 점프 가능 횟수
@@ -106,33 +80,6 @@ public class Player : MonoBehaviour
     bool isDash = false;
     float dashTime = 0.2f;
     float dashTimer = 0f;
-
-    /// <summary>
-    /// 캐릭터가 기어가는 중인지 확인하기 위한 bool 변수
-    /// </summary>
-    bool isCrawl = false;
-
-    /// <summary>
-    /// 무기가 회전할 원의 반지름
-    /// </summary>
-    public float radius = 1.25f;
-
-    /// <summary>
-    /// 무기가 움직이는 속도
-    /// 각도 변화 속도(1초에 180도 움직임)
-    /// </summary>
-    public float weaponSpeed = 360f;
-
-    /// <summary>
-    /// 현재 각도
-    /// </summary>
-    private float angle = 90f;
-    //private float angle = 50f;
-
-    /// <summary>
-    /// 무기 오브젝트
-    /// </summary>
-    GameObject weaponObject;
 
     /// <summary>
     /// 플레이어가 모든 열쇠를 가지고 있는지 확인하는 bool 변수
@@ -173,22 +120,14 @@ public class Player : MonoBehaviour
     {
         inputActions = new PlayerInputActions();
         rb = GetComponent<Rigidbody2D>();
-        boxCollider = GetComponent<BoxCollider2D>();
         animator = GetComponent<Animator>();
-
-        weaponObject = transform.GetChild(0).gameObject;
-
-        // 무기의 초기 위치를 (0, 1.25)로 변경 (무기 회전 궤도 변경하려면 radius도 같이 변경해야 됨)
-        weaponObject.transform.localPosition = new Vector3(0f, 1.25f, 0f);
-
-        spriteRenderer = GetComponent<SpriteRenderer>();
 
         // Resources.Load는 리소스를 로드하는 메서드
         // <Sprite>는 로드할 에셋의 타입을 지정(Texture, AudioClip, GameObject 등 다른 타입도 있음)
         // "Sprites/sprite1" 이 부분은 로딩할 리소스의 경로
         // "Sprites"는 Resources 폴더 내에 있는 서브폴더
         // "sprite1"은 해당 폴더 내에 있는 에셋의 이름
-        jumpDown = Resources.Load<Sprite>("Sprites/JumpDownCopy");
+        //jumpDown = Resources.Load<Sprite>("Sprites/JumpDownCopy");
     }
 
     private void OnEnable()
@@ -198,22 +137,23 @@ public class Player : MonoBehaviour
         inputActions.Actions.Move.canceled += OnMove;
         inputActions.Actions.Jump.performed += OnJump;
         inputActions.Actions.Dash.performed += OnDash;
-        inputActions.Actions.Crawl.performed += OnCrawlStart;
-        inputActions.Actions.Crawl.canceled += OnCrawlEnd;
         inputActions.Actions.DoorInteract.performed += OnDoorInteract;
     }
 
     private void OnDisable()
     {
         inputActions.Actions.DoorInteract.performed -= OnDoorInteract;
-        inputActions.Actions.Crawl.canceled -= OnCrawlEnd;
-        inputActions.Actions.Crawl.performed -= OnCrawlStart;
         inputActions.Actions.Dash.performed -= OnDash;
         inputActions.Actions.Jump.performed -= OnJump;
         inputActions.Actions.Move.canceled -= OnMove;
         inputActions.Actions.Move.performed -= OnMove;
         inputActions.Actions.Disable();
     }
+
+    // 땅 판정용 변수
+    public LayerMask groundLayer; // 인스펙터에서 Ground, Wall 등 지정
+    public float groundCheckDistance = 0.1f; // 발 아래로 쏘는 거리
+    public Vector2 groundCheckOffset = new Vector2(0, -0.5f); // 발 위치 오프셋(콜라이더 중심 기준)
 
     private void FixedUpdate()
     {
@@ -231,95 +171,37 @@ public class Player : MonoBehaviour
         if (moveInput.x > 0.1f)
         {
             transform.localScale = new Vector3(1, 1, 1);    // 오른쪽
-            angle -= weaponSpeed * Time.fixedDeltaTime;     // angle 감소 (90 → 0)
         }
         else if (moveInput.x < -0.1f)
         {
             transform.localScale = new Vector3(-1, 1, 1);   // 왼쪽
-            angle += weaponSpeed * Time.fixedDeltaTime;     // angle 증가 (90 → 180)
         }
-        else
-        {
-            //angle = Mathf.MoveTowards(angle, 90f, weaponSpeed * Time.fixedDeltaTime);
-            angle = Mathf.MoveTowards(angle, 90f, weaponSpeed * Time.fixedDeltaTime);
-        }
-
-        // 위쪽 반원만 사용 (0~180도)
-        angle = Mathf.Clamp(angle, 0f, 180f);
-
-        // 무기 위치 계산(위쪽 반원 좌표계)
-        float x = Mathf.Cos(Mathf.Deg2Rad * angle) * radius;
-        float y = Mathf.Sin(Mathf.Deg2Rad * angle) * radius;
-        weaponObject.transform.position = transform.position + new Vector3(x, y, 0f);
-
-
-        // 무기 회전 보정 (Z축 50 ~ -40도)
-        float correctedAngle = angle;
-        if(transform.localScale.x < 0)
-        {
-            correctedAngle = angle - 140f;
-        }
-        else
-        {
-            correctedAngle = angle - 40f;
-        }
-
-        weaponObject.transform.rotation = Quaternion.Euler(0f, 0f, correctedAngle);
 
         // 이동 처리
         if (!isDash)
         {
             rb.velocity = new Vector2(moveInput.x * moveSpeed, rb.velocity.y);
         }
+
+        // 낙하 상태 판정
+        if (rb.velocity.y < -0.01f)
+        {
+            animator.SetBool("IsFall", true);
+        }
+        else
+        {
+            animator.SetBool("IsFall", false);
+        }
+
+        // === Raycast로 땅 판정 ===
+        Vector2 origin = (Vector2)transform.position + groundCheckOffset;
+        RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, groundCheckDistance, groundLayer);
+        isGround = hit.collider != null;
     }
 
     private void Update()
     {
-        
-    }
 
-    /// <summary>
-    /// 인풋 시스템으로 플레이어의 기어가는 움직임을 제어하는 함수
-    /// </summary>
-    /// <param name="context"></param>
-    private void OnCrawlStart(InputAction.CallbackContext context)
-    {
-        // 만약 내가 땅에 있고 기어가는 중이 아니면 기어갈 준비
-        if (isGround && !isCrawl)
-        {
-            moveSpeed = 0;
-            ResetTrigger();
-            animator.SetTrigger("CrawlStart");
-            boxCollider.offset = new Vector2(crawlOffsetX, crawlOffsetY);
-            boxCollider.size = new Vector2(crawlSizeX, crawlSizeY);
-            isCrawl = true;
-        }
-    }
-
-    private void OnCrawlEnd(InputAction.CallbackContext context)
-    {
-        animator.speed = 1f;                        // 애니메이션 재생
-
-        // 내 머리 위에 레이케스트를 쏴서? 길이가 일정 이상이면 일어설 수 있고 아니면 없고?
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.up, 0.1f);       // 길이 0.1 만큼 레이케스트 쏘기
-
-        // 레이캐스트가 무언가에 맞았다면
-        if (!hit.collider.CompareTag("Player"))
-        {
-            // 일어서는 것 불가능
-            Debug.Log("검출된 오브젝트: " + hit.collider.name);
-        }
-        else
-        {
-            // 일어서는 것 가능
-            Debug.Log("검출된 오브젝트 없음");
-            ResetTrigger();
-            animator.SetTrigger("CrawlEnd");
-            boxCollider.offset = new Vector2(defaultOffsetX, defaultOffsetY);
-            boxCollider.size = new Vector2(defaultSizeX, defaultSizeY);
-            isCrawl = false;
-            moveSpeed = defaultMoveSpeed;               // 속도 되돌리기
-        }
     }
 
     /// <summary>
@@ -332,32 +214,27 @@ public class Player : MonoBehaviour
         moveInput = context.ReadValue<Vector2>();
         animator.speed = 1f;                        // 애니메이션 재생
 
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
         // 애니메이션 처리
         if (moveInput.magnitude > 0.1f)
         {
-            if (isGround && !isCrawl)               // 땅에 있고
+            // 움직임이 있고
+            //땅에 있고 현재 애니메이션이 점프가 아니면
+            if (isGround && !stateInfo.IsName("Jump"))
             {
                 ResetTrigger();
-                animator.SetTrigger("Walk");
-            }
-            else if(isGround && isCrawl)
-            {
-                moveSpeed = 3.0f;                   // 이동 속도 줄이기
-                ResetTrigger();
-                animator.SetTrigger("Crawl");
+                animator.SetTrigger("Run");
             }
         }
         else
         {
-            if (isGround && !isCrawl)
+            // 움직임이 없고
+            // 땅에 있고 현재 애니메이션이 점프가 아니면
+            if (isGround && !stateInfo.IsName("Jump"))
             {
                 ResetTrigger();
                 animator.SetTrigger("Idle");
-            }
-            else if(isGround && isCrawl)
-            {
-                ResetTrigger();
-                animator.speed = 0f;                // 애니메이션 정지
             }
         }
     }
@@ -380,7 +257,7 @@ public class Player : MonoBehaviour
             animator.SetTrigger("Jump");                                // 트리거 전환
             rb.velocity = new Vector2(rb.velocity.x, 0f);               // 기존 y 속도 제거
             rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);   // 위로 힘 추가
-            
+
             // 점프를 했으니까 땅이 아닐 것임
 
             // 만약 벽점프를 했으면 벽점프를 했다고 표시
@@ -425,12 +302,12 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    /*private void OnCollisionEnter2D(Collision2D collision)
     {
-        /*if (!animator.enabled)
+        *//*if (!animator.enabled)
         {
             animator.enabled = true;
-        }*/
+        }*//*
 
         // 플레이어가 땅이 아닐때
         if (!isGround)
@@ -444,13 +321,16 @@ public class Player : MonoBehaviour
                 isGround = true;
                 //jumpAble = true;        // 땅에 충돌했으니 점프 가능
 
+                // 착지 시 낙하 상태 해제
+                animator.SetBool("IsFall", false);
+
                 // 움직임이 있으면?
                 if (moveInput.magnitude != 0)
                 {
                     Debug.Log("움직임 있음");
                     ResetTrigger();
                     //animator.SetTrigger("Idle");
-                    animator.SetTrigger("Walk");
+                    animator.SetTrigger("Run");
                 }
                 else
                 {
@@ -480,14 +360,14 @@ public class Player : MonoBehaviour
                     // 벽 위쪽(땅 취급)
                     jumpCount = maxJumpCount;       // 2단 점프 가능
                     isGround = true;
-                    
+
                     // 움직임이 있으면?
                     if (moveInput.magnitude != 0)
                     {
                         Debug.Log("움직임 있음");
                         ResetTrigger();
                         //animator.SetTrigger("Idle");
-                        animator.SetTrigger("Walk");
+                        animator.SetTrigger("Run");
                     }
                     else
                     {
@@ -516,12 +396,12 @@ public class Player : MonoBehaviour
                 Debug.Log("벽에서 떨어짐!");
 
                 // 벽에서 떨어졌을 때 점프 가능 + 벽점프 안함 이면
-                /*if (jumpAble && !wallJumped)
+                *//*if (jumpAble && !wallJumped)
                 {
                     Debug.Log("점프 가능 + 벽점프도 안함!");
                     ResetTrigger();
                     animator.SetTrigger("Idle");
-                }*/
+                }*//*
             }
         }
         // 땅에서 떨어지면
@@ -530,18 +410,64 @@ public class Player : MonoBehaviour
             isGround = false; // 땅에서 떨어짐 표시
 
             AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-            
+
             // 점프가 가능하면 점프를 안하고 떨어졌다는 소리
             if (jumpCount > 0)
             {
-                // 만약 현재 애니메이터가 Idle or Walk 이면
-                if (stateInfo.IsName("Idle") || stateInfo.IsName("Walk"))
+                // 만약 현재 애니메이터가 Idle or Run 이면
+                if (stateInfo.IsName("Idle") || stateInfo.IsName("Run"))
                 {
                     //ResetTrigger();
                     //animator.enabled = false; // 애니메이터 중단
                     //spriteRenderer.sprite = jumpDown;
                     //Debug.Log("이미지 변경 완료");
                 }
+            }
+        }
+    }*/
+
+    private int groundContactCount = 0;
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            //groundContactCount++;
+            //isGround = true;
+            animator.SetBool("IsFall", false);
+            jumpCount = maxJumpCount;
+        }
+        else if (collision.gameObject.CompareTag("Wall"))
+        {
+            //bool isWallTop = false;
+            bool isWallSide = false;
+
+            foreach (var contact in collision.contacts)
+            {
+                if (contact.normal.y > 0.7f)
+                {
+                    // Wall의 윗면: 땅 판정
+                    //groundContactCount++;
+                    //isGround = true;
+                    animator.SetBool("IsFall", false);
+                    jumpCount = maxJumpCount;
+                    //isWallTop = true;
+                    break;
+                }
+                else if (Mathf.Abs(contact.normal.x) > 0.7f && Mathf.Abs(contact.normal.y) < 0.1f)
+                {
+                    // Wall의 옆면: 메달림 판정
+                    isWallSide = true;
+                }
+            }
+
+            // 땅이 아니고 벽의 옆면에 닿았을 때 Hang 트리거
+            if (!isGround && isWallSide)
+            {
+                ResetTrigger();
+                animator.SetTrigger("Hang");
+                jumpCount = 1; // 벽점프 1회 가능 등 추가 로직
+                wallJumped = false;
             }
         }
     }
@@ -552,33 +478,37 @@ public class Player : MonoBehaviour
     /// <param name="collision"></param>
     private void OnCollisionStay2D(Collision2D collision)
     {
+        // 땅 판정은 Raycast에서만 처리!
+        // 여기서는 점프 카운트, 애니메이션 등만 처리
+
         // 플레이어가 땅에 충돌 중일때
-        if(collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag("Ground"))
         {
             isGround = true;
-            // 점프 중이 아닐 때만 Idle/Walk 트리거를 준다
+
+            // 착지 시 낙하 상태 해제
+            animator.SetBool("IsFall", false);
+
             AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-            if (!stateInfo.IsName("Jump") && !isDash && !isCrawl)
+
+            // 점프 중이 아닐 때만 Idle/Run 트리거를 준다
+            if (!stateInfo.IsName("Jump") && !isDash)
             {
-                // 땅에 있고, 대쉬 중이 아니면
-                if (isGround && !isDash && !isCrawl)
+                // 움직임이 있으면
+                if (moveInput.magnitude != 0)
                 {
-                    // 움직임이 있으면
-                    if (moveInput.magnitude != 0)
-                    {
-                        ResetTrigger();
-                        animator.SetTrigger("Walk");
-                    }
-                    else
-                    {
-                        ResetTrigger();
-                        animator.SetTrigger("Idle");
-                    }
+                    ResetTrigger();
+                    animator.SetTrigger("Run");
+                }
+                else
+                {
+                    ResetTrigger();
+                    animator.SetTrigger("Idle");
                 }
             }
         }
     }
-    
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Key"))
@@ -603,7 +533,7 @@ public class Player : MonoBehaviour
                 // n초 후 씬 전환
                 canEnterDoor = true;
                 doorCenter = collision.transform;       // 문의 중앙은 충돌한 문의 위치
-            }            
+            }
         }
     }
 
@@ -661,10 +591,7 @@ public class Player : MonoBehaviour
     {
         animator.ResetTrigger("Idle");
         animator.ResetTrigger("Jump");
-        animator.ResetTrigger("Walk");
-        animator.ResetTrigger("CrawlStart");
-        animator.ResetTrigger("Crawl");
-        animator.ResetTrigger("CrawlEnd");
+        animator.ResetTrigger("Run");
         animator.ResetTrigger("Dash");
         animator.ResetTrigger("Hang");
         animator.ResetTrigger("BackWalk");
