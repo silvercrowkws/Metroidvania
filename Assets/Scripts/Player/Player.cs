@@ -68,12 +68,12 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 점프 파워
     /// </summary>
-    public float jumpPower = 5f;
+    public float jumpPower = 7.5f;
 
     /// <summary>
     /// 대쉬 파워
     /// </summary>
-    public float dashPower = 5f;
+    public float dashPower = 15f;
 
     /// <summary>
     /// 캐릭터가 땅에 있는지 확인하기 위한 bool 변수
