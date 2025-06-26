@@ -78,6 +78,23 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    /// <summary>
+    /// 플레이어_2
+    /// </summary>
+    Player_Test player_test;
+
+    public Player_Test Player_Test
+    {
+        get
+        {
+            if(player_test == null)
+            {
+                player_test = FindAnyObjectByType<Player_Test>();
+            }
+            return player_test;
+        }
+    }
+
     /*SaveManager saveManager = new SaveManager();
 
     public SaveManager SaveManager => saveManager;

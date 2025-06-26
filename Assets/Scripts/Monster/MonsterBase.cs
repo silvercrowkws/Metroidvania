@@ -150,7 +150,15 @@ public class MonsterBase : MonoBehaviour
         gameManager = GameManager.Instance;
 
         Player player = gameManager.Player;
-        playerTransform = player.transform;
+        Player_Test player_test = gameManager.Player_Test;
+        if(player == null)
+        {
+            playerTransform = player_test.transform;
+        }
+        else
+        {
+            playerTransform = player.transform;
+        }
 
         animator = GetComponent<Animator>();
 

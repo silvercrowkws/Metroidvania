@@ -71,42 +71,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Attack"",
+                    ""type"": ""Button"",
+                    ""id"": ""882a864d-0ca8-4f7a-89cc-3fa8306ad8c1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": ""2D Vector"",
-                    ""id"": ""ab39d2ea-2c43-410a-8542-fb77dd7cd446"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""37031bc7-8aa7-47a2-91f1-dc6cdf0ff15f"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KM"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""8b674804-3bfc-4470-90af-bd91e92201a2"",
-                    ""path"": ""<Keyboard>/d"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KM"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
                 {
                     ""name"": ""2D Vector"",
                     ""id"": ""dcd41c92-9754-4d8f-9b5a-f72aa4a1f2cc"",
@@ -175,8 +151,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""4e0b0f2d-6a48-40a5-944d-a21240cfb353"",
-                    ""path"": ""<Keyboard>/w"",
+                    ""id"": ""a6050523-e87c-4399-888e-13e8fa3a9fae"",
+                    ""path"": ""<Keyboard>/upArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KM"",
@@ -186,12 +162,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""a6050523-e87c-4399-888e-13e8fa3a9fae"",
-                    ""path"": ""<Keyboard>/upArrow"",
+                    ""id"": ""ef50e27f-fd5c-48e0-b0aa-bdfefe2f0a68"",
+                    ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KM"",
-                    ""action"": ""DoorInteract"",
+                    ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -224,6 +200,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Actions_Dash = m_Actions.FindAction("Dash", throwIfNotFound: true);
         m_Actions_Crawl = m_Actions.FindAction("Crawl", throwIfNotFound: true);
         m_Actions_DoorInteract = m_Actions.FindAction("DoorInteract", throwIfNotFound: true);
+        m_Actions_Attack = m_Actions.FindAction("Attack", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -290,6 +267,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Actions_Dash;
     private readonly InputAction m_Actions_Crawl;
     private readonly InputAction m_Actions_DoorInteract;
+    private readonly InputAction m_Actions_Attack;
     public struct ActionsActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -299,6 +277,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Dash => m_Wrapper.m_Actions_Dash;
         public InputAction @Crawl => m_Wrapper.m_Actions_Crawl;
         public InputAction @DoorInteract => m_Wrapper.m_Actions_DoorInteract;
+        public InputAction @Attack => m_Wrapper.m_Actions_Attack;
         public InputActionMap Get() { return m_Wrapper.m_Actions; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -323,6 +302,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @DoorInteract.started += instance.OnDoorInteract;
             @DoorInteract.performed += instance.OnDoorInteract;
             @DoorInteract.canceled += instance.OnDoorInteract;
+            @Attack.started += instance.OnAttack;
+            @Attack.performed += instance.OnAttack;
+            @Attack.canceled += instance.OnAttack;
         }
 
         private void UnregisterCallbacks(IActionsActions instance)
@@ -342,6 +324,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @DoorInteract.started -= instance.OnDoorInteract;
             @DoorInteract.performed -= instance.OnDoorInteract;
             @DoorInteract.canceled -= instance.OnDoorInteract;
+            @Attack.started -= instance.OnAttack;
+            @Attack.performed -= instance.OnAttack;
+            @Attack.canceled -= instance.OnAttack;
         }
 
         public void RemoveCallbacks(IActionsActions instance)
@@ -375,5 +360,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnDash(InputAction.CallbackContext context);
         void OnCrawl(InputAction.CallbackContext context);
         void OnDoorInteract(InputAction.CallbackContext context);
+        void OnAttack(InputAction.CallbackContext context);
     }
 }

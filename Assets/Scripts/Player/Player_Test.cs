@@ -74,8 +74,25 @@ public class Player_Test : MonoBehaviour
     float dashTime = 0.2f;
     float dashTimer = 0f;
 
+    /// <summary>
+    /// Hang 트리거 이후에 다른 트리거들 들어가지 않도록 코루틴에서 딜레이 주는 용도
+    /// </summary>
     private bool justHanged = false;
+
+    /// <summary>
+    /// 점프한 이후에 다른 트리거들 들어가지 않도록 코루틴에서 딜레이 주는 용도
+    /// </summary>
     private bool justJumped = false;
+
+    /// <summary>
+    /// 대쉬한 이후에 다른 트리거들 들어가지 않도록 코루틴에서 딜레이 주는 용도
+    /// </summary>
+    private bool justDashed = false;
+
+    /// <summary>
+    /// 벽의 옆면과 충돌 중인지 확인하기 위한 bool 변수(false : 벽과 접촉 중, true : 벽과 접촉 해제)
+    /// </summary>
+    public bool canFall = true;
 
     // 플레이어 조작 관련 끝 --------------------------------------------------
 
@@ -131,24 +148,25 @@ public class Player_Test : MonoBehaviour
         inputActions.Actions.Move.performed += OnMove;
         inputActions.Actions.Move.canceled += OnMove;
         inputActions.Actions.Jump.performed += OnJump;
-        /*inputActions.Actions.Dash.performed += OnDash;
-        inputActions.Actions.Crawl.performed += OnCrawlStart;
-        inputActions.Actions.Crawl.canceled += OnCrawlEnd;
-        inputActions.Actions.DoorInteract.performed += OnDoorInteract;*/
+        inputActions.Actions.Dash.performed += OnDash;
+        inputActions.Actions.DoorInteract.performed += OnDoorInteract;
+        inputActions.Actions.Attack.performed += OnAttack;
     }
 
     private void OnDisable()
     {
-        /*inputActions.Actions.DoorInteract.performed -= OnDoorInteract;
-        inputActions.Actions.Crawl.canceled -= OnCrawlEnd;
-        inputActions.Actions.Crawl.performed -= OnCrawlStart;
-        inputActions.Actions.Dash.performed -= OnDash;*/
+        inputActions.Actions.Attack.performed -= OnAttack;
+        inputActions.Actions.DoorInteract.performed -= OnDoorInteract;
+        inputActions.Actions.Dash.performed -= OnDash;
         inputActions.Actions.Jump.performed -= OnJump;
         inputActions.Actions.Move.canceled -= OnMove;
         inputActions.Actions.Move.performed -= OnMove;
         inputActions.Actions.Disable();
     }
 
+    /// <summary>
+    /// 인스펙터에서 확인하기 위한 변수
+    /// </summary>
     public bool isFall = false;
 
     private void FixedUpdate()
@@ -159,6 +177,14 @@ public class Player_Test : MonoBehaviour
             if (dashTimer <= 0)
             {
                 isDash = false;
+                ResetTrigger();
+                if (isGround)
+                {
+                    if (moveInput.magnitude > 0.1f)
+                        animator.SetTrigger("Run");
+                    else
+                        animator.SetTrigger("Idle");
+                }
             }
             return;
         }
@@ -206,7 +232,57 @@ public class Player_Test : MonoBehaviour
 
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
-        // Jump 상태일 때만 y속도가 음수로 바뀌었을 때 Fall로 전환
+        if (canFall)
+        {
+            if (stateInfo.IsName("Jump"))
+            {
+                if (!justJumped && rb.velocity.y < -0.01f)
+                {
+                    isFall = true;
+                    animator.SetBool("IsFall", true);
+                }
+                else
+                {
+                    isFall = false;
+                    animator.SetBool("IsFall", false);
+                }
+            }
+            // 아이들 or 런 상태일 때 떨어지면
+            else if(stateInfo.IsName("Idle") && stateInfo.IsName("Run"))
+            {
+                if(rb.velocity.y < -0.01f)
+                {
+                    isFall = true;
+                    animator.SetBool("IsFall", true);
+                }
+                else
+                {
+                    isFall = false;
+                    animator.SetBool("IsFall", false);
+                }
+            }
+            else
+            {
+                if (rb.velocity.y < -0.01f)
+                {
+                    isFall = true;
+                    animator.SetBool("IsFall", true);
+                }
+                else
+                {
+                    isFall = false;
+                    animator.SetBool("IsFall", false);
+                }
+            }
+        }
+        else
+        {
+
+            isFall = false;
+            animator.SetBool("IsFall", false);
+        }
+
+        /*// Jump 상태일 때만 y속도가 음수로 바뀌었을 때 Fall로 전환
         if (stateInfo.IsName("Jump"))
         {
             if (!justJumped && rb.velocity.y < -0.01f)
@@ -243,7 +319,7 @@ public class Player_Test : MonoBehaviour
                 isFall = false;
                 animator.SetBool("IsFall", false);
             }
-        }
+        }*/
     }
 
     /// <summary>
@@ -301,6 +377,78 @@ public class Player_Test : MonoBehaviour
     }
 
     /// <summary>
+    /// 인풋 시스템으로 플레이어의 대쉬를 제어하는 함수
+    /// </summary>
+    /// <param name="context"></param>
+    private void OnDash(InputAction.CallbackContext context)
+    {
+        // 만약 플레이어의 대쉬 게이지가 있으면
+        //if ()
+        {
+            isDash = true;
+            ResetTrigger();
+            animator.SetTrigger("Dash");
+            rb.gravityScale = 0;        // 직선적으로 움직이기 위해 중력 끄기
+
+            // 현재 이동 방향을 반영하여 대쉬 방향 결정
+            float dashDirection = 0;
+            if (transform.localScale.x > 0)
+            {
+                dashDirection = 1f;
+            }
+            else
+            {
+                dashDirection = -1;
+            }
+
+            justDashed = true;
+            rb.velocity = Vector2.zero;     // 기존 속도 초기화
+            rb.AddForce(Vector2.right * dashPower * dashDirection, ForceMode2D.Impulse);
+            rb.gravityScale = 1;        // 중력 원래대로
+            dashTimer = dashTime;
+
+            StartCoroutine(DashDelay());
+        }
+    }
+
+    /// <summary>
+    /// 인풋 시스템으로 플레이어의 공격을 제어하는 함수
+    /// </summary>
+    /// <param name="context"></param>
+    private void OnAttack(InputAction.CallbackContext context)
+    {
+        // 만약 Idle이나 Run 상태에서 공격하면 그냥 Attack이 나가고
+        // Dash 상태에서 공격하면 Dash-Attack이 나가고?
+
+        // 달리는 상태에서 Attack을 DashAttack이라고 합시다
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        if (stateInfo.IsName("Run") || stateInfo.IsName("Dash"))
+        {
+            animator.SetTrigger("DashAttack");
+        }
+        else
+        {
+            animator.SetTrigger("Attack");
+        }
+    }
+
+    /// <summary>
+    /// 공격 시작할 때 이동 속도 0으로 만드는 함수(애니메이터 이벤트용)
+    /// </summary>
+    private void AttackStart()
+    {
+        moveSpeed = 0;
+    }
+
+    /// <summary>
+    /// 공격이 끝났을 때 이동속도 되돌리는 함수(애니메이터 이벤트용)
+    /// </summary>
+    private void AttackEnd()
+    {
+        moveSpeed = defaultMoveSpeed;
+    }
+
+    /// <summary>
     /// 모든 트리거를 리셋하는 함수
     /// </summary>
     private void ResetTrigger()
@@ -310,7 +458,63 @@ public class Player_Test : MonoBehaviour
         animator.ResetTrigger("Run");
         animator.ResetTrigger("Dash");
         animator.ResetTrigger("Hang");
-        animator.ResetTrigger("BackWalk");
+        animator.ResetTrigger("Attack");
+        animator.ResetTrigger("DashAttack");
+    }
+    
+    private IEnumerator HangDelay()
+    {
+        yield return new WaitForSeconds(0.1f);
+        justHanged = false;
+    }
+
+    private IEnumerator JumpDelay()
+    {
+        yield return new WaitForSeconds(0.1f); // 0.1~0.15초 정도
+        justJumped = false;
+    }
+
+    private IEnumerator DashDelay()
+    {
+        yield return new WaitForSeconds(0.1f); // 0.1~0.15초 정도
+        justDashed = false;
+    }
+
+    /// <summary>
+    /// 문과 상호작용하는 함수(플레이어 상호작용 입력 정지 포함)
+    /// </summary>
+    /// <param name="context"></param>
+    private void OnDoorInteract(InputAction.CallbackContext context)
+    {
+        if (canEnterDoor && !isWalkingToDoor)
+        {
+            // 입력 막기
+            inputActions.Actions.Disable();
+            isWalkingToDoor = true;
+            targetDoorPosition = new Vector3(doorCenter.position.x, transform.position.y, transform.position.z);
+            StartCoroutine(WalkToDoorAndEnter());
+        }
+    }
+
+    /// <summary>
+    /// 문 중앙까지 걸어가는 코루틴
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator WalkToDoorAndEnter()
+    {
+        float walkSpeed = 3f;
+        while (Vector3.Distance(transform.position, targetDoorPosition) > 0.01f)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, targetDoorPosition, walkSpeed * Time.deltaTime);
+            yield return null;
+        }
+
+        ResetTrigger();
+        animator.SetTrigger("Idle");
+
+        yield return new WaitForSeconds(1.5f);
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);       // 현재 실행 중인 씬 +1 로 이동
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -384,21 +588,58 @@ public class Player_Test : MonoBehaviour
             }
         }
     }
-    private IEnumerator HangDelay()
-    {
-        yield return new WaitForSeconds(0.1f);
-        justHanged = false;
-    }
-
-    private IEnumerator JumpDelay()
-    {
-        yield return new WaitForSeconds(0.1f); // 0.1~0.15초 정도
-        justJumped = false;
-    }
-
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        
+        // 벽에서 떨어지면 다시 canFall = true
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            canFall = true;
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            foreach (var contact in collision.contacts)
+            {
+                // 벽의 옆면에 충돌했으면
+                if (Mathf.Abs(contact.normal.x) > 0.7f && Mathf.Abs(contact.normal.y) < 0.1f)
+                {
+                    canFall = false;
+                    return;
+                }
+            }
+        }
+        canFall = true;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Key"))
+        {
+            keyCount++;
+            if (keyCount >= 3)
+            {
+                hasAllKeys = true;
+            }
+            onKeyCountChanged?.Invoke(keyCount);
+        }
+
+        // 문과 충돌했을 때
+        if (collision.CompareTag("Door"))
+        {
+            // 열쇠가 전부 있을때
+            if (hasAllKeys)
+            {
+                // W or 위키를 누르면?
+                // 플레이어 입력 막고 문 중앙까지 걸어가고
+                // BackWalk 애니메이터 실행
+                // n초 후 씬 전환
+                canEnterDoor = true;
+                doorCenter = collision.transform;       // 문의 중앙은 충돌한 문의 위치
+            }
+        }
     }
 }

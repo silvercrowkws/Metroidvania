@@ -8,7 +8,9 @@ public class KeyPanel : MonoBehaviour
     Image[] keyImages;
 
     GameManager gameManager;
+
     Player player;
+    Player_Test player_test;
 
     private void Awake()
     {
@@ -26,13 +28,29 @@ public class KeyPanel : MonoBehaviour
     {
         gameManager = GameManager.Instance;
         player = gameManager.Player;
-        player.onKeyCountChanged += SetKeyImage;
+        if(player == null)
+        {
+            player_test = gameManager.Player_Test;
+            player_test.onKeyCountChanged += SetKeyImage;
+        }
+        else
+        {
+            player = gameManager.Player;
+            player.onKeyCountChanged += SetKeyImage;
+        }
 
     }
 
     private void OnDisable()
     {
-        player.onKeyCountChanged -= SetKeyImage;
+        if(player == null)
+        {
+            player_test.onKeyCountChanged -= SetKeyImage;
+        }
+        else
+        {
+            player.onKeyCountChanged -= SetKeyImage;
+        }
     }
 
     /// <summary>
