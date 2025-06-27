@@ -75,6 +75,49 @@ public class Player_Test : MonoBehaviour
     float dashTimer = 0f;
 
     /// <summary>
+    /// 플레이어의 최대 체력
+    /// </summary>
+    private float maxHP;
+
+    /// <summary>
+    /// 플레이어의 현재 체력
+    /// </summary>
+    private float currentHP;
+
+    public float HP
+    {
+        get => currentHP;
+        set
+        {
+            if (currentHP != value)
+            {
+                //currentHP = value;
+                currentHP = Mathf.Clamp(value, 0, maxHP);
+                if (currentHP < 1)
+                {
+                    currentHP = 0;
+
+                    onPlayerDie?.Invoke(currentHP);     // 플레이어가 죽었다고 델리게이트로 알림
+                    Debug.Log("플레이어 사망");
+                    
+                    // 사망 연출 실행 부분
+
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 플레이어가 죽었음을 알리는 델리게이트
+    /// </summary>
+    public Action<float> onPlayerDie;
+
+    /// <summary>
+    /// 플레이어의 공격력
+    /// </summary>
+    private float playerAttackPower = 25.0f;
+
+    /// <summary>
     /// Hang 트리거 이후에 다른 트리거들 들어가지 않도록 코루틴에서 딜레이 주는 용도
     /// </summary>
     private bool justHanged = false;
@@ -135,11 +178,17 @@ public class Player_Test : MonoBehaviour
 
     // 문 및 열쇠 관련 끝 --------------------------------------------------
 
+    // 몬스터와 상호작용 관련 --------------------------------------------------
+
+
     private void Awake()
     {
         inputActions = new PlayerInputActions();
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        // 리지드 바디의 충돌 감지 모드를 연속으로 변경
+        // 기존 값은 느린 속도에서는 충돌을 잘 감지하지만,빠르게 움직이면(대쉬) 한 프레임에 오브젝트가 벽을 통과(터널링)할 수 있음
     }
 
     private void OnEnable()
@@ -402,8 +451,9 @@ public class Player_Test : MonoBehaviour
             }
 
             justDashed = true;
-            rb.velocity = Vector2.zero;     // 기존 속도 초기화
-            rb.AddForce(Vector2.right * dashPower * dashDirection, ForceMode2D.Impulse);
+            /*rb.velocity = Vector2.zero;     // 기존 속도 초기화
+            rb.AddForce(Vector2.right * dashPower * dashDirection, ForceMode2D.Impulse);*/
+            rb.velocity = new Vector2(dashPower * dashDirection, 0f); // 직접 속도 지정
             rb.gravityScale = 1;        // 중력 원래대로
             dashTimer = dashTime;
 
@@ -549,7 +599,44 @@ public class Player_Test : MonoBehaviour
         else if (collision.gameObject.CompareTag("Wall"))
         {
             Vector2 normal = collision.contacts[0].normal;
+
+            // 1. 벽 위쪽(땅 취급) 먼저 체크
+            if (normal.y > 0.7f)
+            {
+                // 벽 위쪽(땅 취급)
+                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+                if (!stateInfo.IsName("Jump"))
+                {
+                    if (moveInput.magnitude != 0)
+                    {
+                        Debug.Log("벽 위인데 움직임 있음");
+                        ResetTrigger();
+                        animator.SetTrigger("Run");
+                    }
+                    else
+                    {
+                        Debug.Log("벽 위인데 움직임 없음");
+                        ResetTrigger();
+                        animator.SetTrigger("Idle");
+                    }
+                }
+                jumpCount = maxJumpCount;
+                isGround = true;
+                return;     // 벽 위쪽이면 여기서 끝내고 Hang 실행 안 함
+            }
+
+            // 2. 벽 옆면(Hang)
             if (Mathf.Abs(normal.y) < 0.1f && Mathf.Abs(normal.x) > 0.7f)
+            {
+                Debug.Log("벽에는 정상 충돌함");
+                ResetTrigger();
+                animator.SetTrigger("Hang");
+                jumpCount = 1;
+                justHanged = true;
+                StartCoroutine(HangDelay());
+            }
+
+            /*if (Mathf.Abs(normal.y) < 0.1f && Mathf.Abs(normal.x) > 0.7f)
             //if (collision.contacts[0].normal.y <= 0)    // 벽의 옆면에서 충돌을 감지했을 경우
             {
                 Debug.Log("벽에는 정상 충돌함");
@@ -585,7 +672,7 @@ public class Player_Test : MonoBehaviour
                 }
                 jumpCount = maxJumpCount;       // 2단 점프 가능
                 isGround = true;
-            }
+            }*/
         }
     }
 
