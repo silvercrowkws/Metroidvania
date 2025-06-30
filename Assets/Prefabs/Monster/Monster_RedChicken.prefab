@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 2516151870010647121}
   - component: {fileID: 5723966766431868379}
   - component: {fileID: 7954793029483215268}
+  - component: {fileID: 3421864023838000765}
+  - component: {fileID: 7016588492146749129}
   m_Layer: 0
   m_Name: Monster_RedChicken
   m_TagString: Untagged
@@ -123,6 +125,78 @@ MonoBehaviour:
   isChasing: 0
   playerTransform: {fileID: 0}
   chaseRange: {fileID: 9172593142986081261, guid: 642a2caba182cec49bdb022b90da0a0a, type: 3}
+--- !u!61 &3421864023838000765
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1642112140218739397}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.64, y: 1.26}
+    newSize: {x: 0.9411765, y: 0.64705884}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.64, y: 1.26}
+  m_EdgeRadius: 0
+--- !u!50 &7016588492146749129
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1642112140218739397}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1001 &5831280854226038552
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -169,6 +243,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1672004849668408739, guid: 642a2caba182cec49bdb022b90da0a0a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8365914494271522413, guid: 642a2caba182cec49bdb022b90da0a0a, type: 3}
+      propertyPath: m_Color.a
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9172593142986081261, guid: 642a2caba182cec49bdb022b90da0a0a, type: 3}

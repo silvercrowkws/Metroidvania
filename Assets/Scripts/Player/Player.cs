@@ -169,6 +169,11 @@ public class Player : MonoBehaviour
     /// </summary>
     private Vector3 targetDoorPosition;
 
+    /// <summary>
+    /// 플레이어의 공격력
+    /// </summary>
+    public float playerAttackPower = 25.0f;
+
     private void Awake()
     {
         inputActions = new PlayerInputActions();

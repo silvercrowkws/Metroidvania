@@ -11,6 +11,7 @@ TagManager:
   - Monster
   - chaseRange
   - disengageRange
+  - AttackRange
   layers:
   - Default
   - TransparentFX

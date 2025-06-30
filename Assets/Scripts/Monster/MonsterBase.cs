@@ -41,6 +41,11 @@ public class MonsterBase : MonoBehaviour
     protected Action onMonsterDie;
 
     /// <summary>
+    /// 몬스터가 죽었는지 확인하는 bool 변수
+    /// </summary>
+    protected bool isDead = false;
+
+    /// <summary>
     /// 몬스터의 현재 체력
     /// </summary>
     protected float currentHP = 1.0f;
@@ -102,6 +107,7 @@ public class MonsterBase : MonoBehaviour
 
     /// <summary>
     /// 몬스터가 추격중인지 확인하는 bool 변수
+    /// ChaseRangeTrigger 클래스에서 조작
     /// </summary>
     public bool isChasing = false;
 
@@ -116,6 +122,19 @@ public class MonsterBase : MonoBehaviour
     public GameObject chaseRange;
 
     //ChaseRangeTrigger chaseRamgeTrigger;
+
+    /// <summary>
+    /// 플레이어
+    /// </summary>
+    Player player;
+
+    Player_Test player_test;
+
+    /// <summary>
+    /// 공격 받을 수 있는지 확인하는 bool 변수(공격 받은 후 일정 시간 동안 데미지를 입지 않도록)
+    /// false : 공격 받을 수 있음, true : 공격 받을 수 없음
+    /// </summary>
+    private bool damageCoolDown = false;
 
 
     protected virtual void Awake()
@@ -147,10 +166,14 @@ public class MonsterBase : MonoBehaviour
 
     protected virtual void OnEnable()
     {
+        // 초기화
+        isDead = false;
+        damageCoolDown = false;
+
         gameManager = GameManager.Instance;
 
-        Player player = gameManager.Player;
-        Player_Test player_test = gameManager.Player_Test;
+        player = gameManager.Player;
+        player_test = gameManager.Player_Test;
         if(player == null)
         {
             playerTransform = player_test.transform;
@@ -196,6 +219,8 @@ public class MonsterBase : MonoBehaviour
 
     protected virtual void OnDisable()
     {
+        this.gameObject.transform.position = spawnPosition;
+
         dieEffectInstance.SetActive(false);     // 폭발 비활성화
         onMonsterDie -= OnMonsterDie;
     }
@@ -207,6 +232,12 @@ public class MonsterBase : MonoBehaviour
 
     protected virtual void Update()
     {
+        // 몬스터 사망시 아무 것도 하지 않음
+        if (isDead)
+        {
+            return;
+        }
+
         if (isChasing && playerTransform != null)
         {
             float distance = Vector3.Distance(transform.position, playerTransform.position);
@@ -269,10 +300,24 @@ public class MonsterBase : MonoBehaviour
     /// <returns></returns>
     protected virtual void OnMonsterDie()
     {
-        // 애니메이터 정지 (현재 프레임에서 멈춤)
+        // 애니메이터 정지 (현재 프레임에서 멈춤), 플레이어 추적 정지
+
+        isDead = true;
+
         if (animator != null)
         {
             animator.speed = 0f;
+        }
+
+        // 플레이어 추적 및 이동 정지
+        isChasing = false;
+        playerTransform = null;
+
+        // Rigidbody2D가 있다면 속도도 0으로 (물리 이동 중지)
+        var rb2d = GetComponent<Rigidbody2D>();
+        if (rb2d != null)
+        {
+            rb2d.velocity = Vector2.zero;
         }
 
         StartCoroutine(dieEffectActiveCoroutine());
@@ -333,6 +378,47 @@ public class MonsterBase : MonoBehaviour
             // 피격 처리
             HP -= 10f;
         }*/
+
+        if (collision.CompareTag("AttackRange"))
+        {
+            // 공격 받을 수 있으면
+            if (!damageCoolDown)
+            {
+                damageCoolDown = true;
+
+                // 피격 처리
+                Debug.Log("플레이어 공격에 맞음");
+                if(player != null)
+                {
+                    HP -= player.playerAttackPower;
+                    Debug.Log($"{this.gameObject.name}의 남은 HP: {HP}");
+                }
+                else
+                {
+                    if(player_test != null)
+                    {
+                        HP -= player_test.playerAttackPower;
+                        Debug.Log($"{this.gameObject.name}의 남은 HP: {HP}");
+                    }
+                    else
+                    {
+                        Debug.LogWarning("플레이어 테스트도 없는데?");
+                    }
+                }
+
+                StartCoroutine(DamageCooldown());
+            }
+        }
+    }
+
+    /// <summary>
+    /// 공격 받은 후 일정 시간동안 공격 받지 않도록 하는 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator DamageCooldown()
+    {
+        yield return new WaitForSeconds(1.0f);
+        damageCoolDown = false;
     }
 
     protected virtual void ResetTrigger()

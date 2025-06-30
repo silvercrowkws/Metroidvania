@@ -115,7 +115,7 @@ public class Player_Test : MonoBehaviour
     /// <summary>
     /// 플레이어의 공격력
     /// </summary>
-    private float playerAttackPower = 25.0f;
+    public float playerAttackPower = 25.0f;
 
     /// <summary>
     /// Hang 트리거 이후에 다른 트리거들 들어가지 않도록 코루틴에서 딜레이 주는 용도
@@ -136,6 +136,11 @@ public class Player_Test : MonoBehaviour
     /// 벽의 옆면과 충돌 중인지 확인하기 위한 bool 변수(false : 벽과 접촉 중, true : 벽과 접촉 해제)
     /// </summary>
     public bool canFall = true;
+
+    /// <summary>
+    /// 공격 범위 확인용
+    /// </summary>
+    GameObject attackRange;
 
     // 플레이어 조작 관련 끝 --------------------------------------------------
 
@@ -200,6 +205,14 @@ public class Player_Test : MonoBehaviour
         inputActions.Actions.Dash.performed += OnDash;
         inputActions.Actions.DoorInteract.performed += OnDoorInteract;
         inputActions.Actions.Attack.performed += OnAttack;
+
+        Transform child = transform.GetChild(0);
+        attackRange = child.gameObject;
+
+        if( attackRange != null )
+        {
+            attackRange.SetActive(false);
+        }
     }
 
     private void OnDisable()
@@ -488,6 +501,7 @@ public class Player_Test : MonoBehaviour
     private void AttackStart()
     {
         moveSpeed = 0;
+        attackRange.SetActive(true);
     }
 
     /// <summary>
@@ -496,6 +510,7 @@ public class Player_Test : MonoBehaviour
     private void AttackEnd()
     {
         moveSpeed = defaultMoveSpeed;
+        attackRange.SetActive(false);
     }
 
     /// <summary>
