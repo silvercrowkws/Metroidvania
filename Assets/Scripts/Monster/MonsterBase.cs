@@ -4,6 +4,19 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+public enum MonsterType
+{
+    None = 0,
+    RedChicken,     // 레드 치킨 몬스터
+}
+
+public enum MonsterMoveType
+{
+    None = 0,
+    Flying,         // 비행 가능 몬스터
+    Walk,           // 비행 불가 몬스터
+}
+
 public class MonsterBase : MonoBehaviour
 {
     // 몬스터 베이스가 정의할 것
@@ -14,6 +27,9 @@ public class MonsterBase : MonoBehaviour
     // 5. 공격 직전 플레이어의 당시 위치 추적(그곳을 공격하기 위해)
     // 6. 생성된 위치도 기억할 필요가 있음(그래야 플레이어가 너무 멀리 벗어나면 원위치로 돌아갈테니)
     // 7. 몬스터 스폰은 RoomGenerator가 담당하긴 하는데 MonsterBase가 알고 있어야 하나?
+
+    protected MonsterType monsterType = MonsterType.None;
+    protected MonsterMoveType monsterMoveType = MonsterMoveType.None;
 
     /// <summary>
     /// 게임 매니저
@@ -106,7 +122,7 @@ public class MonsterBase : MonoBehaviour
     protected Vector3 spawnPosition;
 
     /// <summary>
-    /// 몬스터가 추격중인지 확인하는 bool 변수
+    /// 몬스터가 추격중인지 확인하는 bool 변수 => 추격중일때 일정 시간 간격으로 플레이어를 공격하도록 추가
     /// ChaseRangeTrigger 클래스에서 조작
     /// </summary>
     public bool isChasing = false;
@@ -135,6 +151,16 @@ public class MonsterBase : MonoBehaviour
     /// false : 공격 받을 수 있음, true : 공격 받을 수 없음
     /// </summary>
     private bool damageCoolDown = false;
+
+    /// <summary>
+    /// 공격할 목표 위치(Attack 함수가 호출된 시점의 playerTransform)
+    /// </summary>
+    private Vector3 targetPosition;
+
+    /// <summary>
+    /// 공격 중 여부
+    /// </summary>
+    private bool isAttacking = false;
 
 
     protected virtual void Awake()
@@ -238,59 +264,89 @@ public class MonsterBase : MonoBehaviour
             return;
         }
 
-        if (isChasing && playerTransform != null)
+        // 비행 가능한 몬스터인 경우 추적 방법
+        if(monsterMoveType == MonsterMoveType.Flying)
         {
-            float distance = Vector3.Distance(transform.position, playerTransform.position);
-
-            // 추격 종료 조건: 플레이어와의 거리가 5 이상
-            if (distance >= 5f)
+            if (isChasing && playerTransform != null)
             {
-                isChasing = false;
-                playerTransform = null;
+                float distance = Vector3.Distance(transform.position, playerTransform.position);
+
+                // 추격 종료 조건: 플레이어와의 거리가 5 이상
+                if (distance >= 5f)
+                {
+                    isChasing = false;
+                    playerTransform = null;
+                }
+                else
+                {
+                    // 추격 중일 때 Moving 트리거
+                    ResetTrigger();
+                    animator.SetTrigger("Moving");
+
+                    // 플레이어를 바라보도록 Flip X 처리 (기본 오른쪽)
+                    if (playerTransform.position.x < transform.position.x)
+                        spriteRenderer.flipX = true;
+                    else
+                        spriteRenderer.flipX = false;
+
+                    Vector3 dir = (playerTransform.position - transform.position).normalized;
+                    transform.position += dir * moveSpeed * Time.deltaTime;
+                }
             }
             else
             {
-                // 추격 중일 때 Moving 트리거
-                ResetTrigger();
-                animator.SetTrigger("Moving");
+                // 추격 중이 아니면 원위치로 돌아감
+                if (Vector3.Distance(transform.position, spawnPosition) > 0.1f)
+                {
+                    // 원위치로 돌아가는 중에는 Moving 트리거
+                    ResetTrigger();
+                    animator.SetTrigger("Moving");
 
-                // 플레이어를 바라보도록 Flip X 처리 (기본 오른쪽)
-                if (playerTransform.position.x < transform.position.x)
-                    spriteRenderer.flipX = true;
+                    // 원위치 방향으로 Flip X 처리 (기본 오른쪽)
+                    if (spawnPosition.x < transform.position.x)
+                        spriteRenderer.flipX = true;
+                    else
+                        spriteRenderer.flipX = false;
+
+                    Vector3 dir = (spawnPosition - transform.position).normalized;
+                    transform.position += dir * moveSpeed * Time.deltaTime;
+                }
                 else
-                    spriteRenderer.flipX = false;
+                {
+                    // 원위치 도착 시 Idle 트리거
+                    ResetTrigger();
+                    animator.SetTrigger("Idle");
 
-                Vector3 dir = (playerTransform.position - transform.position).normalized;
-                transform.position += dir * moveSpeed * Time.deltaTime;
+                    // Idle 시 기본 방향(오른쪽)으로 Flip X 해제
+                    spriteRenderer.flipX = false;
+                }
             }
         }
-        else
+
+
+        // 걷기 가능한 몬스터의 경우 추적 방법
+        else if(monsterMoveType == MonsterMoveType.Walk)
         {
-            // 추격 중이 아니면 원위치로 돌아감
-            if (Vector3.Distance(transform.position, spawnPosition) > 0.1f)
+            // 나중에 몬스터 만들고 구현 필요
+        }
+
+
+        // 공격이 활성화 되었으면
+        if (isAttacking)
+        {
+            float attackSpeed = moveSpeed * 2.5f; // 공격 속도(원하는 값으로 조절)
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, attackSpeed * Time.deltaTime);
+
+            // 목표 위치에 도달하면 공격 종료, 다시 추격 시작
+            if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
             {
-                // 원위치로 돌아가는 중에는 Moving 트리거
+                isAttacking = false;
+                isChasing = true;
+
                 ResetTrigger();
                 animator.SetTrigger("Moving");
-
-                // 원위치 방향으로 Flip X 처리 (기본 오른쪽)
-                if (spawnPosition.x < transform.position.x)
-                    spriteRenderer.flipX = true;
-                else
-                    spriteRenderer.flipX = false;
-
-                Vector3 dir = (spawnPosition - transform.position).normalized;
-                transform.position += dir * moveSpeed * Time.deltaTime;
             }
-            else
-            {
-                // 원위치 도착 시 Idle 트리거
-                ResetTrigger();
-                animator.SetTrigger("Idle");
-
-                // Idle 시 기본 방향(오른쪽)으로 Flip X 해제
-                spriteRenderer.flipX = false;
-            }
+            return; // 공격 중에는 다른 동작 안 함
         }
     }
 
@@ -426,5 +482,23 @@ public class MonsterBase : MonoBehaviour
         animator.ResetTrigger("Idle");
         animator.ResetTrigger("Moving");
         animator.ResetTrigger("Attack");
+    }
+
+    protected void Attack()
+    {
+        targetPosition = playerTransform.position;
+        isAttacking = true;
+        isChasing = false; // 추격 중단
+
+        // 몬스터가 RedChicken의 경우 공격 방법
+        if (monsterType == MonsterType.RedChicken)
+        {
+            // 이때 플레이어의 위치를 기억하고 저장
+
+            ResetTrigger();
+            animator.SetTrigger("Attack");
+
+            // 기억한 위치로 급강하 필요
+        }
     }
 }
