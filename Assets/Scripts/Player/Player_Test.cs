@@ -77,7 +77,7 @@ public class Player_Test : MonoBehaviour
     /// <summary>
     /// 플레이어의 최대 체력
     /// </summary>
-    private float maxHP;
+    private float maxHP = 100f;
 
     /// <summary>
     /// 플레이어의 현재 체력
@@ -93,6 +93,9 @@ public class Player_Test : MonoBehaviour
             {
                 //currentHP = value;
                 currentHP = Mathf.Clamp(value, 0, maxHP);
+
+                Debug.Log($"플레이어의 남은 체력: {HP}");
+
                 if (currentHP < 1)
                 {
                     currentHP = 0;
@@ -198,6 +201,8 @@ public class Player_Test : MonoBehaviour
 
     private void OnEnable()
     {
+        currentHP = maxHP;
+
         inputActions.Actions.Enable();
         inputActions.Actions.Move.performed += OnMove;
         inputActions.Actions.Move.canceled += OnMove;

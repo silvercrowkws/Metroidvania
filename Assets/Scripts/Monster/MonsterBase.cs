@@ -94,7 +94,7 @@ public class MonsterBase : MonoBehaviour
     /// <summary>
     /// 몬스터의 공격력
     /// </summary>
-    protected float attackPower = 1.0f;
+    protected float attackPower = 10.0f;
 
     /// <summary>
     /// 사망 연출
@@ -137,6 +137,11 @@ public class MonsterBase : MonoBehaviour
     /// </summary>
     public GameObject chaseRange;
 
+    private float chaseTime = 0f;           // 추적 지속 시간
+    private float firstAttackDelay = 1.0f;  // 첫 공격 딜레이
+    private float nextAttackDelay = 2.0f;   // 이후 공격 딜레이
+    private bool firstAttackDone = false;   // 첫 공격 여부
+
     //ChaseRangeTrigger chaseRamgeTrigger;
 
     /// <summary>
@@ -151,6 +156,12 @@ public class MonsterBase : MonoBehaviour
     /// false : 공격 받을 수 있음, true : 공격 받을 수 없음
     /// </summary>
     private bool damageCoolDown = false;
+
+    /// <summary>
+    /// 공겨 할 수 있는지 확인하는 bool 변수(공격한 후 연속으로 데미지 들어가지 않도록)
+    /// false : 공격 할 수 있음, true : 공격 할 수 없음
+    /// </summary>
+    private bool attackCoolDown = false;
 
     /// <summary>
     /// 공격할 목표 위치(Attack 함수가 호출된 시점의 playerTransform)
@@ -264,8 +275,26 @@ public class MonsterBase : MonoBehaviour
             return;
         }
 
+        // 공격이 활성화 되었으면
+        if (isAttacking)
+        {
+            float attackSpeed = moveSpeed * 5f;       // 공격 속도(원하는 값으로 조절)
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, attackSpeed * Time.deltaTime);     // 적 위치로 빠르게 이동하는 부분
+
+            // 목표 위치에 도달하면 공격 종료, 다시 추격 시작
+            if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+            {
+                isAttacking = false;
+                isChasing = true;
+
+                ResetTrigger();
+                animator.SetTrigger("Moving");
+            }
+            return; // 공격 중에는 다른 동작 안 함
+        }
+
         // 비행 가능한 몬스터인 경우 추적 방법
-        if(monsterMoveType == MonsterMoveType.Flying)
+        if (monsterMoveType == MonsterMoveType.Flying)
         {
             if (isChasing && playerTransform != null)
             {
@@ -276,6 +305,8 @@ public class MonsterBase : MonoBehaviour
                 {
                     isChasing = false;
                     playerTransform = null;
+                    chaseTime = 0f;
+                    firstAttackDone = false;
                 }
                 else
                 {
@@ -285,12 +316,35 @@ public class MonsterBase : MonoBehaviour
 
                     // 플레이어를 바라보도록 Flip X 처리 (기본 오른쪽)
                     if (playerTransform.position.x < transform.position.x)
+                    {
                         spriteRenderer.flipX = true;
+                    }
                     else
+                    {
                         spriteRenderer.flipX = false;
+                    }
 
                     Vector3 dir = (playerTransform.position - transform.position).normalized;
                     transform.position += dir * moveSpeed * Time.deltaTime;
+
+
+                    // 추적 시간 누적
+                    chaseTime += Time.deltaTime;
+
+                    // 첫 공격을 안했고 추적 시간이 첫 공격 딜레이를 넘었으면
+                    if (!firstAttackDone && chaseTime >= firstAttackDelay)
+                    {
+                        Attack();
+                        firstAttackDone = true;
+                        chaseTime = 0f;     // 첫 공격 후 타이머 리셋
+                    }
+
+                    // 첫 공격 이후 추적 시간이 다음 공격 딜레이를 넘었으면
+                    else if (firstAttackDone && chaseTime >= nextAttackDelay)
+                    {
+                        Attack();
+                        chaseTime = 0f;
+                    }
                 }
             }
             else
@@ -298,15 +352,22 @@ public class MonsterBase : MonoBehaviour
                 // 추격 중이 아니면 원위치로 돌아감
                 if (Vector3.Distance(transform.position, spawnPosition) > 0.1f)
                 {
+                    chaseTime = 0f;
+                    firstAttackDone = false;
+
                     // 원위치로 돌아가는 중에는 Moving 트리거
                     ResetTrigger();
                     animator.SetTrigger("Moving");
 
                     // 원위치 방향으로 Flip X 처리 (기본 오른쪽)
                     if (spawnPosition.x < transform.position.x)
+                    {
                         spriteRenderer.flipX = true;
+                    }
                     else
+                    {
                         spriteRenderer.flipX = false;
+                    }
 
                     Vector3 dir = (spawnPosition - transform.position).normalized;
                     transform.position += dir * moveSpeed * Time.deltaTime;
@@ -328,25 +389,6 @@ public class MonsterBase : MonoBehaviour
         else if(monsterMoveType == MonsterMoveType.Walk)
         {
             // 나중에 몬스터 만들고 구현 필요
-        }
-
-
-        // 공격이 활성화 되었으면
-        if (isAttacking)
-        {
-            float attackSpeed = moveSpeed * 2.5f; // 공격 속도(원하는 값으로 조절)
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, attackSpeed * Time.deltaTime);
-
-            // 목표 위치에 도달하면 공격 종료, 다시 추격 시작
-            if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
-            {
-                isAttacking = false;
-                isChasing = true;
-
-                ResetTrigger();
-                animator.SetTrigger("Moving");
-            }
-            return; // 공격 중에는 다른 동작 안 함
         }
     }
 
@@ -428,13 +470,7 @@ public class MonsterBase : MonoBehaviour
     /// <param name="collision"></param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        /*// 예시: 플레이어 공격에 맞았을 때
-        if (collision.CompareTag("PlayerAttack"))
-        {
-            // 피격 처리
-            HP -= 10f;
-        }*/
-
+        // 플레이어의 공격 범위에 충돌되면
         if (collision.CompareTag("AttackRange"))
         {
             // 공격 받을 수 있으면
@@ -465,6 +501,34 @@ public class MonsterBase : MonoBehaviour
                 StartCoroutine(DamageCooldown());
             }
         }
+        
+        if (collision.CompareTag("Player"))
+        {
+            Debug.Log("플레이어한테 충돌은 함");
+            
+            if (isAttacking && !attackCoolDown)
+            {
+                attackCoolDown = true;
+
+                Debug.Log("플레이어한테 공격은 함");
+
+                // 플레이어의 HP 감소 부분
+                if (player != null)
+                {
+                    player.HP -= attackPower;
+                }
+                else if (player_test != null)
+                {
+                    player_test.HP -= attackPower;
+                }
+                else
+                {
+                    Debug.Log("아니 플레이어랑 플레이어 테스트 둘 다 null인데?");
+                }
+
+                StartCoroutine(MonsterDamageColldown());
+            }
+        }
     }
 
     /// <summary>
@@ -477,6 +541,16 @@ public class MonsterBase : MonoBehaviour
         damageCoolDown = false;
     }
 
+    /// <summary>
+    /// 몬스터가 공격한 후 일정 시간동안 또 공격하지 않도록 하는 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator MonsterDamageColldown()
+    {
+        yield return new WaitForSeconds(1.0f);
+        attackCoolDown = false;
+    }
+
     protected virtual void ResetTrigger()
     {
         animator.ResetTrigger("Idle");
@@ -484,21 +558,22 @@ public class MonsterBase : MonoBehaviour
         animator.ResetTrigger("Attack");
     }
 
+    /// <summary>
+    /// 공격하는 함수
+    /// </summary>
     protected void Attack()
     {
         targetPosition = playerTransform.position;
         isAttacking = true;
-        isChasing = false; // 추격 중단
+        isChasing = false;      // 추격 중단
 
         // 몬스터가 RedChicken의 경우 공격 방법
         if (monsterType == MonsterType.RedChicken)
         {
-            // 이때 플레이어의 위치를 기억하고 저장
-
             ResetTrigger();
             animator.SetTrigger("Attack");
-
-            // 기억한 위치로 급강하 필요
         }
     }
+
+    
 }

@@ -174,6 +174,47 @@ public class Player : MonoBehaviour
     /// </summary>
     public float playerAttackPower = 25.0f;
 
+    /// <summary>
+    /// 플레이어의 최대 체력
+    /// </summary>
+    private float maxHP = 100f;
+
+    /// <summary>
+    /// 플레이어의 현재 체력
+    /// </summary>
+    private float currentHP;
+
+    public float HP
+    {
+        get => currentHP;
+        set
+        {
+            if (currentHP != value)
+            {
+                //currentHP = value;
+                currentHP = Mathf.Clamp(value, 0, maxHP);
+
+                Debug.Log($"플레이어의 남은 체력: {HP}");
+
+                if (currentHP < 1)
+                {
+                    currentHP = 0;
+
+                    onPlayerDie?.Invoke(currentHP);     // 플레이어가 죽었다고 델리게이트로 알림
+                    Debug.Log("플레이어 사망");
+
+                    // 사망 연출 실행 부분
+
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 플레이어가 죽었음을 알리는 델리게이트
+    /// </summary>
+    public Action<float> onPlayerDie;
+
     private void Awake()
     {
         inputActions = new PlayerInputActions();
