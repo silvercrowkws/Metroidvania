@@ -168,7 +168,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.64, y: 1.26}
+  m_Size: {x: 2.5, y: 2}
   m_EdgeRadius: 0
 --- !u!50 &7016588492146749129
 Rigidbody2D:
@@ -252,6 +252,10 @@ PrefabInstance:
     - target: {fileID: 9172593142986081261, guid: 642a2caba182cec49bdb022b90da0a0a, type: 3}
       propertyPath: m_Name
       value: chaseRange
+      objectReference: {fileID: 0}
+    - target: {fileID: 9172593142986081261, guid: 642a2caba182cec49bdb022b90da0a0a, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

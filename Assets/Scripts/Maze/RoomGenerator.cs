@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
 
 public class RoomGenerator : MonoBehaviour
@@ -18,7 +19,7 @@ public class RoomGenerator : MonoBehaviour
     public int seed = -1;
     private const int AllRandom = -1;
 
-    private Dictionary<Vector2Int, Room> roomDictionary = new();
+    public Dictionary<Vector2Int, Room> roomDictionary = new();
     private HashSet<Vector2Int> visited = new();
 
     // 사각형 격자(상, 우, 하, 좌) - 6칸씩 이동

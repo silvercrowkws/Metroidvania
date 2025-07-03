@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public enum Direction
 {
@@ -28,6 +29,11 @@ public class Room : MonoBehaviour
     /// </summary>
     Sprite[] landObjects;
 
+    /*/// <summary>
+    /// Room 본인의 타일맵
+    /// </summary>
+    private Tilemap tilemap;*/
+
     private void Awake()
     {
         Transform child = transform.GetChild(1);        // Bottom
@@ -52,6 +58,8 @@ public class Room : MonoBehaviour
         {
             Debug.LogError("폴더에 스프라이트가 없습니다!");
         }
+
+        //tilemap = GetComponent<Tilemap>();
     }
 
     /// <summary>
@@ -86,6 +94,39 @@ public class Room : MonoBehaviour
                     wallLeft.SetActive(false);
                 }
                 break;
+        }
+    }
+
+    public void SetLight(bool isBright)
+    {
+        Color color = isBright ? new Color(1f, 1f, 1f, 1f) : new Color(0f, 0f, 0f, 1f);
+
+        Tilemap[] tilemaps = GetComponentsInChildren<Tilemap>(true);
+        foreach (var tm in tilemaps)
+        {
+            tm.color = color;
+        }
+
+        /*Transform child = transform.GetChild(1).GetChild(0);
+        
+        SpriteRenderer[] spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+        foreach (var sp in spriteRenderers)
+        {
+            sp.color = color;
+        }*/
+
+        if (transform.childCount > 1)
+        {
+            Transform firstChild = transform.GetChild(1);
+            if (firstChild.childCount > 0)
+            {
+                Transform target = firstChild.GetChild(0);
+                SpriteRenderer sr = target.GetComponent<SpriteRenderer>();
+                if (sr != null)
+                {
+                    sr.color = color;
+                }
+            }
         }
     }
 }

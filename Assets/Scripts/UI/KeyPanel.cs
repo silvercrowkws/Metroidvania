@@ -20,7 +20,7 @@ public class KeyPanel : MonoBehaviour
         for (int i = 0; i < childCount; i++)
         {
             keyImages[i] = transform.GetChild(i).GetComponent<Image>();
-            SetAlpha(keyImages[i], 0f); // 시작 시 모두 투명하게
+            SetAlpha(keyImages[i], 0.25f);      // 시작 시 모두 투명하게
         }
     }
 
@@ -60,7 +60,7 @@ public class KeyPanel : MonoBehaviour
     {
         for (int i = 0; i < keyImages.Length; i++)
         {
-            SetAlpha(keyImages[i], i < keyCount ? 1f : 0f);
+            SetAlpha(keyImages[i], i < keyCount ? 1f : 0.25f);
         }
     }
 
