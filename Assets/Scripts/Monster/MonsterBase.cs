@@ -400,6 +400,7 @@ public class MonsterBase : MonoBehaviour
     {
         // 애니메이터 정지 (현재 프레임에서 멈춤), 플레이어 추적 정지
 
+        //Debug.Log("OnMonsterDie 실행");
         isDead = true;
 
         if (animator != null)
@@ -432,6 +433,8 @@ public class MonsterBase : MonoBehaviour
 
         // 체력은 잘 빠져나가는거 같은데 알파값이 문제인가 서서히 RGB 줄어들고 알파값0으로 바뀌는 부분이 안보임
 
+        //Debug.Log("dieEffectActiveCoroutine 코루틴 실행");
+
         // 1. RGB를 서서히 0으로
         if (spriteRenderer != null)
         {
@@ -448,19 +451,20 @@ public class MonsterBase : MonoBehaviour
             }
             spriteRenderer.color = endColor;
 
-            // 2. 알파값만 0으로 변경
-            Color alphaZero = spriteRenderer.color;
-            alphaZero.a = 0f;
-            spriteRenderer.color = alphaZero;
+            // 사망 이펙트 활성화
+            if (dieEffectInstance != null)
+            {
+                Debug.Log("폭발 연출 활성화");
+                dieEffectInstance.SetActive(true);
+            }
         }
-
-        // 사망 이펙트 활성화
-        if (dieEffectInstance != null)
-        {
-            dieEffectInstance.SetActive(true);
-        }
-
         yield return new WaitForSeconds(0.8f);
+
+        // 2. 알파값만 0으로 변경
+        Color alphaZero = spriteRenderer.color;
+        alphaZero.a = 0f;
+        spriteRenderer.color = alphaZero;
+
         this.gameObject.SetActive(false);
     }
 

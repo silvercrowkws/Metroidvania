@@ -145,6 +145,11 @@ public class Player_Test : MonoBehaviour
     /// </summary>
     GameObject attackRange;
 
+    /// <summary>
+    /// 공격 중 여부 true : 공격 중, false : 공격 중 아님
+    /// </summary>
+    private bool isAttacking = false;
+
     // 플레이어 조작 관련 끝 --------------------------------------------------
 
     // 문 및 열쇠 관련 --------------------------------------------------
@@ -425,7 +430,12 @@ public class Player_Test : MonoBehaviour
     private void OnJump(InputAction.CallbackContext context)
     {
         //Debug.Log("점프");
-        
+        // 공격 중에는 점프 불가
+        if (isAttacking)
+        {
+            return;
+        }
+
         // 만약 점프가 가능하면
         if (jumpCount > 0)
         {
@@ -487,6 +497,7 @@ public class Player_Test : MonoBehaviour
     {
         // 만약 Idle이나 Run 상태에서 공격하면 그냥 Attack이 나가고
         // Dash 상태에서 공격하면 Dash-Attack이 나가고?
+        isAttacking = true;         // 공격 시작
 
         // 달리는 상태에서 Attack을 DashAttack이라고 합시다
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
@@ -516,6 +527,7 @@ public class Player_Test : MonoBehaviour
     {
         moveSpeed = defaultMoveSpeed;
         attackRange.SetActive(false);
+        isAttacking = false;        // 공격 종료
     }
 
     /// <summary>
