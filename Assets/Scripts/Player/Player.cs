@@ -177,7 +177,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 플레이어의 최대 체력
     /// </summary>
-    private float maxHP = 100f;
+    public float maxHP = 100f;
 
     /// <summary>
     /// 플레이어의 현재 체력

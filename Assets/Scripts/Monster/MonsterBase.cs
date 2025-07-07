@@ -173,6 +173,11 @@ public class MonsterBase : MonoBehaviour
     /// </summary>
     private bool isAttacking = false;
 
+    /// <summary>
+    /// 하트 패널
+    /// </summary>
+    HeartPanel heartPanel;
+
 
     protected virtual void Awake()
     {
@@ -247,11 +252,9 @@ public class MonsterBase : MonoBehaviour
         animator.speed = 1f;        // 활성화 될 때 애니메이션 속도 정상화
         maxHP = currentHP;          // 체력 정상화
 
-
-
         onMonsterDie += OnMonsterDie;
-        // 만약 몬스터의 HP가 0이되면 사망 연출 활성화?
-        // 만약 몬스터의 HP가 0이 되면 
+
+        heartPanel = FindAnyObjectByType<HeartPanel>();
     }
 
     protected virtual void OnDisable()
@@ -520,10 +523,12 @@ public class MonsterBase : MonoBehaviour
                 if (player != null)
                 {
                     player.HP -= attackPower;
+                    heartPanel.UpdateHearts(player.HP);
                 }
                 else if (player_test != null)
                 {
                     player_test.HP -= attackPower;
+                    heartPanel.UpdateHearts(player_test.HP);
                 }
                 else
                 {
