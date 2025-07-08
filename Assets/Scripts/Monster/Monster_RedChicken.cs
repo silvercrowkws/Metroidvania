@@ -32,7 +32,9 @@ public class Monster_RedChicken : MonsterBase
 
         ChaseRangeTrigger chaseRangeTrigger = transform.GetChild(0).GetComponent<ChaseRangeTrigger>();
         if (chaseRangeTrigger == null)
+        {
             chaseRangeTrigger = transform.GetChild(1).gameObject.AddComponent<ChaseRangeTrigger>();
+        }
 
         chaseRangeTrigger.Init(this);
 

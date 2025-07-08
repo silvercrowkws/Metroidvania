@@ -1758,7 +1758,7 @@ GameObject:
   - component: {fileID: 1025770813}
   - component: {fileID: 1025770812}
   - component: {fileID: 1025770814}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player_2
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -2936,6 +2936,7 @@ MonoBehaviour:
   hpPerHeart: 10
   fillPerHeart: 4
   heartPrefab: {fileID: 2973183806512174089, guid: 648b22377758a0a49bc7f782d0190d97, type: 3}
+  heartFills: []
 --- !u!1 &1994360984
 GameObject:
   m_ObjectHideFlags: 0

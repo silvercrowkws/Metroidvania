@@ -178,6 +178,11 @@ public class MonsterBase : MonoBehaviour
     /// </summary>
     HeartPanel heartPanel;
 
+    /// <summary>
+    /// 공격 반경
+    /// </summary>
+    float attackRadius = 1f;
+
 
     protected virtual void Awake()
     {
@@ -339,6 +344,9 @@ public class MonsterBase : MonoBehaviour
                     {
                         Attack();
                         firstAttackDone = true;
+
+                        // 플레이어가 반경 내에 있으면 데미지 적용 (Overlap 방식)
+                        TryAttackInProximity();
                         chaseTime = 0f;     // 첫 공격 후 타이머 리셋
                     }
 
@@ -346,6 +354,9 @@ public class MonsterBase : MonoBehaviour
                     else if (firstAttackDone && chaseTime >= nextAttackDelay)
                     {
                         Attack();
+
+                        // 플레이어가 반경 내에 있으면 데미지 적용 (Overlap 방식)
+                        TryAttackInProximity();
                         chaseTime = 0f;
                     }
                 }
@@ -509,6 +520,7 @@ public class MonsterBase : MonoBehaviour
             }
         }
         
+        /*// 플레이어에게 공격하는 부분
         if (collision.CompareTag("Player"))
         {
             Debug.Log("플레이어한테 충돌은 함");
@@ -537,7 +549,7 @@ public class MonsterBase : MonoBehaviour
 
                 StartCoroutine(MonsterDamageColldown());
             }
-        }
+        }*/
     }
 
     /// <summary>
@@ -584,5 +596,45 @@ public class MonsterBase : MonoBehaviour
         }
     }
 
-    
+    /// <summary>
+    /// 플레이어가 공격 반경내에 있으면 데미지 적용하는 함수 (Overlap 방식)
+    /// </summary>
+    private void TryAttackInProximity()
+    {
+        if (!isAttacking && attackCoolDown || playerTransform == null)
+            return;
+
+        //float attackRadius = 0.5f; // 공격 반경 조절 가능
+        LayerMask playerLayer = LayerMask.GetMask("Player"); // 플레이어 레이어
+
+        Collider2D hit = Physics2D.OverlapCircle(transform.position, attackRadius, playerLayer);
+        if (hit != null)
+        {
+            attackCoolDown = true;
+            //Debug.Log("OverlapCircle로 플레이어 감지 및 데미지 적용");
+
+            if (player != null)
+            {
+                player.HP -= attackPower;
+                heartPanel.UpdateHearts(player.HP);
+            }
+            else if (player_test != null)
+            {
+                player_test.HP -= attackPower;
+                heartPanel.UpdateHearts(player_test.HP);
+            }
+
+            StartCoroutine(MonsterDamageColldown());
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!Application.isPlaying) return; // 실행 중일 때만 그리기 (선택사항)
+
+        Gizmos.color = attackCoolDown ? Color.gray : Color.red;
+        //float attackRadius = 0.5f;
+        Gizmos.DrawWireSphere(transform.position, attackRadius);
+    }
+
 }
