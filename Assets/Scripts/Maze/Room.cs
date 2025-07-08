@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.AI;
 
 public enum Direction
 {

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Unity.AI.Navigation;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
 
@@ -11,6 +12,8 @@ public class RoomGenerator : MonoBehaviour
     [SerializeField] private GameObject doorPrefab;     // Door 프리팹
     [SerializeField] private GameObject keyPrefab;      // Key 프리팹
     [SerializeField] private GameObject monster_0;      // monster_0 프리팹
+
+    [SerializeField] private NavMeshSurface navMeshSurface;
 
     [Tooltip("미로의 반지름(방 개수는 반지름에 따라 1:3², 2:5², 3:7², 4:9², 5:11², 6: 13², 7:15², 8:17²... 뒷배경이 반지름 8까지 커버 가능함)")]
     [SerializeField] public int radius = 4;
@@ -53,6 +56,12 @@ public class RoomGenerator : MonoBehaviour
         SpawnDoorInRandomRoom();    // 미로 생성 후 랜덤 Room에 Door 생성
         SpawnKeyInRandomRoom();     // 미로 생성 후 랜덤 Room에 Key 생성
         SpawnMonsterInRandomRoom(); // 미로 생성 후 랜덤 Room에 Monster_0 생성
+
+        // NavMesh 굽기
+        if (navMeshSurface != null)
+        {
+            navMeshSurface.BuildNavMesh();
+        }
     }
 
     /// <summary>
