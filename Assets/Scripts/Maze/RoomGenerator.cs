@@ -60,6 +60,7 @@ public class RoomGenerator : MonoBehaviour
         // NavMesh 굽기
         if (navMeshSurface != null)
         {
+            Debug.Log("navMeshSurface 할당 됬고");
             navMeshSurface.BuildNavMesh();
         }
     }
