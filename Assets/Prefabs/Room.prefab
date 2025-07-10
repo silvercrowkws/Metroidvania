@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 7355350534422812477}
   - component: {fileID: 4899043333772592367}
   - component: {fileID: 5588597067981217887}
+  - component: {fileID: 3590663947972573339}
   m_Layer: 0
   m_Name: Right
   m_TagString: Wall
@@ -413,6 +414,22 @@ CompositeCollider2D:
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
   m_CompositeGameObject: {fileID: 667573010033765522}
+--- !u!114 &3590663947972573339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 667573010033765522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &2180602010839422163
 GameObject:
   m_ObjectHideFlags: 0
@@ -427,6 +444,7 @@ GameObject:
   - component: {fileID: 7181958540730077025}
   - component: {fileID: 5482024045240918719}
   - component: {fileID: 4802673714112933630}
+  - component: {fileID: 6051592409900672156}
   m_Layer: 0
   m_Name: Top
   m_TagString: Untagged
@@ -724,6 +742,22 @@ CompositeCollider2D:
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
   m_CompositeGameObject: {fileID: 2180602010839422163}
+--- !u!114 &6051592409900672156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2180602010839422163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &5888729567345752883
 GameObject:
   m_ObjectHideFlags: 0
@@ -738,6 +772,7 @@ GameObject:
   - component: {fileID: 8155408820820661366}
   - component: {fileID: 4610614084416747223}
   - component: {fileID: 8469040767998906518}
+  - component: {fileID: 6752772459888045954}
   m_Layer: 0
   m_Name: Left
   m_TagString: Wall
@@ -1053,6 +1088,22 @@ CompositeCollider2D:
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
   m_CompositeGameObject: {fileID: 5888729567345752883}
+--- !u!114 &6752772459888045954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5888729567345752883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &5889566246396743836
 GameObject:
   m_ObjectHideFlags: 0
@@ -1068,6 +1119,7 @@ GameObject:
   - component: {fileID: 4708675058442354725}
   - component: {fileID: 8629945276735100303}
   - component: {fileID: 9159874567989542221}
+  - component: {fileID: 4226790997298560122}
   m_Layer: 9
   m_Name: Room
   m_TagString: Wall
@@ -1084,7 +1136,7 @@ Transform:
   m_GameObject: {fileID: 5889566246396743836}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.39, y: -0.06, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1495,6 +1547,22 @@ MonoBehaviour:
   wallBottom: {fileID: 8198899923387295062}
   wallRight: {fileID: 667573010033765522}
   wallLeft: {fileID: 5888729567345752883}
+--- !u!114 &4226790997298560122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5889566246396743836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &8198899923387295062
 GameObject:
   m_ObjectHideFlags: 0
@@ -1509,6 +1577,7 @@ GameObject:
   - component: {fileID: 5309308251243399015}
   - component: {fileID: 1151902411465399637}
   - component: {fileID: 6468868078429319070}
+  - component: {fileID: 2207553041950510018}
   m_Layer: 9
   m_Name: Bottom
   m_TagString: Ground
@@ -1825,3 +1894,19 @@ CompositeCollider2D:
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
   m_CompositeGameObject: {fileID: 8198899923387295062}
+--- !u!114 &2207553041950510018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8198899923387295062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff

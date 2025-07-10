@@ -4,6 +4,8 @@ using UnityEngine;
 using Unity.AI.Navigation;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
+using UnityEngine.UI;
+using System;
 
 public class RoomGenerator : MonoBehaviour
 {
@@ -12,8 +14,9 @@ public class RoomGenerator : MonoBehaviour
     [SerializeField] private GameObject doorPrefab;     // Door 프리팹
     [SerializeField] private GameObject keyPrefab;      // Key 프리팹
     [SerializeField] private GameObject monster_0;      // monster_0 프리팹
+    [SerializeField] private GameObject monster_1;
 
-    [SerializeField] private NavMeshSurface navMeshSurface;
+    //[SerializeField] private NavMeshSurface navMeshSurface;
 
     [Tooltip("미로의 반지름(방 개수는 반지름에 따라 1:3², 2:5², 3:7², 4:9², 5:11², 6: 13², 7:15², 8:17²... 뒷배경이 반지름 8까지 커버 가능함)")]
     [SerializeField] public int radius = 4;
@@ -33,6 +36,11 @@ public class RoomGenerator : MonoBehaviour
         (new Vector2Int(0, -6), Direction.Bottom),
         (new Vector2Int(-6, 0), Direction.Left)
     };
+
+    /// <summary>
+    /// 미로 생성이 끝났음을 알림
+    /// </summary>
+    public Action onRoomGenerated;
 
     void Awake()
     {
@@ -57,12 +65,15 @@ public class RoomGenerator : MonoBehaviour
         SpawnKeyInRandomRoom();     // 미로 생성 후 랜덤 Room에 Key 생성
         SpawnMonsterInRandomRoom(); // 미로 생성 후 랜덤 Room에 Monster_0 생성
 
+        // 미로 생성 완료 후 길 굽기
+        onRoomGenerated?.Invoke();
+
         // NavMesh 굽기
-        if (navMeshSurface != null)
+        /*if (navMeshSurface != null)
         {
             Debug.Log("navMeshSurface 할당 됬고");
             navMeshSurface.BuildNavMesh();
-        }
+        }*/
     }
 
     /// <summary>
@@ -203,7 +214,7 @@ public class RoomGenerator : MonoBehaviour
 
         if (validRooms.Count == 0) return;
 
-        int randomIndex = Random.Range(0, validRooms.Count);
+        int randomIndex = UnityEngine.Random.Range(0, validRooms.Count);
         Room selectedRoom = validRooms[randomIndex];
 
         // LandObject 위치 찾기 (Room 구조에 맞게 수정)
@@ -230,7 +241,7 @@ public class RoomGenerator : MonoBehaviour
         if (validRooms.Count < 3) return;
 
         // 랜덤하게 섞고 3개 선택
-        var selectedRooms = validRooms.OrderBy(_ => Random.value).Take(3).ToList();
+        var selectedRooms = validRooms.OrderBy(_ => UnityEngine.Random.value).Take(3).ToList();
 
         for (int i = 0; i < selectedRooms.Count; i++)
         {
@@ -247,7 +258,7 @@ public class RoomGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// 미로 내 랜덤 Room 5개에만 Monster 생성(0,0 제외)
+    /// 미로 내 랜덤 Room 5개에만 NavigationMonster 생성(0,0 제외)
     /// </summary>
     private void SpawnMonsterInRandomRoom()
     {
@@ -261,7 +272,7 @@ public class RoomGenerator : MonoBehaviour
         if (validRooms.Count < 3) return;
 
         // 랜덤하게 섞고 3개 선택
-        var selectedRooms = validRooms.OrderBy(_ => Random.value).Take(5).ToList();
+        var selectedRooms = validRooms.OrderBy(_ => UnityEngine.Random.value).Take(5).ToList();
 
         for (int i = 0; i < selectedRooms.Count; i++)
         {
@@ -272,8 +283,11 @@ public class RoomGenerator : MonoBehaviour
 
             Vector3 spawnPosition = new Vector3(landObjectTransform.position.x, landObjectTransform.position.y + 0.6f, landObjectTransform.position.z);
 
-            GameObject monster_0_Obj = Instantiate(monster_0, spawnPosition, Quaternion.identity, landObjectTransform);
-            monster_0_Obj.name = $"Monster_0_{i + 1}";
+            /*GameObject monster_0_Obj = Instantiate(monster_0, spawnPosition, Quaternion.identity, landObjectTransform);
+            monster_0_Obj.name = $"Monster_0_{i + 1}";*/
+
+            GameObject monster_1_Obj = Instantiate(monster_1, spawnPosition, Quaternion.identity, landObjectTransform);
+            monster_1_Obj.name = $"Monster_1_{i + 1}";
         }
     }
 }

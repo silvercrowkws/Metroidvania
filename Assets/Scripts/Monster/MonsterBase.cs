@@ -3,11 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;   // Nav Mesh 를 사용하기 위해 필요한 using 문
 
 public enum MonsterType
 {
     None = 0,
     RedChicken,     // 레드 치킨 몬스터
+    Skeleton,       // 스켈레톤 몬스터
 }
 
 public enum MonsterMoveType
@@ -183,6 +185,11 @@ public class MonsterBase : MonoBehaviour
     /// </summary>
     float attackRadius = 1f;
 
+    /// <summary>
+    /// 네브매시 에이전트
+    /// </summary>
+    NavMeshAgent agent;
+
 
     protected virtual void Awake()
     {
@@ -273,6 +280,18 @@ public class MonsterBase : MonoBehaviour
     protected virtual void Start()
     {
         spawnPosition = transform.position;
+
+
+        if(monsterMoveType == MonsterMoveType.Walk)
+        {
+            agent = GetComponent<NavMeshAgent>();
+            if (agent != null)
+            {
+                agent.updateRotation = false;
+                agent.updateUpAxis = false;
+                agent.speed = moveSpeed; // 몬스터 속도와 동기화
+            }
+        }
     }
 
     protected virtual void Update()
@@ -403,6 +422,99 @@ public class MonsterBase : MonoBehaviour
         else if(monsterMoveType == MonsterMoveType.Walk)
         {
             // 나중에 몬스터 만들고 구현 필요
+
+            if (isChasing && playerTransform != null && agent != null)
+            {
+                float distance = Vector3.Distance(transform.position, playerTransform.position);
+
+                // 추격 종료 조건
+                if (distance >= 5f)
+                {
+                    isChasing = false;
+                    playerTransform = null;
+                    chaseTime = 0f;
+                    firstAttackDone = false;
+                    agent.ResetPath(); // 경로 초기화
+                }
+                else
+                {
+                    // NavMeshAgent로 플레이어 추적
+
+                    ResetTrigger();
+                    animator.SetTrigger("Moving");
+
+                    // 플레이어를 바라보도록 Flip X 처리 (기본 오른쪽)
+                    if (playerTransform.position.x < transform.position.x)
+                    {
+                        spriteRenderer.flipX = true;
+                    }
+                    else
+                    {
+                        spriteRenderer.flipX = false;
+                    }
+
+                    agent.SetDestination(playerTransform.position);
+
+                    // 추적 시간 누적 및 공격 타이밍 등 기존 로직
+                    chaseTime += Time.deltaTime;
+                    if (!firstAttackDone && chaseTime >= firstAttackDelay)
+                    {
+                        Attack();
+                        firstAttackDone = true;
+
+                        // 플레이어가 반경 내에 있으면 데미지 적용 (Overlap 방식)
+                        TryAttackInProximity();
+                        chaseTime = 0f;
+                    }
+
+                    // 첫 공격 이후 추적 시간이 다음 공격 딜레이를 넘었으면
+                    else if (firstAttackDone && chaseTime >= nextAttackDelay)
+                    {
+                        Attack();
+
+                        // 플레이어가 반경 내에 있으면 데미지 적용 (Overlap 방식)
+                        TryAttackInProximity();
+                        chaseTime = 0f;
+                    }
+                }
+            }
+            else if (agent != null)
+            {
+                // 추격 중이 아니면 원위치로 돌아감
+                float distanceToSpawn = Vector3.Distance(transform.position, spawnPosition);
+                if (distanceToSpawn > 0.1f)
+                {
+                    chaseTime = 0f;
+                    firstAttackDone = false;
+
+                    // 원위치로 돌아가는 중에는 Moving 트리거
+                    ResetTrigger();
+                    animator.SetTrigger("Moving");
+
+                    // 원위치 방향으로 Flip X 처리 (기본 오른쪽)
+                    if (spawnPosition.x < transform.position.x)
+                    {
+                        spriteRenderer.flipX = true;
+                    }
+                    else
+                    {
+                        spriteRenderer.flipX = false;
+                    }
+
+                    agent.SetDestination(spawnPosition);
+                }
+                else
+                {
+                    // 원위치 도착 시 Idle 트리거
+                    ResetTrigger();
+                    animator.SetTrigger("Idle");
+
+                    // Idle 시 기본 방향(오른쪽)으로 Flip X 해제
+                    spriteRenderer.flipX = false;
+
+                    agent.ResetPath();
+                }
+            }
         }
     }
 
@@ -590,6 +702,13 @@ public class MonsterBase : MonoBehaviour
 
         // 몬스터가 RedChicken의 경우 공격 방법
         if (monsterType == MonsterType.RedChicken)
+        {
+            ResetTrigger();
+            animator.SetTrigger("Attack");
+        }
+
+        // 몬스터가 Skeleton의 경우 공격 방법
+        else if (monsterType == MonsterType.Skeleton)
         {
             ResetTrigger();
             animator.SetTrigger("Attack");

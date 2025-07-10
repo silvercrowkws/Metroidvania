@@ -1200,7 +1200,7 @@ GameObject:
   - component: {fileID: 1162766340}
   - component: {fileID: 1162766339}
   m_Layer: 0
-  m_Name: Monster
+  m_Name: NavigationMonster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2628,7 +2628,7 @@ MonoBehaviour:
   m_BuildHeightMesh: 0
   m_MinRegionArea: 0
   m_HideEditorLogs: 0
-  m_NavMeshData: {fileID: 23800000, guid: 2dec4210c46f77f46b207bba77a18f0b, type: 2}
+  m_NavMeshData: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

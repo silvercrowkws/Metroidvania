@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI; // Nav Mesh 를 사용하기 위해 필요한 using 문
 
-public class Monster : MonoBehaviour
+public class NavigationMonster : MonoBehaviour
 {
     [SerializeField] Transform target; // 따라갈 타겟
 
