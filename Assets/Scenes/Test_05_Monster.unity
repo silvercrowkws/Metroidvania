@@ -172,6 +172,7 @@ MonoBehaviour:
   doorPrefab: {fileID: 546653982712998797, guid: 7c37505655047504db4b077aadcdb91a, type: 3}
   keyPrefab: {fileID: 6023572433624502454, guid: 967c60376a83e474e80cb1c1b9253040, type: 3}
   monster_0: {fileID: 1642112140218739397, guid: f1d674cc5b9f87143b285b129246ceec, type: 3}
+  monster_1: {fileID: 0}
   radius: 4
   seed: -1
 --- !u!1 &519420028
@@ -500,7 +501,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1092,7 +1093,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1160,6 +1161,8 @@ MonoBehaviour:
   radius: 1.25
   weaponSpeed: 360
   hasAllKeys: 0
+  playerAttackPower: 25
+  maxHP: 100
 --- !u!61 &1749687901
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -305,19 +305,39 @@ public class MonsterBase : MonoBehaviour
         // 공격이 활성화 되었으면
         if (isAttacking)
         {
-            float attackSpeed = moveSpeed * 5f;       // 공격 속도(원하는 값으로 조절)
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, attackSpeed * Time.deltaTime);     // 적 위치로 빠르게 이동하는 부분
-
-            // 목표 위치에 도달하면 공격 종료, 다시 추격 시작
-            if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+            if(monsterMoveType == MonsterMoveType.Flying)
             {
-                isAttacking = false;
-                isChasing = true;
+                float attackSpeed = moveSpeed * 5f;       // 공격 속도(원하는 값으로 조절)
+                transform.position = Vector3.MoveTowards(transform.position, targetPosition, attackSpeed * Time.deltaTime);     // 적 위치로 빠르게 이동하는 부분
 
-                ResetTrigger();
-                animator.SetTrigger("Moving");
+                // 목표 위치에 도달하면 공격 종료, 다시 추격 시작
+                if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+                {
+                    isAttacking = false;
+                    isChasing = true;
+
+                    ResetTrigger();
+                    animator.SetTrigger("Moving");
+                }
+                return; // 공격 중에는 다른 동작 안 함
             }
-            return; // 공격 중에는 다른 동작 안 함
+            else if (monsterMoveType == MonsterMoveType.Walk && agent != null)
+            {
+                // NavMeshAgent로 목표 위치까지 이동
+                agent.SetDestination(targetPosition);
+
+                // 목적지 도달 체크
+                bool arrived = !agent.pathPending && agent.remainingDistance <= 0.05f;
+                if (arrived)
+                {
+                    isAttacking = false;
+                    isChasing = true;
+                    ResetTrigger();
+                    animator.SetTrigger("Moving");
+                    agent.ResetPath();
+                }
+                return;
+            }
         }
 
         // 비행 가능한 몬스터인 경우 추적 방법
@@ -435,6 +455,9 @@ public class MonsterBase : MonoBehaviour
                     chaseTime = 0f;
                     firstAttackDone = false;
                     agent.ResetPath(); // 경로 초기화
+
+                    // 원위치로 돌아가기 시작
+                    agent.SetDestination(spawnPosition);
                 }
                 else
                 {
@@ -480,9 +503,10 @@ public class MonsterBase : MonoBehaviour
             }
             else if (agent != null)
             {
-                // 추격 중이 아니면 원위치로 돌아감
+                /*// 추격 중이 아니면 원위치로 돌아감
                 float distanceToSpawn = Vector3.Distance(transform.position, spawnPosition);
-                if (distanceToSpawn > 0.1f)
+
+                if (!isChasing && distanceToSpawn > 0.1f)
                 {
                     chaseTime = 0f;
                     firstAttackDone = false;
@@ -503,7 +527,7 @@ public class MonsterBase : MonoBehaviour
 
                     agent.SetDestination(spawnPosition);
                 }
-                else
+                else if(!isChasing && distanceToSpawn <= 0.1f)
                 {
                     // 원위치 도착 시 Idle 트리거
                     ResetTrigger();
@@ -512,6 +536,36 @@ public class MonsterBase : MonoBehaviour
                     // Idle 시 기본 방향(오른쪽)으로 Flip X 해제
                     spriteRenderer.flipX = false;
 
+                    agent.ResetPath();
+                }*/
+
+                // NavMeshAgent가 목적지에 거의 도달했는지 체크
+                bool arrived = !agent.pathPending && agent.remainingDistance <= 0.05f;
+
+                if (!isChasing && !arrived)
+                {
+                    chaseTime = 0f;
+                    firstAttackDone = false;
+
+                    ResetTrigger();
+                    animator.SetTrigger("Moving");
+
+                    if (spawnPosition.x < transform.position.x)
+                    {
+                        spriteRenderer.flipX = true;
+                    }
+                    else
+                    {
+                        spriteRenderer.flipX = false;
+                    }
+
+                    agent.SetDestination(spawnPosition);
+                }
+                else if (!isChasing && arrived)
+                {
+                    ResetTrigger();
+                    animator.SetTrigger("Idle");
+                    spriteRenderer.flipX = false;
                     agent.ResetPath();
                 }
             }
