@@ -10,6 +10,7 @@ public enum MonsterType
     None = 0,
     RedChicken,     // 레드 치킨 몬스터
     Skeleton,       // 스켈레톤 몬스터
+    FlyingEye,      // 플라잉아이 몬스터
 }
 
 public enum MonsterMoveType
@@ -189,6 +190,8 @@ public class MonsterBase : MonoBehaviour
     /// 네브매시 에이전트
     /// </summary>
     NavMeshAgent agent;
+
+    // 공격 받았을 때 Take Hit 로 넘어가는 부분 필요
 
 
     protected virtual void Awake()
@@ -763,6 +766,12 @@ public class MonsterBase : MonoBehaviour
 
         // 몬스터가 Skeleton의 경우 공격 방법
         else if (monsterType == MonsterType.Skeleton)
+        {
+            ResetTrigger();
+            animator.SetTrigger("Attack");
+        }
+
+        else if(monsterType == MonsterType.FlyingEye)
         {
             ResetTrigger();
             animator.SetTrigger("Attack");

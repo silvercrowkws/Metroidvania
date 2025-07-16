@@ -13,8 +13,9 @@ public class RoomGenerator : MonoBehaviour
     [SerializeField] private Transform roomParent;      // 부모 오브젝트
     [SerializeField] private GameObject doorPrefab;     // Door 프리팹
     [SerializeField] private GameObject keyPrefab;      // Key 프리팹
-    [SerializeField] private GameObject monster_0;      // monster_0 프리팹
-    [SerializeField] private GameObject monster_1;
+    [SerializeField] private GameObject monster_RedChicken;      // monster_RedChicken 프리팹
+    [SerializeField] private GameObject monster_Skeleton;
+    [SerializeField] private GameObject monster_FlyingEye;
 
     //[SerializeField] private NavMeshSurface navMeshSurface;
 
@@ -283,11 +284,14 @@ public class RoomGenerator : MonoBehaviour
 
             Vector3 spawnPosition = new Vector3(landObjectTransform.position.x, landObjectTransform.position.y + 0.6f, landObjectTransform.position.z);
 
-            /*GameObject monster_0_Obj = Instantiate(monster_0, spawnPosition, Quaternion.identity, landObjectTransform);
+            /*GameObject monster_0_Obj = Instantiate(monster_RedChicken, spawnPosition, Quaternion.identity, landObjectTransform);
             monster_0_Obj.name = $"Monster_0_{i + 1}";*/
 
-            GameObject monster_1_Obj = Instantiate(monster_1, spawnPosition, Quaternion.identity, landObjectTransform);
-            monster_1_Obj.name = $"Monster_1_{i + 1}";
+            /*GameObject monster_1_Obj = Instantiate(monster_Skeleton, spawnPosition, Quaternion.identity, landObjectTransform);
+            monster_1_Obj.name = $"Monster_1_{i + 1}";*/
+
+            GameObject monster_2_Obj = Instantiate(monster_FlyingEye, spawnPosition, Quaternion.identity, landObjectTransform);
+            monster_2_Obj.name = $"Monster_2_{i + 1}";
         }
     }
 }
