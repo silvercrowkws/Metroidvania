@@ -175,13 +175,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Monster_FlyingEye
       objectReference: {fileID: 0}
-    - target: {fileID: 3559498271361449802, guid: ed6df46cef82f8148ba1187aaf945978, type: 3}
-      propertyPath: m_AnchorMax.x
+    - target: {fileID: 3273290790659399757, guid: ed6df46cef82f8148ba1187aaf945978, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3559498271361449802, guid: ed6df46cef82f8148ba1187aaf945978, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3559498271361449802, guid: ed6df46cef82f8148ba1187aaf945978, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -276,15 +280,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7154522850613739563, guid: c9293299fd29a3a44a18a9510c08b34f, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7154522850613739563, guid: c9293299fd29a3a44a18a9510c08b34f, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8232463299656261448, guid: c9293299fd29a3a44a18a9510c08b34f, type: 3}
       propertyPath: m_Name
       value: Monster_Skeleton (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8232463299656261448, guid: c9293299fd29a3a44a18a9510c08b34f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8658295044683051360, guid: c9293299fd29a3a44a18a9510c08b34f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -792,15 +800,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 889859029360610929, guid: f1d674cc5b9f87143b285b129246ceec, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 889859029360610929, guid: f1d674cc5b9f87143b285b129246ceec, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1642112140218739397, guid: f1d674cc5b9f87143b285b129246ceec, type: 3}
       propertyPath: m_Name
       value: Monster_RedChicken
+      objectReference: {fileID: 0}
+    - target: {fileID: 1642112140218739397, guid: f1d674cc5b9f87143b285b129246ceec, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5137636767701789278, guid: f1d674cc5b9f87143b285b129246ceec, type: 3}
       propertyPath: m_LocalPosition.x
