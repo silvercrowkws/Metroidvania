@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;   // Nav Mesh 를 사용하기 위해 필요한 using 문
+using UnityEngine.AI;
+using UnityEngine.UI;   // Nav Mesh 를 사용하기 위해 필요한 using 문
 
 public enum MonsterType
 {
@@ -81,6 +82,7 @@ public class MonsterBase : MonoBehaviour
             {
                 //currentHP = value;
                 currentHP = Mathf.Clamp(value, 0, maxHP);
+                healthSlider.value = currentHP / maxHP;
                 if (currentHP < 1)
                 {
                     currentHP = 0;
@@ -191,7 +193,10 @@ public class MonsterBase : MonoBehaviour
     /// </summary>
     NavMeshAgent agent;
 
-    // 공격 받았을 때 Take Hit 로 넘어가는 부분 필요
+    /// <summary>
+    /// 몬스터의 체력을 보여주기 위한 슬라이더
+    /// </summary>
+    Slider healthSlider;
 
 
     protected virtual void Awake()
@@ -270,6 +275,11 @@ public class MonsterBase : MonoBehaviour
         onMonsterDie += OnMonsterDie;
 
         heartPanel = FindAnyObjectByType<HeartPanel>();
+
+        Transform child = transform.GetChild(1);
+
+        healthSlider = child.GetChild(0).GetComponent<Slider>();
+        healthSlider.value = 1;
     }
 
     protected virtual void OnDisable()
@@ -277,6 +287,7 @@ public class MonsterBase : MonoBehaviour
         this.gameObject.transform.position = spawnPosition;
 
         dieEffectInstance.SetActive(false);     // 폭발 비활성화
+        healthSlider.value = 1;                       // 체력 슬라이더 조정
         onMonsterDie -= OnMonsterDie;
     }
 
@@ -746,6 +757,7 @@ public class MonsterBase : MonoBehaviour
         animator.ResetTrigger("Idle");
         animator.ResetTrigger("Moving");
         animator.ResetTrigger("Attack");
+        //animator.ResetTrigger("TakeHit");
     }
 
     /// <summary>
@@ -798,12 +810,20 @@ public class MonsterBase : MonoBehaviour
             if (player != null)
             {
                 player.HP -= attackPower;
-                heartPanel.UpdateHearts(player.HP);
+
+                if (heartPanel != null)
+                {
+                    heartPanel.UpdateHearts(player.HP);
+                }
             }
             else if (player_test != null)
             {
                 player_test.HP -= attackPower;
-                heartPanel.UpdateHearts(player_test.HP);
+
+                if (heartPanel != null)
+                {
+                    heartPanel.UpdateHearts(player_test.HP);
+                }
             }
 
             StartCoroutine(MonsterDamageColldown());
