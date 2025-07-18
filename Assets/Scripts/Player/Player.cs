@@ -580,7 +580,7 @@ public class Player : MonoBehaviour
             // 점프가 가능하면 점프를 안하고 떨어졌다는 소리
             if (jumpCount > 0)
             {
-                // 만약 현재 애니메이터가 Idle or Walk 이면
+                // 만약 현재 애니메이터가 Idle or Flying 이면
                 if (stateInfo.IsName("Idle") || stateInfo.IsName("Walk"))
                 {
                     //ResetTrigger();
@@ -602,7 +602,7 @@ public class Player : MonoBehaviour
         if(collision.gameObject.CompareTag("Ground"))
         {
             isGround = true;
-            // 점프 중이 아닐 때만 Idle/Walk 트리거를 준다
+            // 점프 중이 아닐 때만 Idle/Flying 트리거를 준다
             AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
             if (!stateInfo.IsName("Jump") && !isDash && !isCrawl)
             {

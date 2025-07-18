@@ -17,8 +17,8 @@ public enum MonsterType
 public enum MonsterMoveType
 {
     None = 0,
+    Walk,           // 비행 불가능 몬스터
     Flying,         // 비행 가능 몬스터
-    Walk,           // 비행 불가 몬스터
 }
 
 public class MonsterBase : MonoBehaviour
@@ -296,7 +296,7 @@ public class MonsterBase : MonoBehaviour
         spawnPosition = transform.position;
 
 
-        if(monsterMoveType == MonsterMoveType.Walk)
+        if(monsterMoveType == MonsterMoveType.Flying)
         {
             agent = GetComponent<NavMeshAgent>();
             if (agent != null)
@@ -304,6 +304,7 @@ public class MonsterBase : MonoBehaviour
                 agent.updateRotation = false;
                 agent.updateUpAxis = false;
                 agent.speed = moveSpeed; // 몬스터 속도와 동기화
+                agent.updateUpAxis = false;
             }
         }
     }
@@ -319,7 +320,7 @@ public class MonsterBase : MonoBehaviour
         // 공격이 활성화 되었으면
         if (isAttacking)
         {
-            if(monsterMoveType == MonsterMoveType.Flying)
+            if(monsterMoveType == MonsterMoveType.Walk)
             {
                 float attackSpeed = moveSpeed * 5f;       // 공격 속도(원하는 값으로 조절)
                 transform.position = Vector3.MoveTowards(transform.position, targetPosition, attackSpeed * Time.deltaTime);     // 적 위치로 빠르게 이동하는 부분
@@ -335,7 +336,7 @@ public class MonsterBase : MonoBehaviour
                 }
                 return; // 공격 중에는 다른 동작 안 함
             }
-            else if (monsterMoveType == MonsterMoveType.Walk && agent != null)
+            else if (monsterMoveType == MonsterMoveType.Flying && agent != null)
             {
                 // NavMeshAgent로 목표 위치까지 이동
                 agent.SetDestination(targetPosition);
@@ -352,12 +353,132 @@ public class MonsterBase : MonoBehaviour
                 }
                 return;
             }
-        }
+        }        
 
-        // 비행 가능한 몬스터인 경우 추적 방법
-        if (monsterMoveType == MonsterMoveType.Flying)
+        // 몬스터 타입에 맞게 행동하는 함수
+        OnMonsterActive();
+    }
+
+    /// <summary>
+    /// 몬스터 타입에 맞게 행동하는 함수
+    /// </summary>
+    protected virtual void OnMonsterActive()
+    {
+        // 걷기 가능한 몬스터인 경우 추적 방법
+        if (monsterMoveType == MonsterMoveType.Walk)
         {
             if (isChasing && playerTransform != null)
+            {
+                float distance = Vector3.Distance(transform.position, playerTransform.position);
+
+                // X축 방향만 추적 (Y는 고정)
+                Vector3 targetPos = new Vector3(playerTransform.position.x, transform.position.y, transform.position.z);
+                Vector3 dir = (targetPos - transform.position).normalized;
+
+                // 바닥 체크 (앞쪽 아래로 Raycast)
+                float rayDistance = 1.0f;
+                Vector3 rayOrigin = transform.position + new Vector3(dir.x * 0.5f, 0, 0);
+
+                // "GroundBake" 레이어만 체크
+                int groundMask = LayerMask.GetMask("GroundBake");
+                RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.down, rayDistance, groundMask);
+
+                Debug.DrawRay(rayOrigin, Vector2.down * rayDistance, Color.red);
+
+                bool isGroundAhead = hit.collider != null;
+
+                if (hit.collider == null)
+                    Debug.Log("Raycast: 바닥 없음");
+                else
+                    Debug.Log("Raycast: " + hit.collider.tag);
+
+                // 추격 종료 조건: 거리 or 바닥 없음
+                if (distance >= 5f || !isGroundAhead)
+                {
+                    isChasing = false;
+                    chaseTime = 0f;
+                    firstAttackDone = false;
+                    ResetTrigger();
+                    animator.SetTrigger("Idle");
+                    return;
+                }
+
+                // 추격 중일 때 Moving 트리거
+                ResetTrigger();
+                animator.SetTrigger("Moving");
+
+                // 플레이어를 바라보도록 Flip X 처리 (기본 오른쪽)
+                if (playerTransform.position.x < transform.position.x)
+                {
+                    spriteRenderer.flipX = true;
+                }
+                else
+                {
+                    spriteRenderer.flipX = false;
+                }
+
+                transform.position += dir * moveSpeed * Time.deltaTime;
+
+                // 추적 시간 누적
+                chaseTime += Time.deltaTime;
+
+                // 첫 공격을 안했고 추적 시간이 첫 공격 딜레이를 넘었으면
+                if (!firstAttackDone && chaseTime >= firstAttackDelay)
+                {
+                    Attack();
+                    firstAttackDone = true;
+
+                    // 플레이어가 반경 내에 있으면 데미지 적용 (Overlap 방식)
+                    TryAttackInProximity();
+                    chaseTime = 0f;     // 첫 공격 후 타이머 리셋
+                }
+                // 첫 공격 이후 추적 시간이 다음 공격 딜레이를 넘었으면
+                else if (firstAttackDone && chaseTime >= nextAttackDelay)
+                {
+                    Attack();
+
+                    // 플레이어가 반경 내에 있으면 데미지 적용 (Overlap 방식)
+                    TryAttackInProximity();
+                    chaseTime = 0f;
+                }
+            }
+            else
+            {
+                // 추격 중이 아니면 원위치로 돌아감
+                if (Vector3.Distance(transform.position, spawnPosition) > 0.1f)
+                {
+                    chaseTime = 0f;
+                    firstAttackDone = false;
+
+                    // 원위치로 돌아가는 중에는 Moving 트리거
+                    ResetTrigger();
+                    animator.SetTrigger("Moving");
+
+                    // 원위치 방향으로 Flip X 처리 (기본 오른쪽)
+                    if (spawnPosition.x < transform.position.x)
+                    {
+                        spriteRenderer.flipX = true;
+                    }
+                    else
+                    {
+                        spriteRenderer.flipX = false;
+                    }
+
+                    Vector3 dir = (spawnPosition - transform.position).normalized;
+                    transform.position += dir * moveSpeed * Time.deltaTime;
+                }
+                else
+                {
+                    // 원위치 도착 시 Idle 트리거
+                    ResetTrigger();
+                    animator.SetTrigger("Idle");
+
+                    // Idle 시 기본 방향(오른쪽)으로 Flip X 해제
+                    spriteRenderer.flipX = false;
+                }
+            }
+
+            /*if (isChasing && playerTransform != null)
             {
                 float distance = Vector3.Distance(transform.position, playerTransform.position);
 
@@ -448,12 +569,12 @@ public class MonsterBase : MonoBehaviour
                     // Idle 시 기본 방향(오른쪽)으로 Flip X 해제
                     spriteRenderer.flipX = false;
                 }
-            }
+            }*/
         }
 
 
-        // 걷기 가능한 몬스터의 경우 추적 방법
-        else if(monsterMoveType == MonsterMoveType.Walk)
+        // 비행 가능한 몬스터의 경우 추적 방법
+        else if (monsterMoveType == MonsterMoveType.Flying)
         {
             // 나중에 몬스터 만들고 구현 필요
 
@@ -765,7 +886,16 @@ public class MonsterBase : MonoBehaviour
     /// </summary>
     protected void Attack()
     {
-        targetPosition = playerTransform.position;
+        if (monsterMoveType == MonsterMoveType.Walk)
+        {
+            // X, Z는 플레이어 위치, Y는 스폰 위치로 고정
+            targetPosition = new Vector3(playerTransform.position.x, spawnPosition.y, playerTransform.position.z);
+        }
+        else if(monsterMoveType == MonsterMoveType.Flying)
+        {
+            targetPosition = playerTransform.position;
+        }
+
         isAttacking = true;
         isChasing = false;      // 추격 중단
 

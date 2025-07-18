@@ -12,7 +12,7 @@ public class Monster_FlyingEye : MonsterBase
         maxHP = currentHP;
         attackPower = 10.0f;
         monsterType = MonsterType.FlyingEye;
-        monsterMoveType = MonsterMoveType.Walk;
+        monsterMoveType = MonsterMoveType.Flying;
         base.OnEnable();
     }
 
