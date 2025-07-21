@@ -12,6 +12,8 @@ public enum MonsterType
     RedChicken,     // 레드 치킨 몬스터
     Skeleton,       // 스켈레톤 몬스터
     FlyingEye,      // 플라잉아이 몬스터
+    Goblin,         // 고블린 몬스터
+    Mushroom,       // 버섯 몬스터
 }
 
 public enum MonsterMoveType
@@ -387,10 +389,15 @@ public class MonsterBase : MonoBehaviour
 
                 bool isGroundAhead = hit.collider != null;
 
+                // 디버그로 확인
                 if (hit.collider == null)
-                    Debug.Log("Raycast: 바닥 없음");
+                {
+                    //Debug.Log("Raycast: 바닥 없음");
+                }
                 else
-                    Debug.Log("Raycast: " + hit.collider.tag);
+                {
+                    //Debug.Log("Raycast: " + hit.collider.tag);
+                }
 
                 // 추격 종료 조건: 거리 or 바닥 없음
                 if (distance >= 5f || !isGroundAhead)
@@ -914,6 +921,18 @@ public class MonsterBase : MonoBehaviour
         }
 
         else if(monsterType == MonsterType.FlyingEye)
+        {
+            ResetTrigger();
+            animator.SetTrigger("Attack");
+        }
+
+        else if(monsterType == MonsterType.Goblin)
+        {
+            ResetTrigger();
+            animator.SetTrigger("Attack");
+        }
+        
+        else if(monsterType == MonsterType.Mushroom)
         {
             ResetTrigger();
             animator.SetTrigger("Attack");

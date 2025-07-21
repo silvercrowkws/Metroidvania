@@ -16,6 +16,8 @@ public class RoomGenerator : MonoBehaviour
     [SerializeField] private GameObject monster_RedChicken;      // monster_RedChicken 프리팹
     [SerializeField] private GameObject monster_Skeleton;
     [SerializeField] private GameObject monster_FlyingEye;
+    [SerializeField] private GameObject monster_Goblin;
+    [SerializeField] private GameObject monster_Mushroom;
 
     //[SerializeField] private NavMeshSurface navMeshSurface;
 
@@ -259,7 +261,7 @@ public class RoomGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// 미로 내 랜덤 Room 5개에만 NavigationMonster 생성(0,0 제외)
+    /// 미로 내 랜덤 Room 5개에만 몬스터 생성(0,0 제외)
     /// </summary>
     private void SpawnMonsterInRandomRoom()
     {
