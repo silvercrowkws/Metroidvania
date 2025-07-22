@@ -23,9 +23,9 @@ TagManager:
   - attackRange
   - Player
   - GroundBake
-  - 
-  - 
-  - 
+  - Background
+  - RoomBase
+  - Door
   - 
   - 
   - 
@@ -75,4 +75,7 @@ TagManager:
     locked: 0
   - name: Range
     uniqueID: 981370383
+    locked: 0
+  - name: UI
+    uniqueID: 180946271
     locked: 0

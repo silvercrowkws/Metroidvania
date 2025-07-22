@@ -411,7 +411,7 @@ GameObject:
   - component: {fileID: 6254152884791448104}
   - component: {fileID: 7866533428238455878}
   m_Layer: 5
-  m_Name: Canvas (1)
+  m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -457,7 +457,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: 180946271
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &6254152884791448104

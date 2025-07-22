@@ -6,6 +6,7 @@ using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
 using System;
+using System.Collections;
 
 public class RoomGenerator : MonoBehaviour
 {
@@ -13,6 +14,16 @@ public class RoomGenerator : MonoBehaviour
     [SerializeField] private Transform roomParent;      // 부모 오브젝트
     [SerializeField] private GameObject doorPrefab;     // Door 프리팹
     [SerializeField] private GameObject keyPrefab;      // Key 프리팹
+
+    // 미니맵
+    [SerializeField] private GameObject miniMapIconPrefab; // UI Image 프리팹
+    [SerializeField] private RectTransform miniMapParent;  // Canvas 하위 오브젝트
+    [SerializeField] private float miniMapScale = 30f;     // UI에서 방 간격(픽셀)
+
+    [SerializeField] private Camera miniMapCamera;
+    [SerializeField] private RenderTexture miniMapRT;
+    [SerializeField] private UnityEngine.UI.Image miniMapPanelImage;
+
     [SerializeField] private GameObject monster_RedChicken;      // monster_RedChicken 프리팹
     [SerializeField] private GameObject monster_Skeleton;
     [SerializeField] private GameObject monster_FlyingEye;
@@ -62,6 +73,14 @@ public class RoomGenerator : MonoBehaviour
 
     void Start()
     {
+        // RenderTexture가 없으면 직접 생성해서 카메라에 할당
+        if (miniMapRT == null)
+        {
+            miniMapRT = new RenderTexture(512, 512, 0, RenderTextureFormat.ARGB32);
+            miniMapRT.Create();
+        }
+        miniMapCamera.targetTexture = miniMapRT;
+
         GenerateRooms();
         GenerateMazeWithInitialOpening();
         SpawnDoorInRandomRoom();    // 미로 생성 후 랜덤 Room에 Door 생성
@@ -77,6 +96,50 @@ public class RoomGenerator : MonoBehaviour
             Debug.Log("navMeshSurface 할당 됬고");
             navMeshSurface.BuildNavMesh();
         }*/
+
+        // 미니맵 이미지 생성
+        //GenerateMiniMapTexture();
+        //CaptureMiniMap();
+
+        StartCoroutine(CaptureMiniMapNextFrame());
+    }
+
+    public Sprite testMiniMapSprite;
+
+    private void CaptureMiniMap()
+    {
+        // 미니맵 카메라가 미로 전체를 찍도록 위치/사이즈 조정 후 호출
+
+        RenderTexture currentRT = RenderTexture.active;
+        RenderTexture.active = miniMapRT;
+
+        /*Texture2D tex = new Texture2D(miniMapRT.width, miniMapRT.height, TextureFormat.RGB24, false);
+        tex.ReadPixels(new Rect(0, 0, miniMapRT.width, miniMapRT.height), 0, 0);
+        tex.Apply();
+
+        RenderTexture.active = currentRT;
+
+        Sprite miniMapSprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+        miniMapPanelImage.sprite = miniMapSprite;*/
+
+        Texture2D tex = new Texture2D(miniMapRT.width, miniMapRT.height, TextureFormat.RGB24, false);
+        tex.ReadPixels(new Rect(0, 0, miniMapRT.width, miniMapRT.height), 0, 0);
+        tex.Apply();
+
+        RenderTexture.active = currentRT;
+
+        // 3. Texture2D를 Sprite로 변환
+        Sprite miniMapSprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+        testMiniMapSprite = miniMapSprite;
+
+        // 4. UI Image에 Sprite 할당
+        miniMapPanelImage.sprite = miniMapSprite;
+    }
+
+    private IEnumerator CaptureMiniMapNextFrame()
+    {
+        yield return new WaitForEndOfFrame();
+        CaptureMiniMap();
     }
 
     /// <summary>
@@ -84,6 +147,50 @@ public class RoomGenerator : MonoBehaviour
     /// </summary>
     private void GenerateRooms()
     {
+        /*foreach (var pos in mazePositions)
+        {
+            Vector3 worldPos = new Vector3(pos.x, pos.y, 0);
+            GameObject roomObj = Instantiate(roomPrefab, worldPos, Quaternion.identity, roomParent);
+            roomObj.name = $"Room_({pos.x},{pos.y})";
+
+            Room room = roomObj.GetComponent<Room>();
+            if (room == null)
+            {
+                Debug.LogError($"Room 컴포넌트가 Room Prefab에 없습니다: {roomObj.name}");
+                continue;
+            }
+
+            roomDictionary[pos] = room;
+
+            // room 생성 후 미니맵처리
+            GameObject miniMapIcon = Instantiate(miniMapIconPrefab, miniMapParent);
+            miniMapIcon.GetComponent<RectTransform>().anchoredPosition = new Vector2(pos.x, pos.y) * miniMapScale;
+            MiniMapManager.Instance.RegisterRoom(room, miniMapIcon);
+        }*/
+
+        int minX = mazePositions.Min(p => p.x);
+        int minY = mazePositions.Min(p => p.y);
+        int maxX = mazePositions.Max(p => p.x);
+        int maxY = mazePositions.Max(p => p.y);
+
+        float panelWidth = miniMapParent.rect.width;
+        float panelHeight = miniMapParent.rect.height;
+
+        float rangeX = Mathf.Max(1, maxX - minX);
+        float rangeY = Mathf.Max(1, maxY - minY);
+
+        // 첫 방의 목표 위치
+        float targetX = 90f;
+        float targetY = -90f;
+
+        float firstNormalizedX = (float)(mazePositions[0].x - minX) / rangeX;
+        float firstNormalizedY = (float)(mazePositions[0].y - minY) / rangeY;
+        float firstIconX = firstNormalizedX * panelWidth;
+        float firstIconY = -firstNormalizedY * panelHeight;
+
+        float offsetX = targetX - firstIconX;
+        float offsetY = targetY - firstIconY;
+
         foreach (var pos in mazePositions)
         {
             Vector3 worldPos = new Vector3(pos.x, pos.y, 0);
@@ -98,6 +205,18 @@ public class RoomGenerator : MonoBehaviour
             }
 
             roomDictionary[pos] = room;
+
+            float normalizedX = (float)(pos.x - minX) / rangeX;
+            float normalizedY = (float)(pos.y - minY) / rangeY;
+
+            float iconX = normalizedX * panelWidth + offsetX;
+            float iconY = normalizedY * panelHeight + offsetY - 200;
+
+            GameObject miniMapIcon = Instantiate(miniMapIconPrefab, miniMapParent);
+            miniMapIcon.GetComponent<RectTransform>().anchoredPosition = new Vector2(iconX, iconY);
+
+            // 수정: roomDictionary[pos] 대신 room 객체 직접 전달
+            MiniMapManager.Instance.RegisterRoom(room, miniMapIcon);
         }
     }
 
@@ -201,7 +320,49 @@ public class RoomGenerator : MonoBehaviour
             Direction.Right => Direction.Left,
             _ => dir
         };
-    }
+    }/*
+
+    /// <summary>
+    /// 스크린샷 찍는 함수(미니맵 용도)
+    /// </summary>
+    private void GenerateMiniMapTexture()
+    {
+        // 1. 미로 전체의 최소/최대 좌표 구하기
+        int minX = mazePositions.Min(p => p.x);
+        int minY = mazePositions.Min(p => p.y);
+        int maxX = mazePositions.Max(p => p.x);
+        int maxY = mazePositions.Max(p => p.y);
+
+        int cellSize = 4; // 한 방을 몇 픽셀로 그릴지 (조절 가능)
+        int width = (maxX - minX) / 6 + 1;
+        int height = (maxY - minY) / 6 + 1;
+
+        Texture2D tex = new Texture2D(width * cellSize, height * cellSize);
+
+        // 2. 전체를 검은색(배경)으로 초기화
+        Color32[] fill = Enumerable.Repeat(new Color32(0, 0, 0, 255), tex.width * tex.height).ToArray();
+        tex.SetPixels32(fill);
+
+        // 3. 각 Room 위치에 흰색(방) 픽셀 칠하기
+        foreach (var pos in mazePositions)
+        {
+            int x = (pos.x - minX) / 6;
+            int y = (pos.y - minY) / 6;
+            for (int dx = 0; dx < cellSize; dx++)
+            {
+                for (int dy = 0; dy < cellSize; dy++)
+                {
+                    tex.SetPixel(x * cellSize + dx, y * cellSize + dy, Color.white);
+                }
+            }
+        }
+
+        tex.Apply();
+
+        // 4. Texture2D를 Sprite로 변환해서 MiniMapPanel에 적용
+        Sprite miniMapSprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+        miniMapPanelImage.sprite = miniMapSprite;
+    }*/
 
     /// <summary>
     /// 미로 내 랜덤 Room 1개에만 Door 생성(0,0 제외)

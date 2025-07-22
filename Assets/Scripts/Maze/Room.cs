@@ -35,6 +35,11 @@ public class Room : MonoBehaviour
     /// </summary>
     private Tilemap tilemap;*/
 
+    /// <summary>
+    /// 플레이어가 이 방에 방문했는지 확인하는 bool 변수(미니맵 밝히기 용도)
+    /// </summary>
+    public bool isVisited = false;
+
     private void Awake()
     {
         Transform child = transform.GetChild(1);        // Bottom
@@ -127,6 +132,31 @@ public class Room : MonoBehaviour
                 {
                     sr.color = color;
                 }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 플레이어가 방에 들어올 때 호출
+    /// </summary>
+    /// <param name="other"></param>
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        /*Room room = other.GetComponent<Room>();
+        if (room != null && other.CompareTag("Player"))
+        {
+            Debug.Log("방과 플레이어 충돌 확인");
+            room.isVisited = true;
+            MiniMapManager.Instance.UpdateRoom(room); // 미니맵 갱신
+        }*/
+
+        if (other.CompareTag("Player"))
+        {
+            //Debug.Log("방과 플레이어 충돌 확인");
+            if (!isVisited)
+            {
+                isVisited = true;
+                MiniMapManager.Instance.UpdateRoom(this);
             }
         }
     }
