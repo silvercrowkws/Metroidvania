@@ -1,4 +1,4 @@
-﻿using NavMeshPlus.Components;
+using NavMeshPlus.Components;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -221,7 +221,10 @@ namespace NavMeshPlus.Extensions
                     tilemap.CompressBounds();
                 }
 
-                if (!builder.hideEditorLogs) Debug.Log($"Walkable Bounds [{tilemap.name}]: {tilemap.localBounds}");
+                if (!builder.hideEditorLogs) 
+                {
+                    //Debug.Log($"Walkable Bounds [{tilemap.name}]: {tilemap.localBounds}");
+                }
                 var box = BoxBoundSource(NavMeshSurface.GetWorldBounds(tilemap.transform.localToWorldMatrix, tilemap.localBounds));
                 box.area = builder.defaultArea;
                 sources.Add(box);
