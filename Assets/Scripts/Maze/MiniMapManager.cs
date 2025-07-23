@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MiniMapManager : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class MiniMapManager : MonoBehaviour
 
     // Room과 미니맵 오브젝트 매핑
     private Dictionary<Room, GameObject> roomToMiniMapIcon = new();
+
+    private Room currentPlayerRoom = null;
 
     void Awake()
     {
@@ -43,6 +46,45 @@ public class MiniMapManager : MonoBehaviour
                 img.color = room.isVisited ? new Color(0.2f, 0.2f, 0.2f, 0f) : new Color(0.2f, 0.2f, 0.2f, 1f);
                 //img.color = room.isVisited ? Color.white : new Color(0.2f, 0.2f, 0.2f, 1f);
             }
+        }
+    }
+
+    /// <summary>
+    /// 플레이어가 현재 들어간 방을 업데이트. 이전 방 아이콘은 숨기고, 새 방 아이콘은 표시.
+    /// </summary>
+    public void UpdateCurrentRoom(Room newRoom)
+    {
+        if (newRoom == currentPlayerRoom) return;
+
+        // 이전 방 아이콘 숨김
+        if (currentPlayerRoom != null &&
+            roomToMiniMapIcon.TryGetValue(currentPlayerRoom, out var oldIcon))
+        {
+            SetIconAlpha(oldIcon, 0f);
+        }
+
+        // 새로운 방 아이콘 표시
+        currentPlayerRoom = newRoom;
+
+        if (roomToMiniMapIcon.TryGetValue(currentPlayerRoom, out var newIcon))
+        {
+            SetIconAlpha(newIcon, 1f);
+        }
+    }
+
+    /// <summary>
+    /// 미니맵 아이콘의 0번째 자식 Image 알파값을 조절
+    /// </summary>
+    private void SetIconAlpha(GameObject iconParent, float alpha)
+    {
+        if (iconParent.transform.childCount == 0) return;
+
+        var image = iconParent.transform.GetChild(0).GetComponent<Image>();
+        if (image != null)
+        {
+            var color = image.color;
+            color.a = alpha;
+            image.color = color;
         }
     }
 }
