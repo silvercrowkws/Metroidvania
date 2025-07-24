@@ -156,7 +156,11 @@ public class Room : MonoBehaviour
             if (!isVisited)
             {
                 isVisited = true;
-                MiniMapManager.Instance.UpdateRoom(this);
+
+                if (MiniMapManager.Instance != null)
+                {
+                    MiniMapManager.Instance.UpdateRoom(this);
+                }
             }
         }
     }
@@ -165,7 +169,10 @@ public class Room : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            MiniMapManager.Instance.UpdateCurrentRoom(this);
+            if(MiniMapManager.Instance != null)
+            {
+                MiniMapManager.Instance.UpdateCurrentRoom(this);
+            }
         }
     }
 }
