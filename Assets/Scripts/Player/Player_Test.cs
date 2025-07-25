@@ -150,6 +150,11 @@ public class Player_Test : MonoBehaviour
     /// </summary>
     public bool isAttacking = false;
 
+    /// <summary>
+    /// 방어 중 여부 true : 방어 중, false : 방어 중 아님
+    /// </summary>
+    public bool isGuard = false;
+
     // 플레이어 조작 관련 끝 --------------------------------------------------
 
     // 문 및 열쇠 관련 --------------------------------------------------
@@ -272,7 +277,7 @@ public class Player_Test : MonoBehaviour
         }
 
         // 이동 처리
-        if (!isDash)
+        if (!isDash && !isGuard)
         {
             rb.velocity = new Vector2(moveInput.x * moveSpeed, rb.velocity.y);
         }
@@ -404,21 +409,25 @@ public class Player_Test : MonoBehaviour
         moveInput = context.ReadValue<Vector2>();
         animator.speed = 1f;                        // 애니메이션 재생
 
-        // 애니메이션 처리
-        if (moveInput.magnitude > 0.1f)
+        // 가드 중이 아닐때만
+        if (!isGuard)
         {
-            if (isGround)               // 땅에 있고
+            // 애니메이션 처리
+            if (moveInput.magnitude > 0.1f)
             {
-                ResetTrigger();
-                animator.SetTrigger("Run");
+                if (isGround)               // 땅에 있고
+                {
+                    ResetTrigger();
+                    animator.SetTrigger("Run");
+                }
             }
-        }
-        else
-        {
-            if (isGround)
+            else
             {
-                ResetTrigger();
-                animator.SetTrigger("Idle");
+                if (isGround)
+                {
+                    ResetTrigger();
+                    animator.SetTrigger("Idle");
+                }
             }
         }
     }
@@ -429,9 +438,8 @@ public class Player_Test : MonoBehaviour
     /// <param name="context"></param>
     private void OnJump(InputAction.CallbackContext context)
     {
-        //Debug.Log("점프");
-        // 공격 중에는 점프 불가
-        if (isAttacking)
+        // 공격 가드 중 에는 점프 불가
+        if (isAttacking || isGuard)
         {
             return;
         }

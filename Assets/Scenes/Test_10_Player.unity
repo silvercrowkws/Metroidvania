@@ -1034,6 +1034,7 @@ MonoBehaviour:
   playerAttackPower: 25
   canFall: 1
   isAttacking: 0
+  isGuard: 0
   hasAllKeys: 0
   isFall: 0
 --- !u!95 &1516707285
