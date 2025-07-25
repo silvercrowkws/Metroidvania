@@ -60,7 +60,7 @@ public class Player_Test : MonoBehaviour
     /// <summary>
     /// 점프 가능 횟수
     /// </summary>
-    private int jumpCount = 0;
+    public int jumpCount = 0;
 
     /// <summary>
     /// 최대 점프 가능 횟수
@@ -148,7 +148,7 @@ public class Player_Test : MonoBehaviour
     /// <summary>
     /// 공격 중 여부 true : 공격 중, false : 공격 중 아님
     /// </summary>
-    private bool isAttacking = false;
+    public bool isAttacking = false;
 
     // 플레이어 조작 관련 끝 --------------------------------------------------
 

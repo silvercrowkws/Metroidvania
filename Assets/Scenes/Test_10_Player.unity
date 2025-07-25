@@ -794,7 +794,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2511567136717907489, guid: c1d548bfe04003b4f951229458b4ccc3, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1029,9 +1029,11 @@ MonoBehaviour:
   jumpPower: 7.5
   dashPower: 15
   isGround: 0
+  jumpCount: 0
   maxHP: 100
   playerAttackPower: 25
   canFall: 1
+  isAttacking: 0
   hasAllKeys: 0
   isFall: 0
 --- !u!95 &1516707285
