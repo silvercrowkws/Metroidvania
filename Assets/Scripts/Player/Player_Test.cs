@@ -154,6 +154,21 @@ public class Player_Test : MonoBehaviour
     /// 방어 중 여부 true : 방어 중, false : 방어 중 아님
     /// </summary>
     public bool isGuard = false;
+    
+    /// <summary>
+    /// 패링 여부 true : 패링 성공, false : 패링 실패
+    /// </summary>
+    public bool isParrying = false;
+
+    /// <summary>
+    /// 현재 가드가 가능한 상태인지 true : 가드 가능, false : 가드 불가능
+    /// </summary>
+    bool isGuardAble = false;
+
+    /// <summary>
+    /// 몇 프레임 사이에 가드를 해야 패링이 되는지
+    /// </summary>
+    public int parryingFramerate = 3;
 
     // 플레이어 조작 관련 끝 --------------------------------------------------
 
@@ -196,8 +211,20 @@ public class Player_Test : MonoBehaviour
 
     // 문 및 열쇠 관련 끝 --------------------------------------------------
 
-    // 몬스터와 상호작용 관련 --------------------------------------------------
+    // 애니메이션의 이름을 해쉬로 변환 시작 --------------------------------------------------
 
+    // 애니메이션 이름을 Hash로 변환
+    /*int idleHash = Animator.StringToHash("Idle");
+    int jumpHash = Animator.StringToHash("Jump");
+    int RunHash = Animator.StringToHash("Run");
+    int dashHash = Animator.StringToHash("Dash");
+    int HangHash = Animator.StringToHash("Hang");
+    int attackHash = Animator.StringToHash("Attack");
+    int dashAttackHash = Animator.StringToHash("DashAttack");
+    int guardHash = Animator.StringToHash("Guard");
+    int parryingHash = Animator.StringToHash("Parrying");*/
+
+    // 애니메이션의 이름을 해쉬로 변환 끝 --------------------------------------------------
 
     private void Awake()
     {
@@ -220,6 +247,9 @@ public class Player_Test : MonoBehaviour
         inputActions.Actions.Dash.performed += OnDash;
         inputActions.Actions.DoorInteract.performed += OnDoorInteract;
         inputActions.Actions.Attack.performed += OnAttack;
+        //inputActions.Actions.Guard.performed += OnGuard;
+        inputActions.Actions.Guard.started += OnGuard;
+        inputActions.Actions.Guard.canceled += OnGuard;
 
         Transform child = transform.GetChild(0);
         attackRange = child.gameObject;
@@ -232,6 +262,9 @@ public class Player_Test : MonoBehaviour
 
     private void OnDisable()
     {
+        inputActions.Actions.Guard.canceled -= OnGuard;
+        inputActions.Actions.Guard.started -= OnGuard;
+        //inputActions.Actions.Guard.performed -= OnGuard;
         inputActions.Actions.Attack.performed -= OnAttack;
         inputActions.Actions.DoorInteract.performed -= OnDoorInteract;
         inputActions.Actions.Dash.performed -= OnDash;
@@ -239,6 +272,120 @@ public class Player_Test : MonoBehaviour
         inputActions.Actions.Move.canceled -= OnMove;
         inputActions.Actions.Move.performed -= OnMove;
         inputActions.Actions.Disable();
+    }
+
+    /// <summary>
+    /// 가드 함수
+    /// </summary>
+    /// <param name="context"></param>
+    private void OnGuard(InputAction.CallbackContext context)
+    {
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        
+        // 만약 현재 애니메이션이
+        if (stateInfo.IsName("Idle"))
+        {
+            isGuardAble = true;
+        }
+        else if (stateInfo.IsName("Jump"))
+        {
+            isGuardAble = false;
+        }
+        else if (stateInfo.IsName("Run"))
+        {
+            isGuardAble = true;
+        }
+        else if (stateInfo.IsName("Dash"))
+        {
+            isGuardAble = false;
+        }
+        else if (stateInfo.IsName("Edge-Idle"))
+        {
+            isGuardAble = false;
+        }
+        else if (stateInfo.IsName("Edge-Grab"))
+        {
+            isGuardAble = false;
+        }
+        else if (stateInfo.IsName("Attack"))
+        {
+            isGuardAble = false;
+            /*moveSpeed = defaultMoveSpeed;
+            attackRange.SetActive(false);
+            isAttacking = false;        // 공격 종료
+
+            isGuardAble = true;*/
+        }
+        else if (stateInfo.IsName("Dash-Attack"))
+        {
+            isGuardAble = false;
+            /*moveSpeed = defaultMoveSpeed;
+            attackRange.SetActive(false);
+            isAttacking = false;        // 공격 종료
+
+            isGuardAble = true;*/
+        }
+        else
+        {
+            
+        }
+
+        // 가드가 가능한 상태면
+        if (isGuardAble)
+        {
+            switch (context.phase)
+            {
+                case InputActionPhase.Started:          // 가드 활성화
+                    if (!isGuard)
+                    {
+                        // 입력이 시작된 시점
+                        rb.velocity = Vector3.zero;     // 기존에 가해지던 힘 제거
+                        isGuard = true;                 // 방어 시작
+                        ResetTrigger();
+                        animator.SetTrigger("Guard");
+
+                        StartCoroutine(OnParrying());
+                    }
+                    break;
+
+                case InputActionPhase.Canceled:         // 가드 비활성화
+
+                    if (isGuard)
+                    {
+                        // 입력이 취소된 시점
+                        isGuard = false;        // 방어 종료
+                        isGuardAble = false;    // 가드 가능 초기화
+                        Debug.Log("가드 입력 종료");
+                        ResetTrigger();
+                        animator.SetTrigger("Idle");
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 가드 후 몇 프레임 동안 패링되게 할지 결정하는 코루틴
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator OnParrying()
+    {
+        isParrying = true;
+
+        int startFrame = Time.frameCount;  // 현재 프레임 저장
+
+        while (Time.frameCount < startFrame + parryingFramerate)  // n프레임이 지나면 종료
+        {
+            yield return null;  // 매 프레임마다 확인
+        }
+
+        // n프레임이 지나면 실행되는 코드
+        //Debug.Log($"{parryingFramerate} 프레임이 지났다!");
+
+        isParrying = false;
     }
 
     /// <summary>
@@ -306,6 +453,14 @@ public class Player_Test : MonoBehaviour
             isFall = false;
             animator.SetBool("IsFall", false);
         }*/
+
+        // 플레이어가 가드 중이라면 낙하 애니메이션 재생 방지
+        if (isGuard)
+        {
+            isFall = false;
+            animator.SetBool("IsFall", false);
+            return; // 가드 중일 때는 더 이상 낙하 로직을 진행하지 않음
+        }
 
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
@@ -505,17 +660,21 @@ public class Player_Test : MonoBehaviour
     {
         // 만약 Idle이나 Run 상태에서 공격하면 그냥 Attack이 나가고
         // Dash 상태에서 공격하면 Dash-Attack이 나가고?
-        isAttacking = true;         // 공격 시작
 
-        // 달리는 상태에서 Attack을 DashAttack이라고 합시다
-        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        if (stateInfo.IsName("Run") || stateInfo.IsName("Dash"))
+        if (!isGuard)
         {
-            animator.SetTrigger("DashAttack");
-        }
-        else
-        {
-            animator.SetTrigger("Attack");
+            isAttacking = true;         // 공격 시작
+
+            // 달리는 상태에서 Attack을 DashAttack이라고 합시다
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            if (stateInfo.IsName("Run") || stateInfo.IsName("Dash"))
+            {
+                animator.SetTrigger("DashAttack");
+            }
+            else
+            {
+                animator.SetTrigger("Attack");
+            }
         }
     }
 
@@ -550,6 +709,8 @@ public class Player_Test : MonoBehaviour
         animator.ResetTrigger("Hang");
         animator.ResetTrigger("Attack");
         animator.ResetTrigger("DashAttack");
+        animator.ResetTrigger("Guard");
+        animator.ResetTrigger("Parrying");
     }
     
     private IEnumerator HangDelay()
