@@ -166,9 +166,9 @@ public class Player_Test : MonoBehaviour
     bool isGuardAble = false;
 
     /// <summary>
-    /// 몇 프레임 사이에 가드를 해야 패링이 되는지
+    /// 몇 초 사이에 가드를 해야 패링이 되는지
     /// </summary>
-    public int parryingFramerate = 3;
+    public float parryingTimerate = 1f;
 
     // 플레이어 조작 관련 끝 --------------------------------------------------
 
@@ -344,6 +344,8 @@ public class Player_Test : MonoBehaviour
                         ResetTrigger();
                         animator.SetTrigger("Guard");
 
+                        // 데미지 감소 부분()
+
                         StartCoroutine(OnParrying());
                     }
                     break;
@@ -368,24 +370,49 @@ public class Player_Test : MonoBehaviour
     }
 
     /// <summary>
-    /// 가드 후 몇 프레임 동안 패링되게 할지 결정하는 코루틴
+    /// 가드 후 몇 초 동안 패링되게 할지 결정하는 코루틴
     /// </summary>
     /// <returns></returns>
     private IEnumerator OnParrying()
     {
         isParrying = true;
 
-        int startFrame = Time.frameCount;  // 현재 프레임 저장
+        Debug.Log($"패링 시간 시작");
 
-        while (Time.frameCount < startFrame + parryingFramerate)  // n프레임이 지나면 종료
+        /*int startFrame = Time.frameCount;  // 현재 프레임 저장
+
+        while (Time.frameCount < startFrame + parryingTimerate)  // n프레임이 지나면 종료
         {
+            // 현재 프레임에서 시작 프레임을 뺀 값이 경과된 프레임 수
+            Debug.Log($"{Time.frameCount - startFrame} 프레임 경과");
+
             yield return null;  // 매 프레임마다 확인
         }
 
         // n프레임이 지나면 실행되는 코드
-        //Debug.Log($"{parryingFramerate} 프레임이 지났다!");
+        //Debug.Log($"{parryingTimerate} 프레임이 지났다!");*/
+
+        float timeElapsed = 0f;     // 시간 경과
+        int secondsPassed = 0;      // 초 단위로 경과 시간을 저장
+
+        while (secondsPassed < parryingTimerate)        // parryingTimerate가 될 때까지 반복
+        {
+            timeElapsed += Time.deltaTime;              // 각 프레임마다 흐른 시간을 더함
+
+            // 1초마다 정수 단위로 출력
+            if (timeElapsed >= 1f)
+            {
+                secondsPassed++;
+                Debug.Log($"경과 시간: {secondsPassed}초");
+                timeElapsed -= 1f;
+            }
+
+            yield return null;      // 한 프레임을 기다림
+        }
 
         isParrying = false;
+
+        Debug.Log($"패링 시간 종료");
     }
 
     /// <summary>
@@ -679,6 +706,52 @@ public class Player_Test : MonoBehaviour
     }
 
     /// <summary>
+    /// 데미지를 적용시키는 함수
+    /// </summary>
+    /// <param name="damage"></param>
+    public void OnPlayerApplyDamage(float damage)
+    {
+        //Debug.Log("OnPlayerApplyDamage 함수가 호출");
+
+        // 패링에 성공했으면
+        if(isParrying)
+        {
+            Debug.Log("패링 성공!!!");
+
+            ResetTrigger();
+            animator.SetTrigger("Parrying");
+
+            damage = 0f;
+        }
+
+        // 가드를 안했으면
+        if (!isGuard)
+        {
+            //Debug.Log("가드 없이 플레이어 체력 감소");
+            HP -= damage;
+        }
+
+        // 가드를 했으면
+        else if (isGuard)
+        {
+            /*Debug.Log("가드 성공으로 데미지 50% 감소");
+            Debug.Log($"원래 데미지 : {damage}");*/
+
+            damage = damage / 2;
+
+            //Debug.Log($"감소한 데미지 : {damage}");
+
+            HP -= damage;
+        }
+
+        else
+        {
+            Debug.Log("OnPlayerApplyDamage 에서 가드 버그");
+        }
+        //Debug.Log($"몬스터에게 공격받음! 남은 HP: {HP}");
+    }
+
+    /// <summary>
     /// 공격 시작할 때 이동 속도 0으로 만드는 함수(애니메이터 이벤트용)
     /// </summary>
     private void AttackStart()
@@ -773,7 +846,7 @@ public class Player_Test : MonoBehaviour
         // 땅과 충돌하면
         if (collision.gameObject.CompareTag("Ground"))
         {
-            Debug.Log("땅에 충돌!");
+            //Debug.Log("땅에 충돌!");
 
             // 점프 중이 아닐 때만 Idle/Run 트리거 실행
             AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
@@ -781,13 +854,13 @@ public class Player_Test : MonoBehaviour
             {
                 if (moveInput.magnitude != 0)
                 {
-                    Debug.Log("땅인데 움직임 있음");
+                    //Debug.Log("땅인데 움직임 있음");
                     ResetTrigger();
                     animator.SetTrigger("Run");
                 }
                 else
                 {
-                    Debug.Log("땅인데 움직임 없음");
+                    //Debug.Log("땅인데 움직임 없음");
                     ResetTrigger();
                     animator.SetTrigger("Idle");
                 }
@@ -810,13 +883,13 @@ public class Player_Test : MonoBehaviour
                 {
                     if (moveInput.magnitude != 0)
                     {
-                        Debug.Log("벽 위인데 움직임 있음");
+                        //Debug.Log("벽 위인데 움직임 있음");
                         ResetTrigger();
                         animator.SetTrigger("Run");
                     }
                     else
                     {
-                        Debug.Log("벽 위인데 움직임 없음");
+                        //Debug.Log("벽 위인데 움직임 없음");
                         ResetTrigger();
                         animator.SetTrigger("Idle");
                     }
@@ -829,7 +902,7 @@ public class Player_Test : MonoBehaviour
             // 2. 벽 옆면(Hang)
             if (Mathf.Abs(normal.y) < 0.1f && Mathf.Abs(normal.x) > 0.7f)
             {
-                Debug.Log("벽에는 정상 충돌함");
+                //Debug.Log("벽에는 정상 충돌함");
                 ResetTrigger();
                 animator.SetTrigger("Hang");
                 jumpCount = 1;

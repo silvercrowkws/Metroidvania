@@ -200,6 +200,11 @@ public class MonsterBase : MonoBehaviour
     /// </summary>
     Slider healthSlider;
 
+    /// <summary>
+    /// 적의 공격으로 플레이어에게 데미지를 적용시키는 함수
+    /// </summary>
+    public Action<float> onPlayerApplyDamage;
+
 
     protected virtual void Awake()
     {
@@ -238,13 +243,19 @@ public class MonsterBase : MonoBehaviour
 
         player = gameManager.Player;
         player_test = gameManager.Player_Test;
-        if(player == null)
+
+        // 플레이어가 null이면 Player_Test와 연결
+        if (player == null)
         {
             playerTransform = player_test.transform;
+            onPlayerApplyDamage += player_test.OnPlayerApplyDamage;
         }
+
+        // 플레이어가 null이 아니면 Player와 연결
         else
         {
             playerTransform = player.transform;
+            //onPlayerApplyDamage += player.OnPlayerApplyDamage;
         }
 
         animator = GetComponent<Animator>();
@@ -958,7 +969,8 @@ public class MonsterBase : MonoBehaviour
 
             if (player != null)
             {
-                player.HP -= attackPower;
+                //player.HP -= attackPower;         // 플레이어에게 델리게이트로 HP 변경 요청으로 수정
+                onPlayerApplyDamage?.Invoke(attackPower);
 
                 if (heartPanel != null)
                 {
@@ -967,7 +979,8 @@ public class MonsterBase : MonoBehaviour
             }
             else if (player_test != null)
             {
-                player_test.HP -= attackPower;
+                //player_test.HP -= attackPower;    // 플레이어에게 델리게이트로 HP 변경 요청으로 수정
+                onPlayerApplyDamage?.Invoke(attackPower);
 
                 if (heartPanel != null)
                 {
