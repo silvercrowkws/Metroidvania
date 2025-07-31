@@ -230,7 +230,7 @@ Transform:
   m_GameObject: {fileID: 8232463299656261448}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1.35, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -326,6 +326,7 @@ MonoBehaviour:
   isChasing: 0
   playerTransform: {fileID: 0}
   chaseRange: {fileID: 156446640175185972}
+  blinkColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!61 &8999780532006371830
 BoxCollider2D:
   m_ObjectHideFlags: 0
