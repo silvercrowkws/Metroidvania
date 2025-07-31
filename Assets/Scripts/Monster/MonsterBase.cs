@@ -205,6 +205,21 @@ public class MonsterBase : MonoBehaviour
     /// </summary>
     public Action<float> onPlayerApplyDamage;
 
+    /// <summary>
+    /// 원래 색상
+    /// </summary>
+    private Color originalColor;
+
+    /// <summary>
+    /// 깜빡임 횟수
+    /// </summary>
+    int blinkCount = 3;
+
+    /// <summary>
+    /// 깜빡일 때의 색상
+    /// </summary>
+    public Color blinkColor = Color.red;
+
 
     protected virtual void Awake()
     {
@@ -266,6 +281,7 @@ public class MonsterBase : MonoBehaviour
         if (spriteRenderer != null)
         {
             spriteRenderer.color = new Color(1f, 1f, 1f, 1f);
+            originalColor = spriteRenderer.color;
         }
 
         // Resources.Load는 리소스를 로드하는 메서드
@@ -322,7 +338,7 @@ public class MonsterBase : MonoBehaviour
         }
     }
 
-    protected virtual void Update()
+    protected virtual void FixedUpdate()
     {
         // 몬스터 사망시 아무 것도 하지 않음
         if (isDead)
@@ -425,20 +441,39 @@ public class MonsterBase : MonoBehaviour
                 ResetTrigger();
                 animator.SetTrigger("Moving");
 
-                // 플레이어를 바라보도록 Flip X 처리 (기본 오른쪽)
-                if (playerTransform.position.x < transform.position.x)
+                // 몬스터와 플레이어의 X 좌표 차이가 일정 값(임계값)보다 클 때만 Flip X를 변경
+                float threshold = 0.1f;
+                if (Mathf.Abs(playerTransform.position.x - transform.position.x) > threshold)
                 {
-                    spriteRenderer.flipX = true;
-                }
-                else
-                {
-                    spriteRenderer.flipX = false;
+                    // 플레이어를 바라보도록 Flip X 처리 (기본 오른쪽)
+                    if (playerTransform.position.x < transform.position.x)
+                    {
+                        spriteRenderer.flipX = true;
+                    }
+                    else
+                    {
+                        spriteRenderer.flipX = false;
+                    }
                 }
 
                 transform.position += dir * moveSpeed * Time.deltaTime;
 
                 // 추적 시간 누적
                 chaseTime += Time.deltaTime;
+
+                // 첫번째 공격을 안했고 추적 시간이 첫 공격 딜레이 - 0.5. 즉 첫 공격 0.5초 전이면
+                if (!firstAttackDone && chaseTime >= firstAttackDelay - 0.5f)
+                {
+                    // 모습 잠깐 깜빡이는 코루틴
+                    // 0.25초 간격으로 처음에 깜빡 0.25 후 깜빡 0.5초에 깜빡
+                    StartCoroutine(BlinkEffect());
+                }
+                // 첫 번째 공격을 했고 다음 공격 딜레이 - 0.5, 즉 다음 공격 0.5초 전이면
+                else if(firstAttackDone && chaseTime >= nextAttackDelay - 0.5f)
+                {
+                    // 모습 잠깐 깜빡이는 코루틴
+                    StartCoroutine(BlinkEffect());
+                }
 
                 // 첫 공격을 안했고 추적 시간이 첫 공격 딜레이를 넘었으면
                 if (!firstAttackDone && chaseTime >= firstAttackDelay)
@@ -454,7 +489,6 @@ public class MonsterBase : MonoBehaviour
                 else if (firstAttackDone && chaseTime >= nextAttackDelay)
                 {
                     Attack();
-
                     // 플레이어가 반경 내에 있으면 데미지 적용 (Overlap 방식)
                     TryAttackInProximity();
                     chaseTime = 0f;
@@ -633,6 +667,21 @@ public class MonsterBase : MonoBehaviour
 
                     // 추적 시간 누적 및 공격 타이밍 등 기존 로직
                     chaseTime += Time.deltaTime;
+
+                    // 첫번째 공격을 안했고 추적 시간이 첫 공격 딜레이 - 0.5. 즉 첫 공격 0.5초 전이면
+                    if (!firstAttackDone && chaseTime >= firstAttackDelay - 0.5f)
+                    {
+                        // 모습 잠깐 깜빡이는 코루틴
+                        // 0.25초 간격으로 처음에 깜빡 0.25 후 깜빡 0.5초에 깜빡
+                        StartCoroutine(BlinkEffect());
+                    }
+                    // 첫 번째 공격을 했고 다음 공격 딜레이 - 0.5, 즉 다음 공격 0.5초 전이면
+                    else if (firstAttackDone && chaseTime >= nextAttackDelay - 0.5f)
+                    {
+                        // 모습 잠깐 깜빡이는 코루틴
+                        StartCoroutine(BlinkEffect());
+                    }
+
                     if (!firstAttackDone && chaseTime >= firstAttackDelay)
                     {
                         Attack();
@@ -722,6 +771,35 @@ public class MonsterBase : MonoBehaviour
                     agent.ResetPath();
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// 공격 0.5초 전에 알려주는 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator BlinkEffect()
+    {
+        // 깜빡이는 횟수만큼 반복(0,1,2)
+        for (int i = 0; i < blinkCount; i++)
+        {
+            // 몬스터 색상을 깜빡일 색상으로 변경
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.color = blinkColor;
+            }
+
+            // 지정된 간격만큼 기다립니다.
+            yield return new WaitForSeconds(0.25f / 2);
+
+            // 원래 색상으로 되돌립니다.
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.color = originalColor;
+            }
+
+            // 다시 지정된 간격만큼 기다립니다.
+            yield return new WaitForSeconds(0.25f / 2);
         }
     }
 

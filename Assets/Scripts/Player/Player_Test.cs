@@ -650,6 +650,13 @@ public class Player_Test : MonoBehaviour
     private void OnDash(InputAction.CallbackContext context)
     {
         // 만약 플레이어의 대쉬 게이지가 있으면
+
+        // 공격 가드 중 에는 점프 불가
+        if (isAttacking || isGuard)
+        {
+            return;
+        }
+
         //if ()
         {
             isDash = true;
@@ -690,7 +697,7 @@ public class Player_Test : MonoBehaviour
 
         if (!isGuard)
         {
-            isAttacking = true;         // 공격 시작
+            //isAttacking = true;         // 공격 시작
 
             // 달리는 상태에서 Attack을 DashAttack이라고 합시다
             AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
@@ -757,6 +764,7 @@ public class Player_Test : MonoBehaviour
     private void AttackStart()
     {
         moveSpeed = 0;
+        isAttacking = true;         // 공격 시작
         attackRange.SetActive(true);
     }
 
