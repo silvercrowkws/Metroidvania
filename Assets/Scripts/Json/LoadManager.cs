@@ -19,7 +19,15 @@ public class LoadManager
         if (!File.Exists(path))
         {
             Debug.LogWarning("세이브 파일을 찾을 수 없습니다. 디폴트 파일을 불러옵니다.");
-            return new PlayerData { name = "DefaultPlayer", str = 1, dex = 1, hp = 1, items = new string[] { } };
+            //return new PlayerData { name = "DefaultPlayer", str = 1, dex = 1, hp = 1, items = new string[] { } };
+            return new PlayerData
+            {
+                name = "DefaultPlayer",
+                str = 1,
+                dex = 1,
+                hp = 1,
+                inventorySlots = new List<ItemSlot>()
+            };
         }
 
         try
@@ -33,7 +41,15 @@ public class LoadManager
         catch (System.Exception e)
         {
             Debug.LogError($"JSON 파일을 불러오는데 오류 발생: {e.Message}");
-            return new PlayerData { name = "DefaultPlayer", str = 1, dex = 1, hp = 1, items = new string[] { } };
+            //return new PlayerData { name = "DefaultPlayer", str = 1, dex = 1, hp = 1, items = new string[] { } };
+            return new PlayerData
+            {
+                name = "DefaultPlayer",
+                str = 1,
+                dex = 1,
+                hp = 1,
+                inventorySlots = new List<ItemSlot>()
+            };
         }
     }
 }

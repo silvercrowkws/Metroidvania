@@ -28,5 +28,24 @@ public class PlayerData
     /// </summary>
     public int hp;
 
-    public string[] items;
+    //public string[] items;
+
+    /// <summary>
+    /// 인벤토리 슬롯 리스트
+    /// </summary>
+    public List<ItemSlot> inventorySlots;  // 인벤토리 슬롯 리스트
+}
+
+[System.Serializable]
+public class ItemSlot
+{
+    /// <summary>
+    /// 아이템 식별자(ex: "sword_001")
+    /// </summary>
+    public string itemId;
+
+    /// <summary>
+    /// 해당 아이템의 개수(ex: 포션 5개)
+    /// </summary>
+    public int count;
 }

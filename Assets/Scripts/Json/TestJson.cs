@@ -35,7 +35,7 @@ public class TestJson : MonoBehaviour
         PrintData(playerData);                              // 불러온 데이터 출력*/
     }
 
-    void PrintData(PlayerData playerData)
+    /*void PrintData(PlayerData playerData)
     {
         Debug.Log($"name : {playerData.name}");
         Debug.Log($"str : {playerData.str}");
@@ -44,6 +44,25 @@ public class TestJson : MonoBehaviour
         foreach (string item in playerData.items)
         {
             Debug.Log($"item : {item}");
+        }
+    }*/
+    void PrintData(PlayerData loadPlayerData)
+    {
+        Debug.Log($"name : {loadPlayerData.name}");
+        Debug.Log($"str : {loadPlayerData.str}");
+        Debug.Log($"dex : {loadPlayerData.dex}");
+        Debug.Log($"hp : {loadPlayerData.hp}");
+
+        if (loadPlayerData.inventorySlots != null)
+        {
+            foreach (ItemSlot slot in loadPlayerData.inventorySlots)
+            {
+                Debug.Log($"itemId : {slot.itemId}, count : {slot.count}");
+            }
+        }
+        else
+        {
+            Debug.Log("인벤토리 슬롯이 비어있습니다.");
         }
     }
 }

@@ -46,6 +46,14 @@ public class Test_11_Json : TestBase
         tempPlayerData = new PlayerData();
         saveManager = GameManager.Instance.SaveManager;
         loadManager = GameManager.Instance.LoadManager;
+
+        // 자동으로 저장된 데이터를 불러옴
+        //loadPlayerData = loadManager.LoadData();
+
+        // 불러온 데이터를 tempPlayerData로 복사
+        PlayerData loaded = loadManager.LoadData();
+        tempPlayerData = loaded;
+        loadPlayerData = loaded;     // 필요하다면 같이 저장
     }
 
     void PrintData(PlayerData loadPlayerData)
@@ -54,9 +62,17 @@ public class Test_11_Json : TestBase
         Debug.Log($"str : {loadPlayerData.str}");
         Debug.Log($"dex : {loadPlayerData.dex}");
         Debug.Log($"hp : {loadPlayerData.hp}");
-        foreach (string item in loadPlayerData.items)
+
+        if (loadPlayerData.inventorySlots != null)
         {
-            Debug.Log($"item : {item}");
+            foreach (ItemSlot slot in loadPlayerData.inventorySlots)
+            {
+                Debug.Log($"itemId : {slot.itemId}, count : {slot.count}");
+            }
+        }
+        else
+        {
+            Debug.Log("인벤토리 슬롯이 비어있습니다.");
         }
     }
 
@@ -66,25 +82,37 @@ public class Test_11_Json : TestBase
         tempPlayerData.str = 1;
         tempPlayerData.dex = 1;
         tempPlayerData.hp = 1;
-        tempPlayerData.items = new string[] { "sword_1", "shield_1" };
+        tempPlayerData.inventorySlots = new List<ItemSlot>
+        {
+        new ItemSlot { itemId = "sword_1", count = 1 },
+        new ItemSlot { itemId = "potion_1", count = 1 }
+        };
     }
 
     protected override void OnTest2(InputAction.CallbackContext context)
     {
         tempPlayerData.name = "Player_Test_2";
-        tempPlayerData.str = 1;
-        tempPlayerData.dex = 1;
-        tempPlayerData.hp = 1;
-        tempPlayerData.items = new string[] { "sword_2", "shield_2" };
+        tempPlayerData.str = 2;
+        tempPlayerData.dex = 2;
+        tempPlayerData.hp = 2;
+        tempPlayerData.inventorySlots = new List<ItemSlot>
+        {
+        new ItemSlot { itemId = "sword_2", count = 2 },
+        new ItemSlot { itemId = "potion_2", count = 2 }
+        };
     }
 
     protected override void OnTest3(InputAction.CallbackContext context)
     {
         tempPlayerData.name = "Player_Test_3";
-        tempPlayerData.str = 1;
-        tempPlayerData.dex = 1;
-        tempPlayerData.hp = 1;
-        tempPlayerData.items = new string[] { "sword_3", "shield_3" };
+        tempPlayerData.str = 3;
+        tempPlayerData.dex = 3;
+        tempPlayerData.hp = 3;
+        tempPlayerData.inventorySlots = new List<ItemSlot>
+        {
+        new ItemSlot { itemId = "sword_3", count = 3 },
+        new ItemSlot { itemId = "potion_3", count = 3 }
+        };
     }
 
     protected override void OnTest4(InputAction.CallbackContext context)
