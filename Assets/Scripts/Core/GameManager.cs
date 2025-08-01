@@ -63,6 +63,21 @@ public class GameManager : Singleton<GameManager>
     public Action onSelectCard;
     public Action onGameComplete;
 
+    SaveManager saveManager = new SaveManager();
+
+    public SaveManager SaveManager => saveManager;
+    /*public SaveManager SaveManager        // 이걸 줄여서 가능
+    {
+        get
+        {
+            return saveManager;
+        }
+    }*/
+
+    LoadManager loadManager = new LoadManager();
+
+    public LoadManager LoadManager => loadManager;
+
     /// <summary>
     /// 플레이어
     /// </summary>
