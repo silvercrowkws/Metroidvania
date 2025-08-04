@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 906d83fdf763d814daf1f07cb71934e5, type: 3}
+  m_Name: Apple Item Data SO
+  m_EditorClassIdentifier: 
+  <ItemSprite>k__BackingField: {fileID: 21300000, guid: 7660b40d1800e9d4cbc840c07030de47, type: 3}
+  <ItemName>k__BackingField: Apple
+  <MaxStackCount>k__BackingField: 10
+  <ItemPrefab>k__BackingField: {fileID: 3330491614711406106, guid: c69cf7fe6cbc25a48905af551eec2638, type: 3}

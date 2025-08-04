@@ -63,7 +63,7 @@ public class Test_11_Json : TestBase
         Debug.Log($"dex : {loadPlayerData.dex}");
         Debug.Log($"hp : {loadPlayerData.hp}");
 
-        if (loadPlayerData.inventorySlots != null)
+        /*if (loadPlayerData.inventorySlots != null)
         {
             foreach (ItemSlot slot in loadPlayerData.inventorySlots)
             {
@@ -73,7 +73,7 @@ public class Test_11_Json : TestBase
         else
         {
             Debug.Log("인벤토리 슬롯이 비어있습니다.");
-        }
+        }*/
     }
 
     protected override void OnTest1(InputAction.CallbackContext context)
@@ -82,11 +82,11 @@ public class Test_11_Json : TestBase
         tempPlayerData.str = 1;
         tempPlayerData.dex = 1;
         tempPlayerData.hp = 1;
-        tempPlayerData.inventorySlots = new List<ItemSlot>
+        /*tempPlayerData.inventorySlots = new List<ItemSlot>
         {
         new ItemSlot { itemId = "sword_1", count = 1 },
         new ItemSlot { itemId = "potion_1", count = 1 }
-        };
+        };*/
     }
 
     protected override void OnTest2(InputAction.CallbackContext context)
@@ -95,11 +95,11 @@ public class Test_11_Json : TestBase
         tempPlayerData.str = 2;
         tempPlayerData.dex = 2;
         tempPlayerData.hp = 2;
-        tempPlayerData.inventorySlots = new List<ItemSlot>
+        /*tempPlayerData.inventorySlots = new List<ItemSlot>
         {
         new ItemSlot { itemId = "sword_2", count = 2 },
         new ItemSlot { itemId = "potion_2", count = 2 }
-        };
+        };*/
     }
 
     protected override void OnTest3(InputAction.CallbackContext context)
@@ -108,11 +108,11 @@ public class Test_11_Json : TestBase
         tempPlayerData.str = 3;
         tempPlayerData.dex = 3;
         tempPlayerData.hp = 3;
-        tempPlayerData.inventorySlots = new List<ItemSlot>
+        /*tempPlayerData.inventorySlots = new List<ItemSlot>
         {
         new ItemSlot { itemId = "sword_3", count = 3 },
         new ItemSlot { itemId = "potion_3", count = 3 }
-        };
+        };*/
     }
 
     protected override void OnTest4(InputAction.CallbackContext context)

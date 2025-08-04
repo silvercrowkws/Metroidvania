@@ -33,5 +33,5 @@ public class PlayerData
     /// <summary>
     /// 인벤토리 슬롯 리스트
     /// </summary>
-    public List<ItemSlot> inventorySlots;  // 인벤토리 슬롯 리스트
+    //public List<ItemSlot> inventorySlots;  // 인벤토리 슬롯 리스트
 }

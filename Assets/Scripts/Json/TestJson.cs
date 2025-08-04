@@ -53,7 +53,7 @@ public class TestJson : MonoBehaviour
         Debug.Log($"dex : {loadPlayerData.dex}");
         Debug.Log($"hp : {loadPlayerData.hp}");
 
-        if (loadPlayerData.inventorySlots != null)
+        /*if (loadPlayerData.inventorySlots != null)
         {
             foreach (ItemSlot slot in loadPlayerData.inventorySlots)
             {
@@ -63,6 +63,6 @@ public class TestJson : MonoBehaviour
         else
         {
             Debug.Log("인벤토리 슬롯이 비어있습니다.");
-        }
+        }*/
     }
 }

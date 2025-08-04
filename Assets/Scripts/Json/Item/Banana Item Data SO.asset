@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 906d83fdf763d814daf1f07cb71934e5, type: 3}
+  m_Name: Banana Item Data SO
+  m_EditorClassIdentifier: 
+  <ItemSprite>k__BackingField: {fileID: 21300000, guid: cb2a358cb282dd34d9b866d1e6b70838, type: 3}
+  <ItemName>k__BackingField: Banana
+  <MaxStackCount>k__BackingField: 10
+  <ItemPrefab>k__BackingField: {fileID: 8177130360252738506, guid: b68b388a3c7fd694ca7fccf6f45bb215, type: 3}

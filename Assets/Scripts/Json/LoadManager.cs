@@ -26,7 +26,7 @@ public class LoadManager
                 str = 1,
                 dex = 1,
                 hp = 1,
-                inventorySlots = new List<ItemSlot>()
+                //inventorySlots = new List<ItemSlot>()
             };
         }
 
@@ -48,7 +48,7 @@ public class LoadManager
                 str = 1,
                 dex = 1,
                 hp = 1,
-                inventorySlots = new List<ItemSlot>()
+                //inventorySlots = new List<ItemSlot>()
             };
         }
     }
