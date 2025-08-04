@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class InventoryViewer : MonoBehaviour
 {
-
     [SerializeField] private Slot slotPrefab;
     [SerializeField] private Transform slotParent;
     [SerializeField] private Image changeSlotUI;
@@ -31,47 +30,35 @@ public class InventoryViewer : MonoBehaviour
     //Slot설정
     public void SetPointerSlot(Slot slot)
     {
-
         pointerUpSlot = slot;
-
     }
 
     private void Update()
     {
-
         if (Input.GetMouseButtonUp(1) && isChanging)
         {
-
             if (pointerUpSlot != null)
             {
-
                 SwapSlot(pointerUpSlot);
-
             }
 
             changeSlotUI.gameObject.SetActive(false);
             currentChangeSlot = null;
             isChanging = false;
-
         }
 
         if (isChanging)
         {
-
             changeSlotUI.transform.position = Input.mousePosition;
-
         }
-
     }
 
     public void StartChange(Slot slot)
     {
-
         isChanging = true;
         changeSlotUI.gameObject.SetActive(true);
         changeSlotUI.sprite = slot.currentSaveItem.ItemSprite;
         currentChangeSlot = slot;
-
     }
 
     public void SwapSlot(Slot slot)
@@ -86,7 +73,5 @@ public class InventoryViewer : MonoBehaviour
         currentChangeSlot.Init(oldData);
 
         currentChangeSlot = null;
-
     }
-
 }

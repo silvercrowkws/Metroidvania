@@ -5,7 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "SO/Item/Data")]
 public class ItemDataSO : ScriptableObject
 {
-
     /// <summary>
     /// 아이템의 스프라이트
     /// </summary>
@@ -25,5 +24,4 @@ public class ItemDataSO : ScriptableObject
     /// 아이템의 프리팹
     /// </summary>
     [field: SerializeField] public GameObject ItemPrefab { get; protected set; }
-
 }
