@@ -63,6 +63,11 @@ public class GameManager : Singleton<GameManager>
     public Action onSelectCard;
     public Action onGameComplete;
 
+    /// <summary>
+    /// 데이터 관리 기능 추가
+    /// </summary>
+    [SerializeField] private ItemDatabaseSO itemDatabase; // Inspector에서 설정할 아이템 데이터베이스
+
     SaveManager saveManager = new SaveManager();
 
     public SaveManager SaveManager => saveManager;

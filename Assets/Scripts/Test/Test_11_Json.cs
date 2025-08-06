@@ -4,9 +4,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[Serializable]
+public class InventoryData
+{
+    public List<Item> inventoryList = new List<Item>();
+}
+
 public class Test_11_Json : TestBase
 {
 #if UNITY_EDITOR    
+
+    private InventoryData inventoryData = new InventoryData();
 
     /// <summary>
     /// 게임 매니저
@@ -62,6 +70,18 @@ public class Test_11_Json : TestBase
         Debug.Log($"str : {loadPlayerData.str}");
         Debug.Log($"dex : {loadPlayerData.dex}");
         Debug.Log($"hp : {loadPlayerData.hp}");
+
+        if (loadPlayerData.inventoryItems != null && loadPlayerData.inventoryItems.Count > 0)
+        {
+            foreach (var item in loadPlayerData.inventoryItems)
+            {
+                Debug.Log($"itemName : {item.itemName}, count : {item.count}");
+            }
+        }
+        else
+        {
+            Debug.Log("인벤토리 아이템이 없습니다.");
+        }
 
         /*if (loadPlayerData.inventorySlots != null)
         {
@@ -128,6 +148,17 @@ public class Test_11_Json : TestBase
     protected override void OnTest6(InputAction.CallbackContext context)
     {
         Debug.Log("데이터 저장");
+
+        tempPlayerData.inventoryItems = new List<ItemSlotData>();
+        foreach (var kvp in Inventory.Instance.itemContainer)
+        {
+            tempPlayerData.inventoryItems.Add(new ItemSlotData
+            {
+                itemName = kvp.Key.name,
+                count = kvp.Value
+            });
+        }
+
         saveManager.SaveData(tempPlayerData);       // 데이터 저장
     }
 

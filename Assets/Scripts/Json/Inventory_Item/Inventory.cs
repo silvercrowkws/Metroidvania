@@ -8,7 +8,7 @@ public class Inventory : MonoBehaviour
     /// <summary>
     /// 아이템을 저장할 딕셔너리
     /// </summary>
-    private Dictionary<ItemDataSO, int> itemContainer = new();
+    public Dictionary<ItemDataSO, int> itemContainer = new();
 
     public static Inventory Instance { get; private set; }
 
