@@ -100,6 +100,15 @@ public partial class @TestInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Test9"",
+                    ""type"": ""Button"",
+                    ""id"": ""8a1c0617-7694-4aff-9264-c75bc892fa3a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""LClick"",
                     ""type"": ""Button"",
                     ""id"": ""6458b933-9224-4883-9854-5db7caecbdc0"",
@@ -310,6 +319,17 @@ public partial class @TestInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Test8"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""35d5e668-ec21-4b74-84bc-a5aced454ce9"",
+                    ""path"": ""<Keyboard>/9"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KM"",
+                    ""action"": ""Test9"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -343,6 +363,7 @@ public partial class @TestInputActions: IInputActionCollection2, IDisposable
         m_Test_Test6 = m_Test.FindAction("Test6", throwIfNotFound: true);
         m_Test_Test7 = m_Test.FindAction("Test7", throwIfNotFound: true);
         m_Test_Test8 = m_Test.FindAction("Test8", throwIfNotFound: true);
+        m_Test_Test9 = m_Test.FindAction("Test9", throwIfNotFound: true);
         m_Test_LClick = m_Test.FindAction("LClick", throwIfNotFound: true);
         m_Test_RClick = m_Test.FindAction("RClick", throwIfNotFound: true);
         m_Test_Enter = m_Test.FindAction("Enter", throwIfNotFound: true);
@@ -417,6 +438,7 @@ public partial class @TestInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Test_Test6;
     private readonly InputAction m_Test_Test7;
     private readonly InputAction m_Test_Test8;
+    private readonly InputAction m_Test_Test9;
     private readonly InputAction m_Test_LClick;
     private readonly InputAction m_Test_RClick;
     private readonly InputAction m_Test_Enter;
@@ -434,6 +456,7 @@ public partial class @TestInputActions: IInputActionCollection2, IDisposable
         public InputAction @Test6 => m_Wrapper.m_Test_Test6;
         public InputAction @Test7 => m_Wrapper.m_Test_Test7;
         public InputAction @Test8 => m_Wrapper.m_Test_Test8;
+        public InputAction @Test9 => m_Wrapper.m_Test_Test9;
         public InputAction @LClick => m_Wrapper.m_Test_LClick;
         public InputAction @RClick => m_Wrapper.m_Test_RClick;
         public InputAction @Enter => m_Wrapper.m_Test_Enter;
@@ -472,6 +495,9 @@ public partial class @TestInputActions: IInputActionCollection2, IDisposable
             @Test8.started += instance.OnTest8;
             @Test8.performed += instance.OnTest8;
             @Test8.canceled += instance.OnTest8;
+            @Test9.started += instance.OnTest9;
+            @Test9.performed += instance.OnTest9;
+            @Test9.canceled += instance.OnTest9;
             @LClick.started += instance.OnLClick;
             @LClick.performed += instance.OnLClick;
             @LClick.canceled += instance.OnLClick;
@@ -515,6 +541,9 @@ public partial class @TestInputActions: IInputActionCollection2, IDisposable
             @Test8.started -= instance.OnTest8;
             @Test8.performed -= instance.OnTest8;
             @Test8.canceled -= instance.OnTest8;
+            @Test9.started -= instance.OnTest9;
+            @Test9.performed -= instance.OnTest9;
+            @Test9.canceled -= instance.OnTest9;
             @LClick.started -= instance.OnLClick;
             @LClick.performed -= instance.OnLClick;
             @LClick.canceled -= instance.OnLClick;
@@ -566,6 +595,7 @@ public partial class @TestInputActions: IInputActionCollection2, IDisposable
         void OnTest6(InputAction.CallbackContext context);
         void OnTest7(InputAction.CallbackContext context);
         void OnTest8(InputAction.CallbackContext context);
+        void OnTest9(InputAction.CallbackContext context);
         void OnLClick(InputAction.CallbackContext context);
         void OnRClick(InputAction.CallbackContext context);
         void OnEnter(InputAction.CallbackContext context);

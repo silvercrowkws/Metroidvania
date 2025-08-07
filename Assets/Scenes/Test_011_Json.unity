@@ -1318,6 +1318,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   seed: -1
+  itemDatabase: {fileID: 11400000, guid: b225602c95f780446b01330690cd183c, type: 2}
 --- !u!1001 &1628683058
 PrefabInstance:
   m_ObjectHideFlags: 0

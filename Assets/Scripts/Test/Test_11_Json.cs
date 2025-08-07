@@ -14,6 +14,9 @@ public class Test_11_Json : TestBase
 {
 #if UNITY_EDITOR    
 
+    [Header("UI 복원을 위해 ItemDatabaseSO 에셋을 연결해주세요.")]
+    public ItemDatabaseSO itemDatabase;
+
     private InventoryData inventoryData = new InventoryData();
 
     /// <summary>
@@ -149,7 +152,7 @@ public class Test_11_Json : TestBase
     {
         Debug.Log("데이터 저장");
 
-        tempPlayerData.inventoryItems = new List<ItemSlotData>();
+        /*tempPlayerData.inventoryItems = new List<ItemSlotData>();
         foreach (var kvp in Inventory.Instance.itemContainer)
         {
             tempPlayerData.inventoryItems.Add(new ItemSlotData
@@ -159,18 +162,83 @@ public class Test_11_Json : TestBase
             });
         }
 
-        saveManager.SaveData(tempPlayerData);       // 데이터 저장
+        saveManager.SaveData(tempPlayerData);       // 데이터 저장*/
+
+
+        /*tempPlayerData.inventoryItems = new List<ItemSlotData>();
+        if (Inventory.Instance != null)
+        {
+            foreach (var kvp in Inventory.Instance.itemContainer)
+            {
+                tempPlayerData.inventoryItems.Add(new ItemSlotData
+                {
+                    // kvp.Key.name 대신 kvp.Key.ItemName 을 저장합니다.
+                    itemName = kvp.Key.ItemName,
+                    count = kvp.Value
+                });
+            }
+        }
+
+        saveManager.SaveData(tempPlayerData);    // 데이터 저장*/
+
+        tempPlayerData.inventoryItems = new List<ItemSlotData>();
+        if (Inventory.Instance != null)
+        {
+            // Inventory.Instance.itemContainer 대신 GetItemContainer() 사용을 권장합니다.
+            foreach (var kvp in Inventory.Instance.GetItemContainer())
+            {
+                tempPlayerData.inventoryItems.Add(new ItemSlotData
+                {
+                    itemName = kvp.Key.ItemName,
+                    count = kvp.Value
+                });
+            }
+        }
+
+        saveManager.SaveData(tempPlayerData);
     }
 
     protected override void OnTest7(InputAction.CallbackContext context)
     {
-        Debug.Log("데이터 로드");
+        Debug.Log("데이터 로드(메모리로)");
         loadPlayerData = loadManager.LoadData();    // 데이터 로드
     }
 
     protected override void OnTest8(InputAction.CallbackContext context)
     {
+        Debug.Log("--- 불러온 데이터 출력 ---");
         PrintData(loadPlayerData);                              // 불러온 데이터 출력
+    }
+
+    protected override void OnTest9(InputAction.CallbackContext context)
+    {
+        Debug.Log("<<<<< 불러온 데이터로 인벤토리 UI 복원 시작 >>>>>");
+
+        // 1. 필수 요소들이 준비되었는지 확인
+        if (loadPlayerData == null) { Debug.LogError("로드된 데이터(loadPlayerData)가 없습니다! OnTest7을 먼저 실행하세요."); return; }
+        if (Inventory.Instance == null) { Debug.LogError("Inventory 인스턴스를 찾을 수 없습니다."); return; }
+        if (itemDatabase == null) { Debug.LogError("ItemDatabaseSO가 연결되지 않았습니다! Inspector 창에서 연결해주세요."); return; }
+
+        // 2. 기존 인벤토리 UI와 데이터를 모두 비웁니다.
+        Inventory.Instance.Clear();
+
+        // 3. 불러온 데이터 목록(loadPlayerData.inventoryItems)을 하나씩 확인합니다.
+        foreach (var itemSlotData in loadPlayerData.inventoryItems)
+        {
+            // 4. 저장된 아이템 이름으로 데이터베이스에서 실제 아이템(ItemDataSO)을 찾습니다.
+            ItemDataSO itemData = itemDatabase.GetItemByName(itemSlotData.itemName);
+            if (itemData != null)
+            {
+                // 5. 찾은 아이템과 개수로 인벤토리를 채웁니다. 이 과정에서 UI가 자동으로 업데이트됩니다.
+                Inventory.Instance.LoadItem(itemData, itemSlotData.count);
+            }
+            else
+            {
+                Debug.LogWarning($"아이템 '{itemSlotData.itemName}'을 데이터베이스에서 찾을 수 없습니다.");
+            }
+        }
+
+        Debug.Log("<<<<< 인벤토리 UI 복원 완료 >>>>>");
     }
 
 #endif

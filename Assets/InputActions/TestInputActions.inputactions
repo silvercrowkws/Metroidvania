@@ -78,6 +78,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Test9",
+                    "type": "Button",
+                    "id": "8a1c0617-7694-4aff-9264-c75bc892fa3a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "LClick",
                     "type": "Button",
                     "id": "6458b933-9224-4883-9854-5db7caecbdc0",
@@ -286,6 +295,17 @@
                     "processors": "",
                     "groups": "KM",
                     "action": "Test8",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "35d5e668-ec21-4b74-84bc-a5aced454ce9",
+                    "path": "<Keyboard>/9",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KM",
+                    "action": "Test9",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

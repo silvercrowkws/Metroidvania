@@ -8,7 +8,7 @@ public class Inventory : MonoBehaviour
     /// <summary>
     /// 아이템을 저장할 딕셔너리
     /// </summary>
-    public Dictionary<ItemDataSO, int> itemContainer = new();
+    private Dictionary<ItemDataSO, int> itemContainer = new();
 
     public static Inventory Instance { get; private set; }
 
@@ -28,6 +28,46 @@ public class Inventory : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+    }
+
+    /// <summary>
+    /// 외부에서 인벤토리 데이터를 읽기 위한 메서드 (for Saving)
+    /// </summary>
+    public Dictionary<ItemDataSO, int> GetItemContainer()
+    {
+        return itemContainer;
+    }
+
+    /// <summary>
+    /// 인벤토리의 모든 아이템 데이터와 UI를 제거하는 메서드 (for Loading)
+    /// </summary>
+    public void Clear()
+    {
+        // Slot UI가 스스로를 파괴하도록 이벤트를 발생시킵니다.
+        var itemsToRemove = new List<ItemDataSO>(itemContainer.Keys);
+        foreach (var item in itemsToRemove)
+        {
+            // OnItemChanged 이벤트를 count = 0으로 호출하면, 해당 슬롯이 이 신호를 받고 스스로를 파괴합니다.
+            OnItemChanged?.Invoke(item, 0);
+        }
+
+        // 실제 데이터가 담긴 딕셔너리를 비웁니다.
+        itemContainer.Clear();
+    }
+
+    /// <summary>
+    /// 불러온 데이터를 기반으로 인벤토리에 아이템을 추가하고 UI를 업데이트하는 메서드 (for Loading)
+    /// </summary>
+    public void LoadItem(ItemDataSO itemData, int count)
+    {
+        // 1. 데이터 추가
+        itemContainer.Add(itemData, count);
+
+        // 2. InventoryViewer가 새 Slot UI를 생성하도록 이벤트를 호출합니다.
+        OnNewItemAdded?.Invoke(itemData);
+
+        // 3. 생성된 Slot이 개수 텍스트를 올바르게 설정하도록 이벤트를 호출합니다.
+        OnItemChanged?.Invoke(itemData, count);
     }
 
     public void AddItem(Item item)
