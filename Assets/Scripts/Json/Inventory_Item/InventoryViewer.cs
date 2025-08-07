@@ -74,4 +74,14 @@ public class InventoryViewer : MonoBehaviour
 
         currentChangeSlot = null;
     }
+
+    /// <summary>
+    /// 현재 UI에 있는 모든 슬롯들을 순서대로 가져옵니다.
+    /// </summary>
+    /// <returns>UI 순서대로 정렬된 슬롯의 배열</returns>
+    public Slot[] GetSlots()
+    {
+        // slotParent의 자식으로 있는 모든 Slot 컴포넌트를 순서대로 가져옵니다.
+        return slotParent.GetComponentsInChildren<Slot>();
+    }
 }

@@ -19,6 +19,9 @@ public class Test_11_Json : TestBase
 
     private InventoryData inventoryData = new InventoryData();
 
+    // 2. InventoryViewer의 인스턴스를 찾습니다.
+    InventoryViewer inventoryViewer;
+
     /// <summary>
     /// 게임 매니저
     /// </summary>
@@ -65,6 +68,9 @@ public class Test_11_Json : TestBase
         PlayerData loaded = loadManager.LoadData();
         tempPlayerData = loaded;
         loadPlayerData = loaded;     // 필요하다면 같이 저장
+
+        // InventoryViewer의 인스턴스를 찾습니다.
+        inventoryViewer = FindObjectOfType<InventoryViewer>();
     }
 
     void PrintData(PlayerData loadPlayerData)
@@ -181,7 +187,8 @@ public class Test_11_Json : TestBase
 
         saveManager.SaveData(tempPlayerData);    // 데이터 저장*/
 
-        tempPlayerData.inventoryItems = new List<ItemSlotData>();
+
+        /*tempPlayerData.inventoryItems = new List<ItemSlotData>();
         if (Inventory.Instance != null)
         {
             // Inventory.Instance.itemContainer 대신 GetItemContainer() 사용을 권장합니다.
@@ -195,6 +202,34 @@ public class Test_11_Json : TestBase
             }
         }
 
+        saveManager.SaveData(tempPlayerData);*/
+
+
+        // 1. PlayerData 객체와 인벤토리 리스트를 새로 생성합니다.
+        tempPlayerData.inventoryItems = new List<ItemSlotData>();
+
+        if (inventoryViewer != null && Inventory.Instance != null)
+        {
+            // 2. InventoryViewer의 인스턴스를 찾습니다. Start에서 찾도록 수정
+            //InventoryViewer inventoryViewer = FindObjectOfType<InventoryViewer>();
+            
+            // 3. InventoryViewer에서 UI 순서대로 정렬된 슬롯들을 가져옵니다.
+            Slot[] slots = inventoryViewer.GetSlots();
+
+            // 4. 이 슬롯 배열을 순서대로 순회합니다.
+            foreach (Slot slot in slots)
+            {
+                // 5. 각 슬롯의 아이템 정보와 개수를 가져와 리스트에 추가합니다.
+                tempPlayerData.inventoryItems.Add(new ItemSlotData
+                {
+                    itemName = slot.currentSaveItem.ItemName,
+                    // 아이템 개수는 여전히 Inventory의 데이터에 있으므로, 여기서 가져옵니다.
+                    count = Inventory.Instance.GetItemCount(slot.currentSaveItem)
+                });
+            }
+        }
+
+        // 6. 순서가 반영된 리스트가 담긴 PlayerData를 저장합니다.
         saveManager.SaveData(tempPlayerData);
     }
 
