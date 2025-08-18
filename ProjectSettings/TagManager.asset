@@ -12,6 +12,7 @@ TagManager:
   - chaseRange
   - disengageRange
   - AttackRange
+  - Item
   layers:
   - Default
   - TransparentFX
@@ -78,4 +79,7 @@ TagManager:
     locked: 0
   - name: UI
     uniqueID: 180946271
+    locked: 0
+  - name: Item
+    uniqueID: 2670099869
     locked: 0

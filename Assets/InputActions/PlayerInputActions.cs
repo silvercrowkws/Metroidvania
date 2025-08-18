@@ -89,6 +89,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Inventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""39826f00-56e0-4ad5-ab3b-9a93a6710894"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -190,6 +199,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Guard"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""21ccf848-2850-4962-a8c6-c96c106f2eb2"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -222,6 +242,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Actions_DoorInteract = m_Actions.FindAction("DoorInteract", throwIfNotFound: true);
         m_Actions_Attack = m_Actions.FindAction("Attack", throwIfNotFound: true);
         m_Actions_Guard = m_Actions.FindAction("Guard", throwIfNotFound: true);
+        m_Actions_Inventory = m_Actions.FindAction("Inventory", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -290,6 +311,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Actions_DoorInteract;
     private readonly InputAction m_Actions_Attack;
     private readonly InputAction m_Actions_Guard;
+    private readonly InputAction m_Actions_Inventory;
     public struct ActionsActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -301,6 +323,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @DoorInteract => m_Wrapper.m_Actions_DoorInteract;
         public InputAction @Attack => m_Wrapper.m_Actions_Attack;
         public InputAction @Guard => m_Wrapper.m_Actions_Guard;
+        public InputAction @Inventory => m_Wrapper.m_Actions_Inventory;
         public InputActionMap Get() { return m_Wrapper.m_Actions; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -331,6 +354,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Guard.started += instance.OnGuard;
             @Guard.performed += instance.OnGuard;
             @Guard.canceled += instance.OnGuard;
+            @Inventory.started += instance.OnInventory;
+            @Inventory.performed += instance.OnInventory;
+            @Inventory.canceled += instance.OnInventory;
         }
 
         private void UnregisterCallbacks(IActionsActions instance)
@@ -356,6 +382,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Guard.started -= instance.OnGuard;
             @Guard.performed -= instance.OnGuard;
             @Guard.canceled -= instance.OnGuard;
+            @Inventory.started -= instance.OnInventory;
+            @Inventory.performed -= instance.OnInventory;
+            @Inventory.canceled -= instance.OnInventory;
         }
 
         public void RemoveCallbacks(IActionsActions instance)
@@ -391,5 +420,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnDoorInteract(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnGuard(InputAction.CallbackContext context);
+        void OnInventory(InputAction.CallbackContext context);
     }
 }

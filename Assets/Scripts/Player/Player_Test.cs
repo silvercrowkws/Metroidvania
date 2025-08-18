@@ -170,6 +170,16 @@ public class Player_Test : MonoBehaviour
     /// </summary>
     public float parryingTimerate = 1f;
 
+    /// <summary>
+    /// 플레이어가 인벤토리를 열었는지 확인하는 bool 변수
+    /// </summary>
+    private bool isInventoryOpen = false;
+
+    /// <summary>
+    /// 인벤토리 패널
+    /// </summary>
+    private GameObject inventoryPanel;
+
     // 플레이어 조작 관련 끝 --------------------------------------------------
 
     // 문 및 열쇠 관련 --------------------------------------------------
@@ -250,6 +260,7 @@ public class Player_Test : MonoBehaviour
         //inputActions.Actions.Guard.performed += OnGuard;
         inputActions.Actions.Guard.started += OnGuard;
         inputActions.Actions.Guard.canceled += OnGuard;
+        inputActions.Actions.Inventory.performed += OnInventory;
 
         Transform child = transform.GetChild(0);
         attackRange = child.gameObject;
@@ -260,8 +271,15 @@ public class Player_Test : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        //inventoryPanel = GameObject.Find("InventoryPanel");
+        inventoryPanel = FindAnyObjectByType<InventoryPanel>().gameObject;
+    }
+
     private void OnDisable()
     {
+        inputActions.Actions.Inventory.performed -= OnInventory;
         inputActions.Actions.Guard.canceled -= OnGuard;
         inputActions.Actions.Guard.started -= OnGuard;
         //inputActions.Actions.Guard.performed -= OnGuard;
@@ -710,6 +728,23 @@ public class Player_Test : MonoBehaviour
                 animator.SetTrigger("Attack");
             }
         }
+    }
+
+    public Action<bool> onInventoryToggle;
+
+    /// <summary>
+    /// 인풋 시스템으로 플레이어의 인벤토리를 제어하는 함수
+    /// </summary>
+    /// <param name="context"></param>
+    private void OnInventory(InputAction.CallbackContext context)
+    {
+        // 인벤토리 상태를 토글
+        isInventoryOpen = !isInventoryOpen;
+
+        onInventoryToggle?.Invoke(isInventoryOpen);
+
+        /*inventoryPanel.SetActive(isInventoryOpen);
+        Debug.Log("인벤토리 상태: " + (isInventoryOpen ? "열림" : "닫힘"));*/
     }
 
     /// <summary>
