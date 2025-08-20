@@ -102,16 +102,23 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    public void RemoveItem(ItemDataSO item, Vector2 pos)
+    public void RemoveItem(ItemDataSO item, Vector2 pos, int removeCount = 1)
     {
         //아이템이 존재한다면?
         if (itemContainer.ContainsKey(item))
         {
+            // 실제로 버릴 개수만큼 반복해서 아이템 생성
+            for (int i = 0; i < removeCount; i++)
+            {
+                Instantiate(item.ItemPrefab, pos, Quaternion.identity);
+            }
+
             //생성 해주기
-            Instantiate(item.ItemPrefab, pos, Quaternion.identity);
+            //Instantiate(item.ItemPrefab, pos, Quaternion.identity);
 
             //카운트 1 빼주기
-            itemContainer[item]--;
+            //itemContainer[item]--;
+            itemContainer[item] -= removeCount;
 
             //이벤트 실행
             OnItemChanged?.Invoke(item, itemContainer[item]);

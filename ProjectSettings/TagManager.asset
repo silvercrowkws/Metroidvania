@@ -13,6 +13,7 @@ TagManager:
   - disengageRange
   - AttackRange
   - Item
+  - InventoryPanel
   layers:
   - Default
   - TransparentFX
