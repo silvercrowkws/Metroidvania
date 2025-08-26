@@ -224,13 +224,13 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IP
         return false;
     }
 
-    /// <summary>
+    /*/// <summary>
     /// 아이템 버리기를 시도하는 함수
     /// </summary>
     private void ThrowingItem()
     {
         Inventory.Instance.RemoveItem(currentSaveItem, UnityEngine.Random.insideUnitCircle, quantityPanel.quantityItemCount);
-    }
+    }*/
 
     /// <summary>
     /// 포인터가 가리키는 슬롯 설정

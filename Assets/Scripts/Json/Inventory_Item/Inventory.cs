@@ -104,7 +104,7 @@ public class Inventory : MonoBehaviour
 
     public void RemoveItem(ItemDataSO item, Vector2 pos, int removeCount = 1)
     {
-        //아이템이 존재한다면?
+        // 아이템이 존재한다면?
         if (itemContainer.ContainsKey(item))
         {
             // 실제로 버릴 개수만큼 반복해서 아이템 생성

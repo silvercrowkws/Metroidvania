@@ -32,6 +32,15 @@ public class Item : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("플레이어와 충돌");
+            Inventory.Instance.AddItem(this);
+        }
+    }
+
 #if UNITY_EDITOR
 
     //itemData설정시 자동으로 스프라이트등이 바뀌도록

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
 
 public class QuantityPanel : MonoBehaviour
@@ -37,6 +38,10 @@ public class QuantityPanel : MonoBehaviour
     /// </summary>
     public Action onThrowingItem;
 
+    Player player;
+
+    Player_Test player_test;
+
     private void Awake()
     {
         Transform child = transform.GetChild(1);
@@ -56,6 +61,22 @@ public class QuantityPanel : MonoBehaviour
 
     private void OnEnable()
     {
+        player = GameManager.Instance.Player;
+        if (player == null)
+        {
+            //Debug.Log("player는 없고");
+            player_test = GameManager.Instance.Player_Test;
+
+            if (player_test == null)
+            {
+                //Debug.Log("player_test도 없는데?");
+            }
+            else
+            {
+                //Debug.Log("player_test는 있는데..");
+            }
+        }
+
         // 프레임 끝나고 실행해야 정상적으로 포커스됨
         StartCoroutine(SetFocus());
     }
@@ -93,13 +114,61 @@ public class QuantityPanel : MonoBehaviour
         targetSlot = slot;
     }
 
+    /// <summary>
+    /// 아이템을 버릴 방향(플레이어가 보는 위치)
+    /// </summary>
+    Vector2 throwDirection;
+
+    /// <summary>
+    /// 아이템 버리기 확인 버튼
+    /// </summary>
     private void Confirm()
     {
+        // 아이템을 버릴 위치
+        Vector2 dropPosition;
+
         Debug.Log("아이템 버리기");
         if (targetSlot != null)
         {
+            if (player == null)
+            {
+                if(player_test == null)
+                {
+                    Debug.Log("아이템 버리려는데 플레이어가 없다.");
+                }
+                else
+                {
+                    // 플레이어의 방향(local scale)을 가져와서 아이템을 버릴 위치 계산
+                    throwDirection = new Vector2(player_test.transform.localScale.x, 0);
+                }
+            }
+            else
+            {
+                // 플레이어의 방향(local scale)을 가져와서 아이템을 버릴 위치 계산
+                throwDirection = new Vector2(player.transform.localScale.x, 0);
+            }
+
+            // 1~ 1.5 거리로 버림
+            float randomPlus = UnityEngine.Random.Range(1, 1.5f);
+
+            // 아이템을 버릴 위치를 플레이어 위치 + (방향 * 거리)로 설정
+            if (player == null)
+            {
+                
+                dropPosition = (Vector2)player_test.transform.position + throwDirection * randomPlus + new Vector2(0, 1);
+            }
+            else
+            {
+                dropPosition = (Vector2)player.transform.position + throwDirection * randomPlus + new Vector2(0, 1);
+            }
+
             int.TryParse(inputField.text, out quantityItemCount);
-            Inventory.Instance.RemoveItem(targetSlot.currentSaveItem, UnityEngine.Random.insideUnitCircle, quantityItemCount);
+            //Inventory.Instance.RemoveItem(targetSlot.currentSaveItem, UnityEngine.Random.insideUnitCircle, quantityItemCount);
+            Inventory.Instance.RemoveItem(targetSlot.currentSaveItem, dropPosition, quantityItemCount);
+        }
+        else
+        {
+            Debug.Log("targetSlot이 없는데???");
         }
         this.gameObject.SetActive(false);
     }
