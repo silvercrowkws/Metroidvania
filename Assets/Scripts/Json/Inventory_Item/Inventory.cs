@@ -135,17 +135,17 @@ public class Inventory : MonoBehaviour
                 }
             }
 
-            //카운트 1 빼주기
+            // 카운트 1 빼주기
             //itemContainer[item]--;
             itemContainer[item] -= removeCount;
 
-            //이벤트 실행
+            // 이벤트 실행
             OnItemChanged?.Invoke(item, itemContainer[item]);
 
-            //0이하로 떨어졌다면?
+            // 0이하로 떨어졌다면?
             if (itemContainer[item] <= 0)
             {
-                //item 제거
+                // item 제거
                 itemContainer.Remove(item);
             }
         }
