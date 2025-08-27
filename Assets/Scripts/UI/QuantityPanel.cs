@@ -42,6 +42,12 @@ public class QuantityPanel : MonoBehaviour
 
     Player_Test player_test;
 
+    /// <summary>
+    /// 벽을 감지하기 위한 레이어 마스크
+    /// </summary>
+    [SerializeField]
+    private LayerMask wallLayer;
+
     private void Awake()
     {
         Transform child = transform.GetChild(1);
@@ -139,29 +145,26 @@ public class QuantityPanel : MonoBehaviour
                 else
                 {
                     // 플레이어의 방향(local scale)을 가져와서 아이템을 버릴 위치 계산
-                    throwDirection = new Vector2(player_test.transform.localScale.x, 0);
+                    throwDirection = new Vector2(player_test.transform.localScale.x, 0).normalized;
                 }
             }
             else
             {
                 // 플레이어의 방향(local scale)을 가져와서 아이템을 버릴 위치 계산
-                throwDirection = new Vector2(player.transform.localScale.x, 0);
+                throwDirection = new Vector2(player.transform.localScale.x, 0).normalized;
             }
-
-            // 1~ 1.5 거리로 버림
-            float randomPlus = UnityEngine.Random.Range(1, 1.5f);
 
             // 아이템을 버릴 위치를 플레이어 위치 + (방향 * 거리)로 설정
             if (player == null)
             {
-                
-                dropPosition = (Vector2)player_test.transform.position + throwDirection * randomPlus + new Vector2(0, 1);
+                dropPosition = (Vector2)player_test.transform.position + throwDirection + new Vector2(0, 1);
             }
             else
             {
-                dropPosition = (Vector2)player.transform.position + throwDirection * randomPlus + new Vector2(0, 1);
+                dropPosition = (Vector2)player.transform.position + throwDirection + new Vector2(0, 1);
             }
 
+            // 최종적으로 계산된 dropPosition 위치에 아이템을 버림
             int.TryParse(inputField.text, out quantityItemCount);
             //Inventory.Instance.RemoveItem(targetSlot.currentSaveItem, UnityEngine.Random.insideUnitCircle, quantityItemCount);
             Inventory.Instance.RemoveItem(targetSlot.currentSaveItem, dropPosition, quantityItemCount);
