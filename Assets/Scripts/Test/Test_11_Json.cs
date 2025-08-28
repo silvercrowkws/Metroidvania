@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[Serializable]
+/*[Serializable]
 public class InventoryData
 {
     public List<Item> inventoryList = new List<Item>();
-}
+}*/
 
 public class Test_11_Json : TestBase
 {

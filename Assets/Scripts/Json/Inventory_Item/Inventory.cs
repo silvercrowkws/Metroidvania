@@ -77,32 +77,32 @@ public class Inventory : MonoBehaviour
 
     public void AddItem(Item item)
     {
-        //이미 같은종류의 아이템이 존재한다면?
+        // 이미 같은종류의 아이템이 존재한다면?
         if (itemContainer.ContainsKey(item.itemData))
         {
-            //MaxStackCount보다 덜 가지고있다면?
+            // MaxStackCount보다 덜 가지고있다면?
             if (item.itemData.MaxStackCount > itemContainer[item.itemData])
             {
-                //카운트 1 증가
+                // 카운트 1 증가
                 itemContainer[item.itemData]++;
 
-                //이벤트 실행
+                // 이벤트 실행
                 OnItemChanged?.Invoke(item.itemData, itemContainer[item.itemData]);
 
-                //아이템 제거
+                // 아이템 제거
                 Destroy(item.gameObject);
             }
         }
-        //같은 종류의 아이템을 가지고 있지 않다면
+        // 같은 종류의 아이템을 가지고 있지 않다면
         else
         {
-            //아이템 추가해주기
+            // 아이템 추가해주기
             itemContainer.Add(item.itemData, 1);
 
-            //이벤트 실행
+            // 이벤트 실행
             OnNewItemAdded?.Invoke(item.itemData);
 
-            //아이템 제거
+            // 아이템 제거
             Destroy(item.gameObject);
         }
     }
@@ -155,10 +155,10 @@ public class Inventory : MonoBehaviour
     {
         if (itemContainer.TryGetValue(data, out var count))
         {
-            //있다면 카운트를 반환
+            // 있다면 카운트를 반환
             return count;
         }
-        //아이템이 없다면 -1반환
+        // 아이템이 없다면 -1반환
         return -1;
     }
 

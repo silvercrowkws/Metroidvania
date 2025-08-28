@@ -24,6 +24,11 @@ public class QuantityPanel : MonoBehaviour
     public int quantityItemCount;
 
     /// <summary>
+    /// 버릴 수 있는 최대 수량(아이템 몇개 가지고 있는지)
+    /// </summary>
+    int maxItemCount;
+
+    /// <summary>
     /// 확인 버튼
     /// </summary>
     Button confirmButton;
@@ -87,8 +92,15 @@ public class QuantityPanel : MonoBehaviour
         StartCoroutine(SetFocus());
     }
 
+    /// <summary>
+    /// 인풋필드에 최대 개수를 미리 입력해 놓는 함수
+    /// </summary>
+    /// <param name="maxCount"></param>
     public void Show(int maxCount)
     {
+        // 아이템 최대 수량 기록
+        maxItemCount = maxCount;
+
         quantityItemCount = maxCount;
         gameObject.SetActive(true);
 
@@ -130,6 +142,15 @@ public class QuantityPanel : MonoBehaviour
     /// </summary>
     private void Confirm()
     {
+        // 인풋 텍스트를 quantityItemCount에 반영
+        int.TryParse(inputField.text, out quantityItemCount);
+
+        if (quantityItemCount > maxItemCount)
+        {
+            Debug.Log("판매하려는 개수가 최대 개수보다 크다");
+            return;
+        }
+
         // 아이템을 버릴 위치
         Vector2 dropPosition;
 
@@ -165,7 +186,7 @@ public class QuantityPanel : MonoBehaviour
             }
 
             // 최종적으로 계산된 dropPosition 위치에 아이템을 버림
-            int.TryParse(inputField.text, out quantityItemCount);
+            //int.TryParse(inputField.text, out quantityItemCount);
             //Inventory.Instance.RemoveItem(targetSlot.currentSaveItem, UnityEngine.Random.insideUnitCircle, quantityItemCount);
             Inventory.Instance.RemoveItem(targetSlot.currentSaveItem, dropPosition, quantityItemCount);
         }

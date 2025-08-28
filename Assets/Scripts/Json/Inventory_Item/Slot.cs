@@ -60,6 +60,12 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IP
             //카운트가 0이라면?
             if (count == 0)
             {
+                //이벤트 구독을 먼저 해제 -> Inventory.Clear() 루프의 다음 호출 때 이 슬롯에 접근하지 않기 위해
+                if (Inventory.Instance != null)
+                {
+                    Inventory.Instance.OnItemChanged -= HandleItemAdded;
+                }
+
                 //슬롯 없에기
                 Destroy(gameObject);
             }
@@ -73,14 +79,14 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IP
         }
     }
 
-    private void OnDestroy()
+    /*private void OnDestroy()
     {
         if (Inventory.Instance != null)
         {
             //이벤트 구독 해제
             Inventory.Instance.OnItemChanged -= HandleItemAdded;
         }
-    }
+    }*/
 
     // 이 오브젝트위에서 마우스를 눌렀다면?
     // IPointerDownHandler에 정의되어있음
@@ -186,11 +192,8 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IP
             else // InventoryPanel이 아닌 다른 곳에 놓았을 때
             {
                 Debug.Log("인벤토리 패널 밖으로 아이템을 버립니다.");
-                quantityPanel.SetTargetSlot(this);
-                quantityPanel.gameObject.SetActive(true);
+                ShowQuantityPanel();
 
-                int maxCount = Inventory.Instance.GetItemCount(currentSaveItem);
-                quantityPanel.Show(maxCount);
                 //ThrowingItem();
             }
         }
@@ -246,7 +249,7 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IP
         inventoryViewer.SetPointerSlot(null);
     }
 
-    // Slot.cs
+    
     private void ShowQuantityPanel()
     {
         quantityPanel.SetTargetSlot(this); // 반드시 현재 슬롯을 패널에 전달
