@@ -183,6 +183,22 @@ public class GameManager : Singleton<GameManager>
 
         // InventoryViewer의 인스턴스를 찾기
         inventoryViewer = FindObjectOfType<InventoryViewer>();
+        
+        // InventoryViewer의 슬롯 순서 변경 이벤트에 OnDataSave 함수를 연결
+        if (inventoryViewer != null)
+        {
+            inventoryViewer.OnInventoryOrderChanged += OnDataSave;
+        }
+
+        // Inventory의 이벤트에 OnDataSave 함수를 구독
+        if (Inventory.Instance != null)
+        {
+            // 새로운 종류의 아이템이 추가되었을 때 OnDataSave 실행
+            Inventory.Instance.OnNewItemAdded += (itemData) => OnDataSave();
+
+            // 기존 아이템의 개수가 변경되었을 때 OnDataSave 실행
+            Inventory.Instance.OnItemChanged += (itemData, count) => OnDataSave();
+        }
     }
 
     private void OnEnable()
@@ -193,6 +209,20 @@ public class GameManager : Singleton<GameManager>
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        
+        // GameManager 오브젝트가 비활성화되거나 파괴될 때, 연결했던 이벤트를 해제
+        // 이렇게 하지 않으면 메모리 누수가 발생할 수 있음
+        if (Inventory.Instance != null)
+        {
+            Inventory.Instance.OnNewItemAdded -= (itemData) => OnDataSave();
+            Inventory.Instance.OnItemChanged -= (itemData, count) => OnDataSave();
+        }
+        
+        // InventoryViewer의 이벤트 구독도 해제
+        if (inventoryViewer != null)
+        {
+            inventoryViewer.OnInventoryOrderChanged -= OnDataSave;
+        }
     }
 
     protected override void OnInitialize()
@@ -286,7 +316,7 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     private void OnDataSave()
     {
-        Debug.Log("게임 매니저에서 데이터 저장");
+        Debug.Log("게임매니저에서 인벤토리의 변경 감지됨. 데이터 저장 실행.");
 
         // PlayerData 객체와 인벤토리 리스트를 새로 생성
         tempPlayerData.inventoryItems = new List<ItemSlotData>();

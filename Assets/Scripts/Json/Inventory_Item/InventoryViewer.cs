@@ -12,6 +12,11 @@ public class InventoryViewer : MonoBehaviour
     private Slot currentChangeSlot;
 
     /// <summary>
+    /// 인벤토리 슬롯의 순서가 바뀌었을 때 게임매니저에 알리는 델리게이트
+    /// </summary>
+    public Action OnInventoryOrderChanged;
+
+    /// <summary>
     /// 현재 포인터가 가리키고있는 슬롯
     /// </summary>
     private Slot pointerUpSlot;
@@ -27,7 +32,7 @@ public class InventoryViewer : MonoBehaviour
         Instantiate(slotPrefab, slotParent).Init(obj);
     }
 
-    //Slot설정
+    // Slot설정
     public void SetPointerSlot(Slot slot)
     {
         pointerUpSlot = slot;
@@ -73,6 +78,9 @@ public class InventoryViewer : MonoBehaviour
         currentChangeSlot.Init(oldData);
 
         currentChangeSlot = null;
+        
+        // 슬롯 순서가 변경되었음을 델리게이트로 알림
+        OnInventoryOrderChanged?.Invoke();        
     }
 
     /// <summary>
