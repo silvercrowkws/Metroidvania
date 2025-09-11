@@ -66,7 +66,18 @@ public class Inventory : MonoBehaviour
     public void LoadItem(ItemDataSO itemData, int count)
     {
         // 1. 데이터 추가
-        itemContainer.Add(itemData, count);
+        //itemContainer.Add(itemData, count);
+
+        // 이미 있으면 덮어쓰기, 없으면 추가로 수정
+        if (itemContainer.ContainsKey(itemData))
+        {
+            itemContainer[itemData] = count;
+        }
+        else
+        {
+            itemContainer.Add(itemData, count);
+        }
+
 
         // 2. InventoryViewer가 새 Slot UI를 생성하도록 이벤트를 호출합니다.
         OnNewItemAdded?.Invoke(itemData);

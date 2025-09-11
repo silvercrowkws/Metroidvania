@@ -32,6 +32,8 @@ public class Test_11_Json : TestBase
     /// </summary>
     Player player;
 
+    Player_Test player_Test;
+
     /// <summary>
     /// 세이브 매니저
     /// </summary>
@@ -55,7 +57,7 @@ public class Test_11_Json : TestBase
     private void Start()
     {
         gameManager = GameManager.Instance;
-        player = gameManager.Player;
+        player_Test = gameManager.Player_Test;
 
         tempPlayerData = new PlayerData();
         saveManager = GameManager.Instance.SaveManager;
@@ -64,10 +66,13 @@ public class Test_11_Json : TestBase
         // 자동으로 저장된 데이터를 불러옴
         //loadPlayerData = loadManager.LoadData();
 
-        // 불러온 데이터를 tempPlayerData로 복사
+        /*// 불러온 데이터를 tempPlayerData로 복사
         PlayerData loaded = loadManager.LoadData();
         tempPlayerData = loaded;
-        loadPlayerData = loaded;     // 필요하다면 같이 저장
+        loadPlayerData = loaded;     // 필요하다면 같이 저장*/
+
+        // 파일에서 불러온 데이터는 loadPlayerData에만 저장
+        loadPlayerData = loadManager.LoadData();
 
         // InventoryViewer의 인스턴스를 찾습니다.
         inventoryViewer = FindObjectOfType<InventoryViewer>();
@@ -76,6 +81,7 @@ public class Test_11_Json : TestBase
     void PrintData(PlayerData loadPlayerData)
     {
         Debug.Log($"name : {loadPlayerData.name}");
+        Debug.Log($"level : {loadPlayerData.level}");
         Debug.Log($"str : {loadPlayerData.str}");
         Debug.Log($"dex : {loadPlayerData.dex}");
         Debug.Log($"hp : {loadPlayerData.hp}");
@@ -108,6 +114,7 @@ public class Test_11_Json : TestBase
     protected override void OnTest1(InputAction.CallbackContext context)
     {
         tempPlayerData.name = "Player_Test_1";
+        tempPlayerData.level = 1;
         tempPlayerData.str = 1;
         tempPlayerData.dex = 1;
         tempPlayerData.hp = 1;
@@ -121,6 +128,7 @@ public class Test_11_Json : TestBase
     protected override void OnTest2(InputAction.CallbackContext context)
     {
         tempPlayerData.name = "Player_Test_2";
+        tempPlayerData.level = 2;
         tempPlayerData.str = 2;
         tempPlayerData.dex = 2;
         tempPlayerData.hp = 2;
@@ -134,6 +142,7 @@ public class Test_11_Json : TestBase
     protected override void OnTest3(InputAction.CallbackContext context)
     {
         tempPlayerData.name = "Player_Test_3";
+        tempPlayerData.level = 3;
         tempPlayerData.str = 3;
         tempPlayerData.dex = 3;
         tempPlayerData.hp = 3;
@@ -250,9 +259,36 @@ public class Test_11_Json : TestBase
         Debug.Log("<<<<< 불러온 데이터로 인벤토리 UI 복원 시작 >>>>>");
 
         // 1. 필수 요소들이 준비되었는지 확인
-        if (loadPlayerData == null) { Debug.LogError("로드된 데이터(loadPlayerData)가 없습니다! OnTest7을 먼저 실행하세요."); return; }
-        if (Inventory.Instance == null) { Debug.LogError("Inventory 인스턴스를 찾을 수 없습니다."); return; }
-        if (itemDatabase == null) { Debug.LogError("ItemDatabaseSO가 연결되지 않았습니다! Inspector 창에서 연결해주세요."); return; }
+        if (loadPlayerData == null)
+        {
+            Debug.LogError("로드된 데이터(loadPlayerData)가 없습니다! OnTest7을 먼저 실행하세요.");
+            return;
+        }
+        if (Inventory.Instance == null)
+        {
+            Debug.LogError("Inventory 인스턴스를 찾을 수 없습니다.");
+            return;
+        }
+        if (itemDatabase == null)
+        {
+            Debug.LogError("ItemDatabaseSO가 연결되지 않았습니다! Inspector 창에서 연결해주세요.");
+            return;
+        }
+
+
+        Debug.Log("플레이어 스탯 적용 중...");
+
+        // 불러온 데이터로 Player 객체의 상태를 갱신합니다.
+        // (Player 클래스에 이름, 레벨, 스탯 등을 설정할 수 있는 프로퍼티나 함수가 있다고 가정합니다.)
+        player_Test.PlayerName = loadPlayerData.name; // 예시: Player 클래스에 PlayerName 프로퍼티가 있다고 가정
+        player_Test.Level = loadPlayerData.level;
+        player_Test.Strength = loadPlayerData.str;
+        player_Test.Dexterity = loadPlayerData.dex;
+        player_Test.Health = loadPlayerData.hp;
+
+        Debug.Log($"'{loadPlayerData.name}' (Lv.{loadPlayerData.level}) 데이터 적용 완료!");
+
+
 
         // 2. 기존 인벤토리 UI와 데이터를 모두 비웁니다.
         Inventory.Instance.Clear();
@@ -272,6 +308,9 @@ public class Test_11_Json : TestBase
                 Debug.LogWarning($"아이템 '{itemSlotData.itemName}'을 데이터베이스에서 찾을 수 없습니다.");
             }
         }
+
+
+        
 
         Debug.Log("<<<<< 인벤토리 UI 복원 완료 >>>>>");
     }

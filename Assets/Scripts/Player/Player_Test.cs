@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -10,6 +11,31 @@ using UnityEngine.UIElements;
 
 public class Player_Test : MonoBehaviour
 {
+    /// <summary>
+    /// 플레이어의 이름
+    /// </summary>
+    public string PlayerName { get; set; }
+
+    /// <summary>
+    /// 플레이어의 레벨
+    /// </summary>
+    public int Level { get; set; }
+
+    /// <summary>
+    /// 힘 스탯
+    /// </summary>
+    public int Strength { get; set; }
+
+    /// <summary>
+    /// 민첩 스탯
+    /// </summary>
+    public int Dexterity { get; set; }
+
+    /// <summary>
+    /// 체력 스탯
+    /// </summary>
+    public int Health { get; set; }
+
     // 플레이어 조작 관련 --------------------------------------------------
 
     /// <summary>
@@ -179,6 +205,61 @@ public class Player_Test : MonoBehaviour
     /// 인벤토리 패널
     /// </summary>
     private GameObject inventoryPanel;
+
+    /// <summary>
+    /// 플레이어의 최대 경험치
+    /// 현재 경험치가 최대 경험치보다 크거나 같게 되면 레벨업 하고 최대 경험치량 증가
+    /// </summary>
+    public float maxXP = 100f;
+
+    /// <summary>
+    /// 레벨업 시 필요 경험치가 올라가는 양
+    /// </summary>
+    public float xpGrowthRate = 20f;
+
+    /// <summary>
+    /// 플레이어의 현재 경험치
+    /// </summary>
+    private float currentXP;
+
+    public float EX
+    {
+        get => currentXP;
+        set
+        {
+            if(currentXP != value)
+            {
+                currentXP = value;
+                //currentXP = Mathf.Clamp(value, 0, maxXP);
+
+                Debug.Log($"플레이어의 현재 경험치: {EX}");
+
+                /*if(currentXP >= maxXP)
+                {
+                    // 남은 경험치는 누적
+                    currentXP = currentXP - maxXP;
+
+                    onPlayerLevelUP?.Invoke(currentXP);
+                    Debug.Log("플레이어 레벨업!");
+                }*/
+
+                // 대량의 경험치를 얻어서 레벨업이 연속으로 되도록 변경
+                while (currentXP >= maxXP)
+                {
+                    currentXP -= maxXP;         // 남은 경험치 누적
+                    maxXP += xpGrowthRate;      // 레벨업 필요 경험치량 증가
+
+                    onPlayerLevelUP?.Invoke(currentXP);     // 델리게이트
+                    Debug.Log("플레이어 레벨업!");
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 플레이어가 레벨업 했음을 알리는 델리게이트
+    /// </summary>
+    public Action<float> onPlayerLevelUP;
 
     // 플레이어 조작 관련 끝 --------------------------------------------------
 

@@ -22,6 +22,11 @@ public class PlayerData
     public string name;
 
     /// <summary>
+    /// 플레이어의 레벨
+    /// </summary>
+    public int level;
+
+    /// <summary>
     /// 힘 관련 스탯
     /// </summary>
     public int str;

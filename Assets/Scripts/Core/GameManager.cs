@@ -199,6 +199,8 @@ public class GameManager : Singleton<GameManager>
             // 기존 아이템의 개수가 변경되었을 때 OnDataSave 실행
             Inventory.Instance.OnItemChanged += (itemData, count) => OnDataSave();
         }
+
+
     }
 
     private void OnEnable()
@@ -294,6 +296,7 @@ public class GameManager : Singleton<GameManager>
     void PrintData(PlayerData loadPlayerData)
     {
         Debug.Log($"name : {loadPlayerData.name}");
+        Debug.Log($"level : {loadPlayerData.level}");
         Debug.Log($"str : {loadPlayerData.str}");
         Debug.Log($"dex : {loadPlayerData.dex}");
         Debug.Log($"hp : {loadPlayerData.hp}");
@@ -318,12 +321,22 @@ public class GameManager : Singleton<GameManager>
     {
         Debug.Log("게임매니저에서 인벤토리의 변경 감지됨. 데이터 저장 실행.");
 
+        // 1. 현재 플레이어 스탯을 tempPlayerData에 저장
+        if (Player_Test != null)
+        {
+            tempPlayerData.name = Player_Test.PlayerName;
+            tempPlayerData.level = Player_Test.Level;
+            tempPlayerData.str = Player_Test.Strength;
+            tempPlayerData.dex = Player_Test.Dexterity;
+            tempPlayerData.hp = Player_Test.Health;
+        }
+
         // PlayerData 객체와 인벤토리 리스트를 새로 생성
         tempPlayerData.inventoryItems = new List<ItemSlotData>();
 
         if (inventoryViewer != null && Inventory.Instance != null)
         {
-            // InventoryViewer에서 UI 순서대로 정렬된 슬롯들을 가져옴
+            /*// InventoryViewer에서 UI 순서대로 정렬된 슬롯들을 가져옴
             Slot[] slots = inventoryViewer.GetSlots();
 
             // 이 슬롯 배열을 순서대로 순회
@@ -337,6 +350,18 @@ public class GameManager : Singleton<GameManager>
                     // 아이템 개수는 여전히 Inventory의 데이터에 있으므로, 여기서 가져옴
                     count = Inventory.Instance.GetItemCount(slot.currentSaveItem)
                 });
+            }*/
+
+            foreach (var kvp in Inventory.Instance.GetItemContainer())
+            {
+                if (kvp.Value > 0) // 0개 이상만 저장
+                {
+                    tempPlayerData.inventoryItems.Add(new ItemSlotData
+                    {
+                        itemName = kvp.Key.ItemName,
+                        count = kvp.Value
+                    });
+                }
             }
         }
 
@@ -368,6 +393,15 @@ public class GameManager : Singleton<GameManager>
     private void OnDataRecover()
     {
         Debug.Log("<<<<< 불러온 데이터로 인벤토리 UI 복원 시작 >>>>>");
+
+        if (Player_Test != null && loadPlayerData != null)
+        {
+            Player_Test.PlayerName = loadPlayerData.name;
+            Player_Test.Level = loadPlayerData.level;
+            Player_Test.Strength = loadPlayerData.str;
+            Player_Test.Dexterity = loadPlayerData.dex;
+            Player_Test.Health = loadPlayerData.hp;
+        }
 
         // 1. 필수 요소들이 준비되었는지 확인
         if (loadPlayerData == null) { Debug.LogError("로드된 데이터(loadPlayerData)가 없습니다! OnTest7을 먼저 실행하세요."); return; }

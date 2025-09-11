@@ -49,6 +49,7 @@ public class TestJson : MonoBehaviour
     void PrintData(PlayerData loadPlayerData)
     {
         Debug.Log($"name : {loadPlayerData.name}");
+        Debug.Log($"level : {loadPlayerData.level}");
         Debug.Log($"str : {loadPlayerData.str}");
         Debug.Log($"dex : {loadPlayerData.dex}");
         Debug.Log($"hp : {loadPlayerData.hp}");

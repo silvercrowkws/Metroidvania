@@ -23,6 +23,7 @@ public class LoadManager
             return new PlayerData
             {
                 name = "DefaultPlayer",
+                level = 1,
                 str = 1,
                 dex = 1,
                 hp = 1,
@@ -45,6 +46,7 @@ public class LoadManager
             return new PlayerData
             {
                 name = "DefaultPlayer",
+                level = 1,
                 str = 1,
                 dex = 1,
                 hp = 1,
