@@ -27,6 +27,16 @@ public class PlayerData
     public int level;
 
     /// <summary>
+    /// 플레이어의 경험치
+    /// </summary>
+    public float xp;
+
+    /// <summary>
+    /// 플레이어의 레벨업에 필요한 경험치
+    /// </summary>
+    public float maxXp;
+
+    /// <summary>
     /// 힘 관련 스탯
     /// </summary>
     public int str;

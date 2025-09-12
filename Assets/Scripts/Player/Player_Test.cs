@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using static Cinemachine.DocumentationSortingAttribute;
 
 public class Player_Test : MonoBehaviour
 {
@@ -210,7 +211,7 @@ public class Player_Test : MonoBehaviour
     /// 플레이어의 최대 경험치
     /// 현재 경험치가 최대 경험치보다 크거나 같게 되면 레벨업 하고 최대 경험치량 증가
     /// </summary>
-    public float maxXP = 100f;
+    public float maxXP { get; set; } = 100f;
 
     /// <summary>
     /// 레벨업 시 필요 경험치가 올라가는 양
@@ -222,7 +223,7 @@ public class Player_Test : MonoBehaviour
     /// </summary>
     private float currentXP;
 
-    public float EX
+    public float XP
     {
         get => currentXP;
         set
@@ -232,7 +233,7 @@ public class Player_Test : MonoBehaviour
                 currentXP = value;
                 //currentXP = Mathf.Clamp(value, 0, maxXP);
 
-                Debug.Log($"플레이어의 현재 경험치: {EX}");
+                Debug.Log($"플레이어의 현재 경험치: {XP}");
 
                 /*if(currentXP >= maxXP)
                 {
@@ -248,10 +249,12 @@ public class Player_Test : MonoBehaviour
                 {
                     currentXP -= maxXP;         // 남은 경험치 누적
                     maxXP += xpGrowthRate;      // 레벨업 필요 경험치량 증가
-
-                    onPlayerLevelUP?.Invoke(currentXP);     // 델리게이트
+                    Level++;                    // 레벨 증가
+                    onPlayerLevelUP?.Invoke(Level);     // 델리게이트
                     Debug.Log("플레이어 레벨업!");
                 }
+
+                onPlayerXPChange?.Invoke(currentXP);
             }
         }
     }
@@ -259,7 +262,12 @@ public class Player_Test : MonoBehaviour
     /// <summary>
     /// 플레이어가 레벨업 했음을 알리는 델리게이트
     /// </summary>
-    public Action<float> onPlayerLevelUP;
+    public Action<int> onPlayerLevelUP;
+
+    /// <summary>
+    /// 플레이어의 현재 경험치가 변경했음을 알리는 델리게이트
+    /// </summary>
+    public Action<float> onPlayerXPChange;
 
     // 플레이어 조작 관련 끝 --------------------------------------------------
 

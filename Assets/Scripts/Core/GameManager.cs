@@ -99,8 +99,39 @@ public class GameManager : Singleton<GameManager>
             if(player_test == null)
             {
                 player_test = FindAnyObjectByType<Player_Test>();
+                player_test.onPlayerLevelUP += OnPlayerLevelUP;
+
+                // 경험치 변경 시 저장
+                player_test.onPlayerXPChange += OnPlayerXPChange;
             }
             return player_test;
+        }
+    }
+
+    /// <summary>
+    /// 경험치 변경 시 저장
+    /// </summary>
+    /// <param name="xp"></param>
+    private void OnPlayerXPChange(float xp)
+    {
+        if (isDataRecovered)
+        {
+            OnDataSave();
+        }
+    }
+
+    /// <summary>
+    /// 레벨업 시 저장
+    /// </summary>
+    /// <param name="level"></param>
+    private void OnPlayerLevelUP(int level)
+    {
+        Debug.Log("플레이어의 레벨업 확인");
+        Debug.Log($"플레이어의 현재 레벨: {level}");
+
+        if (isDataRecovered)
+        {
+            OnDataSave();
         }
     }
 
@@ -297,6 +328,8 @@ public class GameManager : Singleton<GameManager>
     {
         Debug.Log($"name : {loadPlayerData.name}");
         Debug.Log($"level : {loadPlayerData.level}");
+        Debug.Log($"xp : {loadPlayerData.xp}");
+        Debug.Log($"maxXP : {loadPlayerData.maxXp}");
         Debug.Log($"str : {loadPlayerData.str}");
         Debug.Log($"dex : {loadPlayerData.dex}");
         Debug.Log($"hp : {loadPlayerData.hp}");
@@ -314,6 +347,8 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    private bool isDataRecovered = false;
+
     /// <summary>
     /// 데이터를 저장하는 함수
     /// </summary>
@@ -321,15 +356,22 @@ public class GameManager : Singleton<GameManager>
     {
         Debug.Log("게임매니저에서 인벤토리의 변경 감지됨. 데이터 저장 실행.");
 
-        // 1. 현재 플레이어 스탯을 tempPlayerData에 저장
-        if (Player_Test != null)
+
+        /*// 인벤토리 인스턴스가 준비되지 않았으면 저장하지 않음
+        if (Inventory.Instance == null)
         {
-            tempPlayerData.name = Player_Test.PlayerName;
-            tempPlayerData.level = Player_Test.Level;
-            tempPlayerData.str = Player_Test.Strength;
-            tempPlayerData.dex = Player_Test.Dexterity;
-            tempPlayerData.hp = Player_Test.Health;
+            Debug.LogWarning("인벤토리 인스턴스가 아직 준비되지 않았으므로 저장을 건너뜁니다.");
+            return;
         }
+
+        // 인벤토리 컨테이너가 비어있으면 저장하지 않음
+        var container = Inventory.Instance.GetItemContainer();
+        if (container == null || container.Count == 0)
+        {
+            Debug.LogWarning("인벤토리 데이터가 비어있으므로 저장을 건너뜁니다.");
+            return;
+        }*/
+
 
         // PlayerData 객체와 인벤토리 리스트를 새로 생성
         tempPlayerData.inventoryItems = new List<ItemSlotData>();
@@ -365,8 +407,23 @@ public class GameManager : Singleton<GameManager>
             }
         }
 
+
+        // 1. 현재 플레이어 스탯을 tempPlayerData에 저장
+        if (Player_Test != null)
+        {
+            tempPlayerData.name = Player_Test.PlayerName;
+            tempPlayerData.level = Player_Test.Level;
+            tempPlayerData.xp = Player_Test.XP;
+            tempPlayerData.maxXp = Player_Test.maxXP;
+            tempPlayerData.str = Player_Test.Strength;
+            tempPlayerData.dex = Player_Test.Dexterity;
+            tempPlayerData.hp = Player_Test.Health;
+        }
+
         // 순서가 반영된 리스트가 담긴 PlayerData를 저장
         saveManager.SaveData(tempPlayerData);
+
+        //OnDataLoad();       // 데이터 로드
     }
 
     /// <summary>
@@ -398,6 +455,8 @@ public class GameManager : Singleton<GameManager>
         {
             Player_Test.PlayerName = loadPlayerData.name;
             Player_Test.Level = loadPlayerData.level;
+            Player_Test.maxXP = loadPlayerData.maxXp;   // 프로퍼티로 할당
+            Player_Test.XP = loadPlayerData.xp;
             Player_Test.Strength = loadPlayerData.str;
             Player_Test.Dexterity = loadPlayerData.dex;
             Player_Test.Health = loadPlayerData.hp;
@@ -428,6 +487,8 @@ public class GameManager : Singleton<GameManager>
         }
 
         Debug.Log("<<<<< 인벤토리 UI 복원 완료 >>>>>");
+
+        isDataRecovered = true; // 복원 완료 플래그 ON
     }
 
 

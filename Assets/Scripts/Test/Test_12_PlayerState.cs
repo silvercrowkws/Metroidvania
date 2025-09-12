@@ -1,18 +1,11 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-/*[Serializable]
-public class InventoryData
+public class Test_12_PlayerState : TestBase
 {
-    public List<Item> inventoryList = new List<Item>();
-}*/
-
-public class Test_11_Json : TestBase
-{
-#if UNITY_EDITOR    
+#if UNITY_EDITOR
 
     [Header("UI 복원을 위해 ItemDatabaseSO 에셋을 연결해주세요.")]
     public ItemDatabaseSO itemDatabase;
@@ -117,48 +110,21 @@ public class Test_11_Json : TestBase
     {
         tempPlayerData.name = "Player_Test_1";
         tempPlayerData.level = 1;
-        tempPlayerData.xp = 1;
-        tempPlayerData.maxXp = 1;
+        tempPlayerData.xp = 0;
+        tempPlayerData.maxXp = 100;
         tempPlayerData.str = 1;
         tempPlayerData.dex = 1;
         tempPlayerData.hp = 1;
-        /*tempPlayerData.inventorySlots = new List<ItemSlot>
-        {
-        new ItemSlot { itemId = "sword_1", count = 1 },
-        new ItemSlot { itemId = "potion_1", count = 1 }
-        };*/
     }
 
     protected override void OnTest2(InputAction.CallbackContext context)
     {
-        tempPlayerData.name = "Player_Test_2";
-        tempPlayerData.level = 2;
-        tempPlayerData.xp = 2;
-        tempPlayerData.maxXp = 2;
-        tempPlayerData.str = 2;
-        tempPlayerData.dex = 2;
-        tempPlayerData.hp = 2;
-        /*tempPlayerData.inventorySlots = new List<ItemSlot>
-        {
-        new ItemSlot { itemId = "sword_2", count = 2 },
-        new ItemSlot { itemId = "potion_2", count = 2 }
-        };*/
+        player_Test.XP += 50;
     }
 
     protected override void OnTest3(InputAction.CallbackContext context)
     {
-        tempPlayerData.name = "Player_Test_3";
-        tempPlayerData.level = 3;
-        tempPlayerData.xp = 3;
-        tempPlayerData.maxXp = 3;
-        tempPlayerData.str = 3;
-        tempPlayerData.dex = 3;
-        tempPlayerData.hp = 3;
-        /*tempPlayerData.inventorySlots = new List<ItemSlot>
-        {
-        new ItemSlot { itemId = "sword_3", count = 3 },
-        new ItemSlot { itemId = "potion_3", count = 3 }
-        };*/
+        
     }
 
     protected override void OnTest4(InputAction.CallbackContext context)
@@ -229,7 +195,7 @@ public class Test_11_Json : TestBase
         {
             // 2. InventoryViewer의 인스턴스를 찾습니다. Start에서 찾도록 수정
             //InventoryViewer inventoryViewer = FindObjectOfType<InventoryViewer>();
-            
+
             // 3. InventoryViewer에서 UI 순서대로 정렬된 슬롯들을 가져옵니다.
             Slot[] slots = inventoryViewer.GetSlots();
 
@@ -320,7 +286,7 @@ public class Test_11_Json : TestBase
         }
 
 
-        
+
 
         Debug.Log("<<<<< 인벤토리 UI 복원 완료 >>>>>");
     }
