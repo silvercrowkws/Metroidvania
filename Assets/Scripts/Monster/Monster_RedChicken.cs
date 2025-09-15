@@ -12,7 +12,7 @@ public class Monster_RedChicken : MonsterBase
         maxHP = currentHP;
         attackPower = 10.0f;
         monsterType = MonsterType.RedChicken;
-        monsterMoveType = MonsterMoveType.Walk;
+        monsterMoveType = MonsterMoveType.Flying;
         base.OnEnable();
     }
 

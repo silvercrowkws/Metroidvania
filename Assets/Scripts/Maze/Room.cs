@@ -175,4 +175,21 @@ public class Room : MonoBehaviour
             }
         }
     }
+
+    public bool HasWall(Direction dir)
+    {
+        switch (dir)
+        {
+            case Direction.Top:
+                return wallTop != null && wallTop.activeSelf;
+            case Direction.Bottom:
+                return wallBottom != null && wallBottom.activeSelf;
+            case Direction.Right:
+                return wallRight != null && wallRight.activeSelf;
+            case Direction.Left:
+                return wallLeft != null && wallLeft.activeSelf;
+            default:
+                return false;
+        }
+    }
 }

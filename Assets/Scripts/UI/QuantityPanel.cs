@@ -8,6 +8,9 @@ using UnityEngine.UI;
 
 public class QuantityPanel : MonoBehaviour
 {
+    // 이 오브젝트는 인스펙터에서 비활성화 하고 시작
+    // Slot에서만 찾고 있고, quantityPanel = FindAnyObjectByType<QuantityPanel>(FindObjectsInactive.Include); 로 비활성화 한 상태에서도 찾기 때문에 상관 없음)
+
     /// <summary>
     /// 인풋 필드
     /// </summary>

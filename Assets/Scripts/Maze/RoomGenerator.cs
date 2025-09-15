@@ -446,12 +446,40 @@ public class RoomGenerator : MonoBehaviour
             .Where(room => room.wallBottom != null && room.wallBottom.activeSelf)
             .ToList();
 
-        if (validRooms.Count < 3) return;
+        // 몬스터 종류의 개수
+        int monsterTypes = 5;
 
-        // 랜덤하게 섞고 3개 선택
-        var selectedRooms = validRooms.OrderBy(_ => UnityEngine.Random.value).Take(5).ToList();
+        // 각 몬스터 별로 생성할 개수
+        int monstersPerType = 3;
 
-        for (int i = 0; i < selectedRooms.Count; i++)
+        // 생성할 몬스터의 총 개수
+        int totalMonsters = monsterTypes * monstersPerType;
+
+        //if (validRooms.Count < 3) return;
+        if (validRooms.Count < totalMonsters)
+        {
+            Debug.LogWarning("방 개수가 부족해서 모든 몬스터를 배치할 수 없습니다.");
+            return;
+        }
+
+        /*// 랜덤하게 섞고 3개 선택
+        var selectedRooms = validRooms.OrderBy(_ => UnityEngine.Random.value).Take(5).ToList();*/
+
+        // 방 랜덤 섞기
+        var shuffledRooms = validRooms.OrderBy(_ => UnityEngine.Random.value).ToList();
+
+        // 몬스터 프리팹 배열
+        GameObject[] monsterPrefabs = new GameObject[]
+        {
+        monster_RedChicken,
+        monster_Skeleton,
+        monster_FlyingEye,
+        monster_Goblin,
+        monster_Mushroom
+        };
+
+
+        /*for (int i = 0; i < selectedRooms.Count; i++)
         {
             Room selectedRoom = selectedRooms[i];
 
@@ -460,14 +488,28 @@ public class RoomGenerator : MonoBehaviour
 
             Vector3 spawnPosition = new Vector3(landObjectTransform.position.x, landObjectTransform.position.y + 0.6f, landObjectTransform.position.z);
 
-            /*GameObject monster_0_Obj = Instantiate(monster_RedChicken, spawnPosition, Quaternion.identity, landObjectTransform);
+            *//*GameObject monster_0_Obj = Instantiate(monster_RedChicken, spawnPosition, Quaternion.identity, landObjectTransform);
             monster_0_Obj.name = $"Monster_0_{i + 1}";*/
 
-            /*GameObject monster_1_Obj = Instantiate(monster_Skeleton, spawnPosition, Quaternion.identity, landObjectTransform);
-            monster_1_Obj.name = $"Monster_1_{i + 1}";*/
+        /*GameObject monster_1_Obj = Instantiate(monster_Skeleton, spawnPosition, Quaternion.identity, landObjectTransform);
+        monster_1_Obj.name = $"Monster_1_{i + 1}";*//*
 
-            GameObject monster_2_Obj = Instantiate(monster_FlyingEye, spawnPosition, Quaternion.identity, landObjectTransform);
-            monster_2_Obj.name = $"Monster_2_{i + 1}";
+        GameObject monster_2_Obj = Instantiate(monster_FlyingEye, spawnPosition, Quaternion.identity, landObjectTransform);
+        monster_2_Obj.name = $"Monster_2_{i + 1}";
+    }*/
+
+        int roomIndex = 0;
+        for (int type = 0; type < monsterTypes; type++)
+        {
+            for (int i = 0; i < monstersPerType; i++)
+            {
+                Room selectedRoom = shuffledRooms[roomIndex++];
+                Transform landObjectTransform = selectedRoom.transform.GetChild(1).GetChild(0);
+                Vector3 spawnPosition = new Vector3(landObjectTransform.position.x, landObjectTransform.position.y + 0.6f, landObjectTransform.position.z);
+
+                GameObject monsterObj = Instantiate(monsterPrefabs[type], spawnPosition, Quaternion.identity, landObjectTransform);
+                monsterObj.name = $"Monster_{type}_{i + 1}";
+            }
         }
     }
 
@@ -485,6 +527,103 @@ public class RoomGenerator : MonoBehaviour
             case 7: return 13.25f;
             case 8: return 11.75f;
             default: return 10f; // 그 이상은 임의값
+        }
+    }
+
+    /*private void OnDrawGizmos()
+    {
+        if (roomDictionary == null || roomDictionary.Count == 0)
+            return;
+
+        Gizmos.color = Color.green;
+
+        foreach (var kv in roomDictionary)
+        {
+            Vector2Int pos = kv.Key;
+            Room room = kv.Value;
+
+            // 연결된 방향 리스트
+            List<Direction> connectedDirs = new List<Direction>();
+            foreach (var (offset, dir) in DirectionOffsets)
+            {
+                Vector2Int neighborPos = pos + offset;
+                if (!roomDictionary.ContainsKey(neighborPos))
+                    continue;
+                if (!room.HasWall(dir))
+                    connectedDirs.Add(dir);
+            }
+
+            // 두 방향 이상 연결된 경우만 체크
+            if (connectedDirs.Count >= 2)
+            {
+                // 모든 방향 쌍을 비교해서 직각(꺾임)인 경우가 있으면 표시
+                for (int i = 0; i < connectedDirs.Count; i++)
+                {
+                    for (int j = i + 1; j < connectedDirs.Count; j++)
+                    {
+                        // 직각(상/하 vs 좌/우) 판정
+                        bool isBend =
+                            (IsVertical(connectedDirs[i]) && IsHorizontal(connectedDirs[j])) ||
+                            (IsHorizontal(connectedDirs[i]) && IsVertical(connectedDirs[j]));
+                        if (isBend)
+                        {
+                            Vector3 worldPos = new Vector3(pos.x, pos.y, 0);
+                            Gizmos.DrawCube(worldPos, Vector3.one * 1.5f);
+                            // 한 번만 찍고 break
+                            goto NextRoom;
+                        }
+                    }
+                }
+            }
+        NextRoom:;
+        }
+
+        // 내부 함수: 방향이 상/하인지
+        bool IsVertical(Direction dir) => dir == Direction.Top || dir == Direction.Bottom;
+        // 내부 함수: 방향이 좌/우인지
+        bool IsHorizontal(Direction dir) => dir == Direction.Left || dir == Direction.Right;
+    }*/
+
+    private void OnDrawGizmos()
+    {
+        if (roomDictionary == null || roomDictionary.Count == 0)
+            return;
+
+        Gizmos.color = Color.green;
+
+        foreach (var kv in roomDictionary)
+        {
+            Vector2Int pos = kv.Key;
+            Room room = kv.Value;
+
+            // wallBottom이 활성화된 방은 표시하지 않음
+            if (room.wallBottom != null && room.wallBottom.activeSelf)
+                continue;
+
+            // 연결된 방향 리스트
+            List<Direction> connectedDirs = new List<Direction>();
+            foreach (var (offset, dir) in DirectionOffsets)
+            {
+                Vector2Int neighborPos = pos + offset;
+                if (!roomDictionary.ContainsKey(neighborPos))
+                    continue;
+                if (!room.HasWall(dir))
+                    connectedDirs.Add(dir);
+            }
+
+            // 좌우 연결이 있는지
+            bool hasLeft = connectedDirs.Contains(Direction.Left);
+            bool hasRight = connectedDirs.Contains(Direction.Right);
+            // 상하 연결이 있는지
+            bool hasTop = connectedDirs.Contains(Direction.Top);
+            bool hasBottom = connectedDirs.Contains(Direction.Bottom);
+
+            // 좌우 + 상하가 동시에 연결된 경우만 표시
+            if ((hasLeft || hasRight) && (hasTop || hasBottom))
+            {
+                Vector3 worldPos = new Vector3(pos.x, pos.y, 0);
+                Gizmos.DrawCube(worldPos, Vector3.one * 1.5f);
+            }
         }
     }
 }
