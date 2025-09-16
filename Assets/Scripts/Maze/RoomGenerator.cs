@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 using UnityEngine.UI;
 using System;
 using System.Collections;
+using UnityEngine.WSA;
 
 public class RoomGenerator : MonoBehaviour
 {
@@ -102,6 +103,9 @@ public class RoomGenerator : MonoBehaviour
         //CaptureMiniMap();
 
         StartCoroutine(CaptureMiniMapNextFrame());
+
+        // 기즈모 위치에 BoxCollider2D 생성
+        CreateBoxCollidersAtGizmoPositions();
     }
 
     public Sprite testMiniMapSprite;
@@ -623,6 +627,51 @@ public class RoomGenerator : MonoBehaviour
             {
                 Vector3 worldPos = new Vector3(pos.x, pos.y, 0);
                 Gizmos.DrawCube(worldPos, Vector3.one * 1.5f);
+            }
+        }
+    }
+
+    private void CreateBoxCollidersAtGizmoPositions()
+    {
+        if (roomDictionary == null || roomDictionary.Count == 0)
+            return;
+
+        foreach (var kv in roomDictionary)
+        {
+            Vector2Int pos = kv.Key;
+            Room room = kv.Value;
+
+            // wallBottom이 활성화된 방은 제외
+            if (room.wallBottom != null && room.wallBottom.activeSelf)
+                continue;
+
+            // 연결된 방향 리스트
+            List<Direction> connectedDirs = new List<Direction>();
+            foreach (var (offset, dir) in DirectionOffsets)
+            {
+                Vector2Int neighborPos = pos + offset;
+                if (!roomDictionary.ContainsKey(neighborPos))
+                    continue;
+                if (!room.HasWall(dir))
+                    connectedDirs.Add(dir);
+            }
+
+            bool hasLeft = connectedDirs.Contains(Direction.Left);
+            bool hasRight = connectedDirs.Contains(Direction.Right);
+            bool hasTop = connectedDirs.Contains(Direction.Top);
+            bool hasBottom = connectedDirs.Contains(Direction.Bottom);
+
+            // 좌우 + 상하가 동시에 연결된 경우만
+            if ((hasLeft || hasRight) && (hasTop || hasBottom))
+            {
+                Transform targetChild = room.transform.GetChild(4);
+                if(targetChild != null)
+                {
+                    BoxCollider2D box = targetChild.gameObject.AddComponent<BoxCollider2D>();
+                    box.offset = Vector2.zero;
+                    box.size = new Vector2(4f, 4f);
+                    box.isTrigger = false;
+                }
             }
         }
     }

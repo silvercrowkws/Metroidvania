@@ -326,6 +326,7 @@ MonoBehaviour:
   isChasing: 0
   playerTransform: {fileID: 0}
   chaseRange: {fileID: 5821803540782796239}
+  blinkColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!61 &6129984618396175244
 BoxCollider2D:
   m_ObjectHideFlags: 0
