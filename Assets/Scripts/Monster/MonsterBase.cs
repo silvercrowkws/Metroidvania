@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -220,6 +221,11 @@ public class MonsterBase : MonoBehaviour
     /// </summary>
     public Color blinkColor = Color.red;
 
+    /// <summary>
+    /// 적 공격 감지용
+    /// </summary>
+    EdgeCollider edgeCollider;
+
 
     protected virtual void Awake()
     {
@@ -309,6 +315,9 @@ public class MonsterBase : MonoBehaviour
 
         healthSlider = child.GetChild(0).GetComponent<Slider>();
         healthSlider.value = 1;
+
+        edgeCollider = GetComponentInChildren<EdgeCollider>();
+        edgeCollider.onAttackRange += OnAttackRange;
     }
 
     protected virtual void OnDisable()
@@ -404,7 +413,7 @@ public class MonsterBase : MonoBehaviour
                 Vector3 targetPos = new Vector3(playerTransform.position.x, transform.position.y, transform.position.z);
                 Vector3 dir = (targetPos - transform.position).normalized;
 
-                // 바닥 체크 (앞쪽 아래로 Raycast)
+                /*// 바닥 체크 (앞쪽 아래로 Raycast)
                 float rayDistance = 1.0f;
                 Vector3 rayOrigin = transform.position + new Vector3(dir.x * 0.5f, 0, 0);
 
@@ -424,10 +433,10 @@ public class MonsterBase : MonoBehaviour
                 else
                 {
                     //Debug.Log("Raycast: " + hit.collider.tag);
-                }
+                }*/
 
                 // 추격 종료 조건: 거리 or 바닥 없음
-                if (distance >= 5f || !isGroundAhead)
+                if (distance >= 5f)
                 {
                     isChasing = false;
                     chaseTime = 0f;
@@ -879,74 +888,54 @@ public class MonsterBase : MonoBehaviour
         this.gameObject.SetActive(false);
     }
 
-    /// <summary>
-    /// 적 본체 피격 처리
-    /// </summary>
-    /// <param name="collision"></param>
+    
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // 플레이어의 공격 범위에 충돌되면
-        if (collision.CompareTag("AttackRange"))
+        // 만약 투명 벽과 충돌하면
+        if (collision.CompareTag("ColliderHolder"))
         {
-            // 공격 받을 수 있으면
-            if (!damageCoolDown)
-            {
-                damageCoolDown = true;
+            // 강제로 추적 중지
+            isChasing = false;
 
-                // 피격 처리
-                Debug.Log("플레이어 공격에 맞음");
-                if(player != null)
+            if (agent != null)
+            {
+                agent.ResetPath(); // 경로 초기화 (정지)
+            }
+        }
+    }
+
+    /// <summary>
+    /// 적 본체 피격 처리 함수
+    /// </summary>
+    private void OnAttackRange()
+    {
+        // 공격 받을 수 있으면
+        if (!damageCoolDown)
+        {
+            damageCoolDown = true;
+
+            // 피격 처리
+            Debug.Log("플레이어 공격에 맞음");
+            if (player != null)
+            {
+                HP -= player.playerAttackPower;
+                Debug.Log($"{this.gameObject.name}의 남은 HP: {HP}");
+            }
+            else
+            {
+                if (player_test != null)
                 {
-                    HP -= player.playerAttackPower;
+                    HP -= player_test.playerAttackPower;
                     Debug.Log($"{this.gameObject.name}의 남은 HP: {HP}");
                 }
                 else
                 {
-                    if(player_test != null)
-                    {
-                        HP -= player_test.playerAttackPower;
-                        Debug.Log($"{this.gameObject.name}의 남은 HP: {HP}");
-                    }
-                    else
-                    {
-                        Debug.LogWarning("플레이어 테스트도 없는데?");
-                    }
+                    Debug.LogWarning("플레이어 테스트도 없는데?");
                 }
-
-                StartCoroutine(DamageCooldown());
             }
+
+            StartCoroutine(DamageCooldown());
         }
-        
-        /*// 플레이어에게 공격하는 부분
-        if (collision.CompareTag("Player"))
-        {
-            Debug.Log("플레이어한테 충돌은 함");
-            
-            if (isAttacking && !attackCoolDown)
-            {
-                attackCoolDown = true;
-
-                Debug.Log("플레이어한테 공격은 함");
-
-                // 플레이어의 HP 감소 부분
-                if (player != null)
-                {
-                    player.HP -= attackPower;
-                    heartPanel.UpdateHearts(player.HP);
-                }
-                else if (player_test != null)
-                {
-                    player_test.HP -= attackPower;
-                    heartPanel.UpdateHearts(player_test.HP);
-                }
-                else
-                {
-                    Debug.Log("아니 플레이어랑 플레이어 테스트 둘 다 null인데?");
-                }
-
-                StartCoroutine(MonsterDamageColldown());
-            }
-        }*/
     }
 
     /// <summary>
