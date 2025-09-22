@@ -9,6 +9,8 @@ public class ColliderHolder : MonoBehaviour
         if (collision.gameObject.CompareTag("EdgeCollider"))
         {
             //Debug.Log("ColliderHolider에서 몬스터와 충돌 감지");
+
+            // 충돌한 오브젝트의 최상위 부모에서 MonsterBase를 찾는다?
         }
     }
 }

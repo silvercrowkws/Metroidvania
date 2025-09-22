@@ -179,7 +179,7 @@ public class MonsterBase : MonoBehaviour
     /// <summary>
     /// 공격 중 여부
     /// </summary>
-    private bool isAttacking = false;
+    public bool isAttacking = false;        // 여기
 
     /// <summary>
     /// 하트 패널
@@ -226,6 +226,12 @@ public class MonsterBase : MonoBehaviour
     /// </summary>
     EdgeCollider edgeCollider;
 
+    /// <summary>
+    /// 추격 종료(강제 중단) 여부
+    /// </summary>
+    public bool isChaseEnd = false;      // 여기
+
+    Rigidbody2D rb2d;
 
     protected virtual void Awake()
     {
@@ -318,6 +324,8 @@ public class MonsterBase : MonoBehaviour
 
         edgeCollider = GetComponentInChildren<EdgeCollider>();
         edgeCollider.onAttackRange += OnAttackRange;
+
+        rb2d = GetComponent<Rigidbody2D>();
     }
 
     protected virtual void OnDisable()
@@ -356,7 +364,7 @@ public class MonsterBase : MonoBehaviour
         }
 
         // 공격이 활성화 되었으면
-        if (isAttacking)
+        if (isAttacking && !isChaseEnd)
         {
             if(monsterMoveType == MonsterMoveType.Walk)
             {
@@ -435,14 +443,19 @@ public class MonsterBase : MonoBehaviour
                     //Debug.Log("Raycast: " + hit.collider.tag);
                 }*/
 
-                // 추격 종료 조건: 거리 or 바닥 없음
-                if (distance >= 5f)
+                // 추격 종료 조건: 거리
+                if (distance >= 5f || isChaseEnd)
                 {
                     isChasing = false;
+                    isAttacking = false;
                     chaseTime = 0f;
                     firstAttackDone = false;
                     ResetTrigger();
                     animator.SetTrigger("Idle");
+
+                    // 멈춤!
+                    rb2d.velocity = Vector2.zero;
+
                     return;
                 }
 
@@ -465,7 +478,8 @@ public class MonsterBase : MonoBehaviour
                     }
                 }
 
-                transform.position += dir * moveSpeed * Time.deltaTime;
+                //transform.position += dir * moveSpeed * Time.deltaTime;
+                rb2d.velocity = dir * moveSpeed;
 
                 // 추적 시간 누적
                 chaseTime += Time.deltaTime;
@@ -506,16 +520,35 @@ public class MonsterBase : MonoBehaviour
             else
             {
                 // 추격 중이 아니면 원위치로 돌아감
-                if (Vector3.Distance(transform.position, spawnPosition) > 0.1f)
+                //if (Vector3.Distance(transform.position, spawnPosition) > 0.1f)
+                float distToSpawn = Vector3.Distance(transform.position, spawnPosition);
+                float velocityMag = rb2d.velocity.magnitude;
+
+                // 미세한 움직임(0.05 이하)은 무시하고 Idle로 간주
+                if (distToSpawn <= 0.1f || velocityMag <= 0.05f)
+                {
+                    rb2d.velocity = Vector2.zero;
+
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+                    {
+                        ResetTrigger();
+                        animator.SetTrigger("Idle");
+                    }
+
+                    spriteRenderer.flipX = false;
+                    isChaseEnd = false;
+                }
+                else
                 {
                     chaseTime = 0f;
                     firstAttackDone = false;
 
-                    // 원위치로 돌아가는 중에는 Moving 트리거
-                    ResetTrigger();
-                    animator.SetTrigger("Moving");
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Moving"))
+                    {
+                        ResetTrigger();
+                        animator.SetTrigger("Moving");
+                    }
 
-                    // 원위치 방향으로 Flip X 처리 (기본 오른쪽)
                     if (spawnPosition.x < transform.position.x)
                     {
                         spriteRenderer.flipX = true;
@@ -526,16 +559,7 @@ public class MonsterBase : MonoBehaviour
                     }
 
                     Vector3 dir = (spawnPosition - transform.position).normalized;
-                    transform.position += dir * moveSpeed * Time.deltaTime;
-                }
-                else
-                {
-                    // 원위치 도착 시 Idle 트리거
-                    ResetTrigger();
-                    animator.SetTrigger("Idle");
-
-                    // Idle 시 기본 방향(오른쪽)으로 Flip X 해제
-                    spriteRenderer.flipX = false;
+                    rb2d.velocity = dir * moveSpeed;
                 }
             }
 
@@ -644,7 +668,7 @@ public class MonsterBase : MonoBehaviour
                 float distance = Vector3.Distance(transform.position, playerTransform.position);
 
                 // 추격 종료 조건
-                if (distance >= 5f)
+                if (distance >= 5f || isChaseEnd)
                 {
                     isChasing = false;
                     playerTransform = null;
@@ -778,6 +802,9 @@ public class MonsterBase : MonoBehaviour
                     animator.SetTrigger("Idle");
                     spriteRenderer.flipX = false;
                     agent.ResetPath();
+
+                    // 원위치 도착 시 추격 종료 해제
+                    isChaseEnd = false;
                 }
             }
         }
@@ -896,6 +923,7 @@ public class MonsterBase : MonoBehaviour
         {
             // 강제로 추적 중지
             isChasing = false;
+            isChaseEnd = true;
 
             if (agent != null)
             {
