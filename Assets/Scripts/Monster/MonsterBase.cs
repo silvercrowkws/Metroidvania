@@ -233,6 +233,8 @@ public class MonsterBase : MonoBehaviour
 
     Rigidbody2D rb2d;
 
+    public bool comeback = false;
+
     protected virtual void Awake()
     {
         /*gameManager = GameManager.Instance;
@@ -363,8 +365,16 @@ public class MonsterBase : MonoBehaviour
             return;
         }
 
+        // 투명벽에 부딪힌 경우 강제 원위치 복귀
+        if (comeback)
+        {
+            ComeBack();
+            return;
+        }
+
         // 공격이 활성화 되었으면
-        if (isAttacking && !isChaseEnd)
+        //if (isAttacking && !isChaseEnd)
+        if (isAttacking)
         {
             if(monsterMoveType == MonsterMoveType.Walk)
             {
@@ -380,7 +390,7 @@ public class MonsterBase : MonoBehaviour
                     ResetTrigger();
                     animator.SetTrigger("Moving");
                 }
-                return; // 공격 중에는 다른 동작 안 함
+                //return; // 공격 중에는 다른 동작 안 함
             }
             else if (monsterMoveType == MonsterMoveType.Flying && agent != null)
             {
@@ -397,10 +407,11 @@ public class MonsterBase : MonoBehaviour
                     animator.SetTrigger("Moving");
                     agent.ResetPath();
                 }
-                return;
             }
-        }        
+            return; // 공격 중에는 다른 동작 안함
+        }
 
+        // 공격 중이 아니거나, 추격이 종료된 경우에는 반드시 OnMonsterActive를 실행
         // 몬스터 타입에 맞게 행동하는 함수
         OnMonsterActive();
     }
@@ -448,6 +459,7 @@ public class MonsterBase : MonoBehaviour
                 {
                     isChasing = false;
                     isAttacking = false;
+                    isChaseEnd = true;
                     chaseTime = 0f;
                     firstAttackDone = false;
                     ResetTrigger();
@@ -455,6 +467,8 @@ public class MonsterBase : MonoBehaviour
 
                     // 멈춤!
                     rb2d.velocity = Vector2.zero;
+
+                    comeback = true;
 
                     return;
                 }
@@ -492,7 +506,7 @@ public class MonsterBase : MonoBehaviour
                     StartCoroutine(BlinkEffect());
                 }
                 // 첫 번째 공격을 했고 다음 공격 딜레이 - 0.5, 즉 다음 공격 0.5초 전이면
-                else if(firstAttackDone && chaseTime >= nextAttackDelay - 0.5f)
+                else if (firstAttackDone && chaseTime >= nextAttackDelay - 0.5f)
                 {
                     // 모습 잠깐 깜빡이는 코루틴
                     StartCoroutine(BlinkEffect());
@@ -526,6 +540,7 @@ public class MonsterBase : MonoBehaviour
 
                 // 미세한 움직임(0.05 이하)은 무시하고 Idle로 간주
                 if (distToSpawn <= 0.1f || velocityMag <= 0.05f)
+                //if (distToSpawn <= 0.1f)
                 {
                     rb2d.velocity = Vector2.zero;
 
@@ -671,6 +686,9 @@ public class MonsterBase : MonoBehaviour
                 if (distance >= 5f || isChaseEnd)
                 {
                     isChasing = false;
+                    isAttacking = false;
+                    comeback = true;
+                    isChaseEnd = true;
                     playerTransform = null;
                     chaseTime = 0f;
                     firstAttackDone = false;
@@ -915,19 +933,90 @@ public class MonsterBase : MonoBehaviour
         this.gameObject.SetActive(false);
     }
 
-    
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        // 만약 투명 벽과 충돌하면
-        if (collision.CompareTag("ColliderHolder"))
+        if (collision.gameObject.CompareTag("ColliderHolder"))
         {
+            Debug.Log("OnCollisionEnter2D 투명벽과 충돌 감지");
+
             // 강제로 추적 중지
+            comeback = true;
             isChasing = false;
             isChaseEnd = true;
+            isAttacking = false;
 
             if (agent != null)
             {
                 agent.ResetPath(); // 경로 초기화 (정지)
+            }
+        }
+    }
+
+    /// <summary>
+    /// 원위치로 돌아가는 함수
+    /// </summary>
+    private void ComeBack()
+    {
+        Debug.Log("복귀 함수 실행");
+
+        if (monsterMoveType == MonsterMoveType.Walk)
+        {
+            float distToSpawn = Vector3.Distance(transform.position, spawnPosition);
+            Debug.Log(distToSpawn);
+            //float velocityMag = rb2d.velocity.magnitude;
+
+            //if (distToSpawn <= 0.1f || velocityMag <= 0.05f)
+            if (distToSpawn <= 0.15f)
+            {
+                //Debug.Log($"복귀 완료로 판단! 거리: {distToSpawn}, 속도: {velocityMag}. comeback을 false로 변경합니다.");
+                Debug.Log($"복귀 완료로 판단! 거리: {distToSpawn}");
+                rb2d.velocity = Vector2.zero;
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+                {
+                    ResetTrigger();
+                    animator.SetTrigger("Idle");
+                }
+                spriteRenderer.flipX = false;
+                isChaseEnd = false;
+                comeback = false; // 복귀 완료 시 comeback 해제
+            }
+            else
+            {
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Moving"))
+                {
+                    ResetTrigger();
+                    animator.SetTrigger("Moving");
+                }
+                if (spawnPosition.x < transform.position.x)
+                    spriteRenderer.flipX = true;
+                else
+                    spriteRenderer.flipX = false;
+
+                Vector3 dir = (spawnPosition - transform.position).normalized;
+                rb2d.velocity = dir * moveSpeed;
+            }
+        }
+        else if(monsterMoveType == MonsterMoveType.Flying && agent != null)
+        {
+            float distToSpawn = Vector3.Distance(transform.position, spawnPosition);
+            bool arrived = !agent.pathPending && agent.remainingDistance <= 0.05f;
+
+            if (arrived)
+            {
+                ResetTrigger();
+                animator.SetTrigger("Idle");
+                spriteRenderer.flipX = false;
+                agent.ResetPath();
+
+                isChaseEnd = false;
+                comeback = false; // ✅ 상태 초기화
+            }
+            else
+            {
+                ResetTrigger();
+                animator.SetTrigger("Moving");
+                spriteRenderer.flipX = (spawnPosition.x < transform.position.x);
+                agent.SetDestination(spawnPosition);
             }
         }
     }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8365914494271522413}
   - component: {fileID: 4820768205462147206}
   - component: {fileID: 1632248645136772649}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: chaseRange
   m_TagString: chaseRange
   m_Icon: {fileID: 0}
