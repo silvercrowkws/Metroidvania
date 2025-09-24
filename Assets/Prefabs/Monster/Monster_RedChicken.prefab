@@ -127,7 +127,10 @@ MonoBehaviour:
   isChasing: 0
   playerTransform: {fileID: 0}
   chaseRange: {fileID: 9172593142986081261, guid: 642a2caba182cec49bdb022b90da0a0a, type: 3}
+  isAttacking: 0
   blinkColor: {r: 1, g: 0, b: 0, a: 1}
+  isChaseEnd: 0
+  comeback: 0
 --- !u!61 &3421864023838000765
 BoxCollider2D:
   m_ObjectHideFlags: 0

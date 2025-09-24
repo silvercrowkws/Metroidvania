@@ -365,7 +365,7 @@ public class MonsterBase : MonoBehaviour
             return;
         }
 
-        // 투명벽에 부딪힌 경우 강제 원위치 복귀
+        // 강제 원위치 복귀
         if (comeback)
         {
             ComeBack();
@@ -953,7 +953,7 @@ public class MonsterBase : MonoBehaviour
     }
 
     /// <summary>
-    /// 원위치로 돌아가는 함수
+      /// 원위치로 돌아가는 함수
     /// </summary>
     private void ComeBack()
     {
@@ -968,8 +968,8 @@ public class MonsterBase : MonoBehaviour
             //if (distToSpawn <= 0.1f || velocityMag <= 0.05f)
             if (distToSpawn <= 0.15f)
             {
-                //Debug.Log($"복귀 완료로 판단! 거리: {distToSpawn}, 속도: {velocityMag}. comeback을 false로 변경합니다.");
-                Debug.Log($"복귀 완료로 판단! 거리: {distToSpawn}");
+                        //Debug.Log($"복귀 완료로 판단! 거리: {distToSpawn}, 속도: {velocityMag}. comeback을 false로 변경합니다.");
+                        //Debug.Log($"복귀 완료로 판단! 거리: {distToSpawn}");
                 rb2d.velocity = Vector2.zero;
                 if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
                 {
@@ -978,7 +978,7 @@ public class MonsterBase : MonoBehaviour
                 }
                 spriteRenderer.flipX = false;
                 isChaseEnd = false;
-                comeback = false; // 복귀 완료 시 comeback 해제
+                comeback = false;       // 복귀 완료 시 comeback 해제
             }
             else
             {
@@ -996,27 +996,47 @@ public class MonsterBase : MonoBehaviour
                 rb2d.velocity = dir * moveSpeed;
             }
         }
-        else if(monsterMoveType == MonsterMoveType.Flying && agent != null)
+        else if (monsterMoveType == MonsterMoveType.Flying && agent != null)
         {
+            //Debug.Log("Flying 몬스터의 복귀 함수 실행");
+            
             float distToSpawn = Vector3.Distance(transform.position, spawnPosition);
-            bool arrived = !agent.pathPending && agent.remainingDistance <= 0.05f;
+            bool arrived = !agent.pathPending && distToSpawn <= 1.5f;
 
-            if (arrived)
+            if (!arrived)
             {
+                //Debug.Log($"복귀 완료로 판단! 거리: {distToSpawn}");
+                //Debug.Log("원위치로 복귀 중");
+                chaseTime = 0f;
+                firstAttackDone = false;
+
+                ResetTrigger();
+                animator.SetTrigger("Moving");
+
+                if (spawnPosition.x < transform.position.x)
+                {
+                    spriteRenderer.flipX = true;
+                }
+                else
+                {
+                    spriteRenderer.flipX = false;
+                }
+
+                agent.SetDestination(spawnPosition);
+            }
+            else if (arrived)
+            {
+                //Debug.Log($"복귀 완료로 판단! 거리2: {distToSpawn}");
+                //Debug.Log("도착했다고 판단");
+
                 ResetTrigger();
                 animator.SetTrigger("Idle");
                 spriteRenderer.flipX = false;
                 agent.ResetPath();
 
+                        // 원위치 도착 시 추격 종료 해제
                 isChaseEnd = false;
-                comeback = false; // ✅ 상태 초기화
-            }
-            else
-            {
-                ResetTrigger();
-                animator.SetTrigger("Moving");
-                spriteRenderer.flipX = (spawnPosition.x < transform.position.x);
-                agent.SetDestination(spawnPosition);
+                comeback = false;
             }
         }
     }

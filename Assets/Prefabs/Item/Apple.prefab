@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2047982176422719196}
   - component: {fileID: 5740935487076037298}
   - component: {fileID: 809891562136651573}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Apple
   m_TagString: Item
   m_Icon: {fileID: 0}
