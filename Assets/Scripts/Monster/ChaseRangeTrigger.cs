@@ -16,7 +16,11 @@ public class ChaseRangeTrigger : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            monster.isChasing = true;
+            monster.comeback = false;       // 복귀 중단
+            monster.isChaseEnd = false;
+            monster.isAttacking = false;
+
+            monster.isChasing = true;       // 추적 시작
             monster.playerTransform = other.transform;
         }
     }
