@@ -475,11 +475,11 @@ public class RoomGenerator : MonoBehaviour
         // 몬스터 프리팹 배열
         GameObject[] monsterPrefabs = new GameObject[]
         {
-        monster_RedChicken,
-        monster_Skeleton,
-        monster_FlyingEye,
-        monster_Goblin,
-        monster_Mushroom
+            monster_RedChicken,
+            monster_Skeleton,
+            monster_FlyingEye,
+            monster_Goblin,
+            monster_Mushroom
         };
 
 
