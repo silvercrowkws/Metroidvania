@@ -103,6 +103,7 @@ public class GameManager : Singleton<GameManager>
 
                 // 경험치 변경 시 저장
                 player_test.onPlayerXPChange += OnPlayerXPChange;
+                player_test.onKeyCountChanged += OnKeyCountChanged;
             }
             return player_test;
         }
@@ -202,6 +203,37 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     PlayerData loadPlayerData;
 
+    // Json 데이터 연동 부분 끝 ------------------------------------------------------------
+
+    // 카메라 진동 부분 ------------------------------------------------------------
+
+    /// <summary>
+    /// 버츄얼 카메라 흔드는 클래스
+    /// </summary>
+    CameraShakeController cameraShakeController;
+
+    /// <summary>
+    /// 진동 시간
+    /// </summary>
+    public float shakeTime = 3f;
+
+    /// <summary>
+    /// 진동 세기
+    /// </summary>
+    public float shakePower = 5f;
+
+    /// <summary>
+    /// 진동 속도
+    /// </summary>
+    public float shakeSpeed = 2f;
+
+    /// <summary>
+    /// 어디선가 문이 열렸다! 패널
+    /// </summary>
+    public GameObject DoorOpenNotification;
+
+    // 카메라 진동 부분 끝 ------------------------------------------------------------
+
 
     private void Start()
     {
@@ -231,7 +263,10 @@ public class GameManager : Singleton<GameManager>
             Inventory.Instance.OnItemChanged += (itemData, count) => OnDataSave();
         }
 
+        cameraShakeController = FindAnyObjectByType<CameraShakeController>();
+        cameraShakeController.onShakeFinished += OnShakeFinished;
 
+        DoorOpenNotification.gameObject.SetActive(false);
     }
 
     private void OnEnable()
@@ -489,6 +524,44 @@ public class GameManager : Singleton<GameManager>
         Debug.Log("<<<<< 인벤토리 UI 복원 완료 >>>>>");
 
         isDataRecovered = true; // 복원 완료 플래그 ON
+    }
+
+    /// <summary>
+    /// 플레이어의 열쇠 개수가 3개면 타임스케일 조절 및 화면을 흔드는 함수
+    /// </summary>
+    /// <param name="keyCount"></param>
+    private void OnKeyCountChanged(int keyCount)
+    {
+        if(keyCount == 3)
+        {
+            Time.timeScale = 0;     // 타임 스케일 0
+            cameraShakeController.StartShake(shakeTime, shakePower, shakeSpeed);
+        }
+    }
+
+    /// <summary>
+    /// 카메라 진동이 끝나서 실행되는 함수
+    /// </summary>
+    private void OnShakeFinished()
+    {
+        StartCoroutine(DoorNotification());
+
+        //Time.timeScale = 1;     // 타임 스케일 1
+    }
+
+    /// <summary>
+    /// 문이 열렸다 패널 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator DoorNotification()
+    {
+        DoorOpenNotification.gameObject.SetActive(true);
+
+        //yield return new WaitForSeconds(1);
+        yield return new WaitForSecondsRealtime(1.5f);     // 실제 시간으로 1.5초 기다리고
+
+        Time.timeScale = 1;     // 타임 스케일 1
+        DoorOpenNotification.gameObject.SetActive(false);
     }
 
 

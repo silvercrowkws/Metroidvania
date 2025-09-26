@@ -1,4 +1,5 @@
 using Cinemachine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,11 @@ public class CameraShakeController : MonoBehaviour
     private float initialFrequency;
 
     private bool isShaking = false;
+
+    /// <summary>
+    /// 카메라 진동이 끝났음을 알리는 델리게이트
+    /// </summary>
+    public Action onShakeFinished;
 
     void Awake()
     {
@@ -55,6 +61,8 @@ public class CameraShakeController : MonoBehaviour
                 noise.m_AmplitudeGain = 0f;
                 noise.m_FrequencyGain = 0f;
                 isShaking = false;
+
+                onShakeFinished?.Invoke();
             }
         }
     }

@@ -12,12 +12,13 @@ public class KeyPanel : MonoBehaviour
     Player player;
     Player_Test player_test;
 
+    int keyCount = 3;
+
     private void Awake()
     {
-        int childCount = 3;
-        keyImages = new Image[childCount];      // 이미지 배열 초기화
+        keyImages = new Image[keyCount];      // 이미지 배열 초기화
 
-        for (int i = 0; i < childCount; i++)
+        for (int i = 0; i < keyCount; i++)
         {
             keyImages[i] = transform.GetChild(i).GetComponent<Image>();
             SetAlpha(keyImages[i], 0.25f);      // 시작 시 모두 투명하게
