@@ -545,8 +545,6 @@ public class GameManager : Singleton<GameManager>
     private void OnShakeFinished()
     {
         StartCoroutine(DoorNotification());
-
-        //Time.timeScale = 1;     // 타임 스케일 1
     }
 
     /// <summary>
