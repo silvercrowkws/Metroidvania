@@ -1178,7 +1178,7 @@ public class MonsterBase : MonoBehaviour
 
                 if (heartPanel != null)
                 {
-                    heartPanel.UpdateHearts(player.HP);
+                    //heartPanel.UpdateHearts(player.HP); -> 플레이어의 HP가 변동될때 스스로 하게끔 수정
                 }
             }
             else if (player_test != null)
@@ -1188,7 +1188,7 @@ public class MonsterBase : MonoBehaviour
 
                 if (heartPanel != null)
                 {
-                    heartPanel.UpdateHearts(player_test.HP);
+                    //heartPanel.UpdateHearts(player_test.HP); -> 플레이어의 HP가 변동될때 스스로 하게끔 수정
                 }
             }
 

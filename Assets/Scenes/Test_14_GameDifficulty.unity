@@ -1091,7 +1091,7 @@ MonoBehaviour:
   monster_FlyingEye: {fileID: 3273290790659399757, guid: ed6df46cef82f8148ba1187aaf945978, type: 3}
   monster_Goblin: {fileID: 5988642764991914433, guid: 2917e9110767cef4bab39e8986fab23a, type: 3}
   monster_Mushroom: {fileID: 5295843686814726671, guid: f232d6517c1e8ed45b7ae49a2161ad81, type: 3}
-  radius: 5
+  radius: 6
   seed: -1
   testMiniMapSprite: {fileID: 0}
 --- !u!1 &505954161
@@ -7558,6 +7558,10 @@ PrefabInstance:
       propertyPath: itemDatabase
       value: 
       objectReference: {fileID: 11400000, guid: b225602c95f780446b01330690cd183c, type: 2}
+    - target: {fileID: 883017453465086737, guid: c25edad9161934543999f4ae4641cdf6, type: 3}
+      propertyPath: gameDifficulty
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 883017453465086737, guid: c25edad9161934543999f4ae4641cdf6, type: 3}
       propertyPath: DoorOpenNotification
       value: 

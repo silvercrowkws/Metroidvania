@@ -20,6 +20,15 @@ public enum GameState
     GameComplete,               // 
 }
 
+public enum GameDifficulty
+{
+    Easy = 0,
+    Normal,
+    Hard,
+    Nightmare,
+    Hell,
+}
+
 [Serializable]
 public class InventoryData
 {
@@ -71,6 +80,45 @@ public class GameManager : Singleton<GameManager>
     public Action onSelectCharacter;
     public Action onSelectCard;
     public Action onGameComplete;
+
+    /// <summary>
+    /// 현재 게임 난이도
+    /// </summary>
+    [Tooltip("난이도에 따라 Easy : 4:9², Normal : 5:11², Hard : 6:13², Nightmare : 7:15², Hell : 8:17²")]
+    public GameDifficulty gameDifficulty = GameDifficulty.Easy;
+
+    /// <summary>
+    /// 현재 게임 난이도 변경시 알리는 프로퍼티
+    /// </summary>
+    public GameDifficulty GameDifficulty
+    {
+        get => gameDifficulty;
+        set
+        {
+            if (gameDifficulty != value)
+            {
+                gameDifficulty = value;
+                switch (gameDifficulty)
+                {
+                    case GameDifficulty.Easy:
+                        Debug.Log("이지 난이도");
+                        break;
+                    case GameDifficulty.Normal:
+                        Debug.Log("노말 난이도");
+                        break;
+                    case GameDifficulty.Hard:
+                        Debug.Log("하드 난이도");
+                        break;
+                    case GameDifficulty.Nightmare:
+                        Debug.Log("나이트메어 난이도");
+                        break;
+                    case GameDifficulty.Hell:
+                        Debug.Log("헬 난이도");
+                        break;
+                }
+            }
+        }
+    }
 
     /// <summary>
     /// 플레이어

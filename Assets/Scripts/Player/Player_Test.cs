@@ -102,6 +102,16 @@ public class Player_Test : MonoBehaviour
     float dashTimer = 0f;
 
     /// <summary>
+    /// 플레이어가 죽었는지 확인하기 위한 bool 변수
+    /// </summary>
+    public bool playerDie = false;
+
+    /// <summary>
+    /// HP 변경 UI 패널
+    /// </summary>
+    HeartPanel heartPanel;
+
+    /// <summary>
     /// 플레이어의 최대 체력
     /// </summary>
     public float maxHP = 100f;
@@ -123,16 +133,32 @@ public class Player_Test : MonoBehaviour
 
                 Debug.Log($"플레이어의 남은 체력: {HP}");
 
+                // 만약 플레이어가 죽었고 부활하지 않았는데 회복되었으면
+                if (playerDie)
+                {
+                    playerDie = false;
+                    animator.SetBool("playerDie", false);
+                    ResetTrigger();
+                    animator.SetTrigger("Idle");
+                    OnEnable();
+                }
+
                 if (currentHP < 1)
                 {
                     currentHP = 0;
+                    playerDie = true;
+                    animator.SetBool("playerDie", true);
 
                     onPlayerDie?.Invoke(currentHP);     // 플레이어가 죽었다고 델리게이트로 알림
                     Debug.Log("플레이어 사망");
-                    
-                    // 사망 연출 실행 부분
 
+                    // 사망 연출 실행 부분
+                    ResetTrigger();
+                    animator.SetTrigger("Die");
+                    OnDisable();
                 }
+
+                heartPanel.UpdateHearts(currentHP);
             }
         }
     }
@@ -333,12 +359,11 @@ public class Player_Test : MonoBehaviour
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         // 리지드 바디의 충돌 감지 모드를 연속으로 변경
         // 기존 값은 느린 속도에서는 충돌을 잘 감지하지만,빠르게 움직이면(대쉬) 한 프레임에 오브젝트가 벽을 통과(터널링)할 수 있음
+        currentHP = maxHP;
     }
 
     private void OnEnable()
     {
-        currentHP = maxHP;
-
         inputActions.Actions.Enable();
         inputActions.Actions.Move.performed += OnMove;
         inputActions.Actions.Move.canceled += OnMove;
@@ -364,6 +389,7 @@ public class Player_Test : MonoBehaviour
     {
         //inventoryPanel = GameObject.Find("InventoryPanel");
         inventoryPanel = FindAnyObjectByType<InventoryPanel>().gameObject;
+        heartPanel = FindAnyObjectByType<HeartPanel>();
     }
 
     private void OnDisable()
@@ -859,7 +885,11 @@ public class Player_Test : MonoBehaviour
         if (!isGuard)
         {
             //Debug.Log("가드 없이 플레이어 체력 감소");
-            HP -= damage;
+            // 플레이어의 1 이상일 때만 데미지 적용
+            if(HP > 1)
+            {
+                HP -= damage;
+            }
         }
 
         // 가드를 했으면
@@ -916,6 +946,7 @@ public class Player_Test : MonoBehaviour
         animator.ResetTrigger("DashAttack");
         animator.ResetTrigger("Guard");
         animator.ResetTrigger("Parrying");
+        animator.ResetTrigger("Die");
     }
     
     private IEnumerator HangDelay()

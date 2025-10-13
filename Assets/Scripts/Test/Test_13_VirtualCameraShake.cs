@@ -11,10 +11,14 @@ public class Test_13_VirtualCameraShake : TestBase
     public float shakePower = 5f;
     public float shakeSpeed = 2f;
 
+    Player_Test player_test;
+
 
     private void Start()
     {
         cameraShakeController = FindAnyObjectByType<CameraShakeController>();
+
+        player_test = GameManager.Instance.Player_Test;
     }
 
 #if UNITY_EDITOR
@@ -28,6 +32,16 @@ public class Test_13_VirtualCameraShake : TestBase
     protected override void OnTest2(InputAction.CallbackContext context)
     {
         Time.timeScale = 1;
+    }
+
+    protected override void OnTest3(InputAction.CallbackContext context)
+    {
+        player_test.HP += 10;
+    }
+
+    protected override void OnTest4(InputAction.CallbackContext context)
+    {
+        player_test.HP -= 10;
     }
 
 #endif

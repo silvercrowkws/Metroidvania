@@ -33,7 +33,7 @@ public class RoomGenerator : MonoBehaviour
 
     //[SerializeField] private NavMeshSurface navMeshSurface;
 
-    [Tooltip("미로의 반지름(방 개수는 반지름에 따라 1:3², 2:5², 3:7², 4:9², 5:11², 6: 13², 7:15², 8:17²... 뒷배경이 반지름 8까지 커버 가능함)")]
+    [Tooltip("미로의 반지름(방 개수는 반지름에 따라 1:3², 2:5², 3:7², 4:9², 5:11², 6:13², 7:15², 8:17²... 뒷배경이 반지름 8까지 커버 가능함)")]
     [SerializeField] public int radius = 4;
 
     private List<Vector2Int> mazePositions;
@@ -57,6 +57,10 @@ public class RoomGenerator : MonoBehaviour
     /// </summary>
     public Action onRoomGenerated;
 
+    GameManager gameManager;
+
+    int monstersPerType = 0;
+
     void Awake()
     {
         if (seed != AllRandom)
@@ -69,11 +73,57 @@ public class RoomGenerator : MonoBehaviour
             Debug.Log("[랜덤 시드] 완전 랜덤으로 실행");
         }
 
-        mazePositions = GenerateOrderedRectangularPositions(radius);
+        /*switch (gameManager.GameDifficulty)
+        {
+            case GameDifficulty.Easy:
+                radius = 4;
+                break;
+            case GameDifficulty.Normal:
+                radius = 5;
+                break;
+            case GameDifficulty.Hard:
+                radius = 6;
+                break;
+            case GameDifficulty.Nightmare:
+                radius = 7;
+                break;
+            case GameDifficulty.Hell:
+                radius = 8;
+                break;
+        }
+        mazePositions = GenerateOrderedRectangularPositions(radius);*/
     }
 
     void Start()
     {
+        gameManager = GameManager.Instance;
+
+        switch (gameManager.GameDifficulty)
+        {
+            // [Tooltip("미로의 반지름(방 개수는 반지름에 따라 4:9², 5:11², 6:13², 7:15², 8:17²... 뒷배경이 반지름 8까지 커버 가능함)")]
+            case GameDifficulty.Easy:
+                radius = 4;
+                monstersPerType = 2;
+                break;
+            case GameDifficulty.Normal:
+                monstersPerType = 3;
+                radius = 5;
+                break;
+            case GameDifficulty.Hard:
+                monstersPerType = 5;
+                radius = 6;
+                break;
+            case GameDifficulty.Nightmare:
+                monstersPerType = 7;
+                radius = 7;
+                break;
+            case GameDifficulty.Hell:
+                monstersPerType = 10;
+                radius = 8;
+                break;
+        }
+        mazePositions = GenerateOrderedRectangularPositions(radius);
+
         // RenderTexture가 없으면 직접 생성해서 카메라에 할당
         if (miniMapRT == null)
         {
@@ -438,7 +488,7 @@ public class RoomGenerator : MonoBehaviour
         }
     }
 
-    /// <summary>
+    /*/// <summary>
     /// 미로 내 랜덤 Room 5개에만 몬스터 생성(0,0 제외)
     /// </summary>
     private void SpawnMonsterInRandomRoom()
@@ -466,8 +516,8 @@ public class RoomGenerator : MonoBehaviour
             return;
         }
 
-        /*// 랜덤하게 섞고 3개 선택
-        var selectedRooms = validRooms.OrderBy(_ => UnityEngine.Random.value).Take(5).ToList();*/
+        *//*// 랜덤하게 섞고 3개 선택
+        var selectedRooms = validRooms.OrderBy(_ => UnityEngine.Random.value).Take(5).ToList();*//*
 
         // 방 랜덤 섞기
         var shuffledRooms = validRooms.OrderBy(_ => UnityEngine.Random.value).ToList();
@@ -483,7 +533,7 @@ public class RoomGenerator : MonoBehaviour
         };
 
 
-        /*for (int i = 0; i < selectedRooms.Count; i++)
+        *//*for (int i = 0; i < selectedRooms.Count; i++)
         {
             Room selectedRoom = selectedRooms[i];
 
@@ -495,19 +545,91 @@ public class RoomGenerator : MonoBehaviour
             *//*GameObject monster_0_Obj = Instantiate(monster_RedChicken, spawnPosition, Quaternion.identity, landObjectTransform);
             monster_0_Obj.name = $"Monster_0_{i + 1}";*/
 
-        /*GameObject monster_1_Obj = Instantiate(monster_Skeleton, spawnPosition, Quaternion.identity, landObjectTransform);
-        monster_1_Obj.name = $"Monster_1_{i + 1}";*//*
+    /*GameObject monster_1_Obj = Instantiate(monster_Skeleton, spawnPosition, Quaternion.identity, landObjectTransform);
+    monster_1_Obj.name = $"Monster_1_{i + 1}";*//*
 
-        GameObject monster_2_Obj = Instantiate(monster_FlyingEye, spawnPosition, Quaternion.identity, landObjectTransform);
-        monster_2_Obj.name = $"Monster_2_{i + 1}";
-    }*/
+    GameObject monster_2_Obj = Instantiate(monster_FlyingEye, spawnPosition, Quaternion.identity, landObjectTransform);
+    monster_2_Obj.name = $"Monster_2_{i + 1}";
+}*//*
 
+    int roomIndex = 0;
+    for (int type = 0; type < monsterTypes; type++)
+    {
+        for (int i = 0; i < monstersPerType; i++)
+        {
+            Room selectedRoom = shuffledRooms[roomIndex++];
+            Transform landObjectTransform = selectedRoom.transform.GetChild(1).GetChild(0);
+            Vector3 spawnPosition = new Vector3(landObjectTransform.position.x, landObjectTransform.position.y + 0.6f, landObjectTransform.position.z);
+
+            GameObject monsterObj = Instantiate(monsterPrefabs[type], spawnPosition, Quaternion.identity, landObjectTransform);
+            monsterObj.name = $"Monster_{type}_{i + 1}";
+        }
+    }
+}*/
+
+    /// <summary>
+    /// 미로 내 랜덤 Room에 몬스터 생성. radius에 따라 종류별 소환 개수가 변경됨. (0,0 제외)
+    /// </summary>
+    private void SpawnMonsterInRandomRoom()
+    {
+        // 1. 유효한 방 목록 필터링 (시작 방 제외, wallBottom이 활성화된 방 = 미로 외곽 쪽 방)
+        var validRooms = roomDictionary
+            .Where(kv => kv.Key != Vector2Int.zero)
+            .Select(kv => kv.Value)
+            .Where(room => room.wallBottom != null && room.wallBottom.activeSelf)
+            .ToList();
+
+        // 2. radius에 따른 각 몬스터 종류별 소환 개수 계산
+        // 요구사항: radius 4->1마리, 5->2마리, 6->3마리, 7->4마리, 8->5마리
+        // 공식: monstersPerType = radius - 3
+        //int monstersPerType = radius - 3;
+        //int monstersPerType = radius - 3;
+
+        // radius가 4보다 작으면 몬스터를 소환하지 않거나 최소 1마리로 조정 가능 (여기서는 1마리 미만이면 0으로 처리)
+        if (monstersPerType <= 0)
+        {
+            Debug.Log($"[Monster Spawn] radius({radius})가 4 미만이므로 몬스터를 소환하지 않습니다.");
+            return;
+        }
+
+        // 3. 몬스터 프리팹 배열
+        GameObject[] monsterPrefabs = new GameObject[]
+        {
+            monster_RedChicken,
+            monster_Skeleton,
+            monster_FlyingEye,
+            monster_Goblin,
+            monster_Mushroom
+        };
+        int monsterTypes = monsterPrefabs.Length; // 몬스터 종류의 개수 (5개)
+        int totalMonsters = monsterTypes * monstersPerType; // 생성할 몬스터의 총 개수
+
+        // 4. 방 개수 확인
+        if (validRooms.Count < totalMonsters)
+        {
+            Debug.LogWarning($"방 개수({validRooms.Count})가 부족해서 모든 몬스터({totalMonsters}마리)를 배치할 수 없습니다. 배치 가능한 만큼만 배치합니다.");
+            totalMonsters = validRooms.Count; // 배치 가능한 최대 개수로 제한
+        }
+
+        // 5. 방 랜덤하게 섞기
+        var shuffledRooms = validRooms.OrderBy(_ => UnityEngine.Random.value).Take(totalMonsters).ToList();
+
+        Debug.Log($"[Monster Spawn] 난이도에 따라 몬스터 종류별 {monstersPerType}마리씩, 총 {totalMonsters}마리 배치 시작.");
+
+        // 6. 몬스터 배치
         int roomIndex = 0;
         for (int type = 0; type < monsterTypes; type++)
         {
             for (int i = 0; i < monstersPerType; i++)
             {
+                // 배치 가능한 방 개수를 초과하면 루프 종료
+                if (roomIndex >= totalMonsters) goto EndSpawn;
+
                 Room selectedRoom = shuffledRooms[roomIndex++];
+
+                // LandObject 위치 찾기 (Room 구조에 맞게 수정)
+                // 현재 코드에서 Transform landObjectTransform = selectedRoom.transform.GetChild(1).GetChild(0); 로 되어 있으나,
+                // Room 구조에 따라 달라질 수 있으므로, 해당 위치를 몬스터가 소환될 중심 위치로 가정하고 진행합니다.
                 Transform landObjectTransform = selectedRoom.transform.GetChild(1).GetChild(0);
                 Vector3 spawnPosition = new Vector3(landObjectTransform.position.x, landObjectTransform.position.y + 0.6f, landObjectTransform.position.z);
 
@@ -515,6 +637,9 @@ public class RoomGenerator : MonoBehaviour
                 monsterObj.name = $"Monster_{type}_{i + 1}";
             }
         }
+
+    EndSpawn:
+        Debug.Log("[Monster Spawn] 몬스터 배치 완료.");
     }
 
     private float GetMiniMapIconSize(int radius)
