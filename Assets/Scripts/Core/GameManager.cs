@@ -497,7 +497,7 @@ public class GameManager : Singleton<GameManager>
             tempPlayerData.name = Player_Test.PlayerName;
             tempPlayerData.level = Player_Test.Level;
             tempPlayerData.xp = Player_Test.XP;
-            tempPlayerData.maxXp = Player_Test.maxXP;
+            tempPlayerData.maxXp = Player_Test.MaxXP;
             tempPlayerData.str = Player_Test.Strength;
             tempPlayerData.dex = Player_Test.Dexterity;
             tempPlayerData.hp = Player_Test.Health;
@@ -538,7 +538,7 @@ public class GameManager : Singleton<GameManager>
         {
             Player_Test.PlayerName = loadPlayerData.name;
             Player_Test.Level = loadPlayerData.level;
-            Player_Test.maxXP = loadPlayerData.maxXp;   // 프로퍼티로 할당
+            Player_Test.MaxXP = loadPlayerData.maxXp;   // 프로퍼티로 할당
             Player_Test.XP = loadPlayerData.xp;
             Player_Test.Strength = loadPlayerData.str;
             Player_Test.Dexterity = loadPlayerData.dex;

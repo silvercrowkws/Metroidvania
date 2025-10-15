@@ -291,7 +291,7 @@ public class Test_11_Json : TestBase
         player_Test.PlayerName = loadPlayerData.name; // 예시: Player 클래스에 PlayerName 프로퍼티가 있다고 가정
         player_Test.Level = loadPlayerData.level;
         player_Test.XP = loadPlayerData.xp;
-        player_Test.maxXP = loadPlayerData.maxXp;
+        player_Test.MaxXP = loadPlayerData.maxXp;
         player_Test.Strength = loadPlayerData.str;
         player_Test.Dexterity = loadPlayerData.dex;
         player_Test.Health = loadPlayerData.hp;

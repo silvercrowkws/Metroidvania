@@ -237,7 +237,23 @@ public class Player_Test : MonoBehaviour
     /// 플레이어의 최대 경험치
     /// 현재 경험치가 최대 경험치보다 크거나 같게 되면 레벨업 하고 최대 경험치량 증가
     /// </summary>
-    public float maxXP { get; set; } = 100f;
+    //private float maxXP = 100f;
+    private float maxXP;
+
+    public float MaxXP
+    {
+        get => maxXP;
+        set
+        {
+            if (maxXP != value)
+            {
+                maxXP = value;
+
+                Debug.Log($"플레이어의 현재 레벨업에 필요한 경험치 : {MaxXP}");
+                onPlayerMaxXPChange?.Invoke(MaxXP);
+            }
+        }
+    }
 
     /// <summary>
     /// 레벨업 시 필요 경험치가 올라가는 양
@@ -271,10 +287,10 @@ public class Player_Test : MonoBehaviour
                 }*/
 
                 // 대량의 경험치를 얻어서 레벨업이 연속으로 되도록 변경
-                while (currentXP >= maxXP)
+                while (currentXP >= MaxXP)
                 {
-                    currentXP -= maxXP;         // 남은 경험치 누적
-                    maxXP += xpGrowthRate;      // 레벨업 필요 경험치량 증가
+                    currentXP -= MaxXP;         // 남은 경험치 누적
+                    MaxXP += xpGrowthRate;      // 레벨업 필요 경험치량 증가
                     Level++;                    // 레벨 증가
                     onPlayerLevelUP?.Invoke(Level);     // 델리게이트
                     Debug.Log("플레이어 레벨업!");
@@ -294,6 +310,11 @@ public class Player_Test : MonoBehaviour
     /// 플레이어의 현재 경험치가 변경했음을 알리는 델리게이트
     /// </summary>
     public Action<float> onPlayerXPChange;
+
+    /// <summary>
+    /// 플레이어의 최대 경험치가 변경했음을 알리는 델리게이트
+    /// </summary>
+    public Action<float> onPlayerMaxXPChange;
 
     // 플레이어 조작 관련 끝 --------------------------------------------------
 
