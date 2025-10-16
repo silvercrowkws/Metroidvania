@@ -151,9 +151,23 @@ public class GameManager : Singleton<GameManager>
 
                 // 경험치 변경 시 저장
                 player_test.onPlayerXPChange += OnPlayerXPChange;
+                player_test.onPlayerMaxXPChange += OnPlayerMaxXPChange;
+
                 player_test.onKeyCountChanged += OnKeyCountChanged;
             }
             return player_test;
+        }
+    }
+
+    /// <summary>
+    /// 최대 경험치 변경 시 저장
+    /// </summary>
+    /// <param name="maxXp"></param>
+    private void OnPlayerMaxXPChange(float maxXp)
+    {
+        if (isDataRecovered)
+        {
+            OnDataSave();
         }
     }
 
@@ -413,6 +427,7 @@ public class GameManager : Singleton<GameManager>
         Debug.Log($"level : {loadPlayerData.level}");
         Debug.Log($"xp : {loadPlayerData.xp}");
         Debug.Log($"maxXP : {loadPlayerData.maxXp}");
+        Debug.Log($"statePoint : {loadPlayerData.statePoint}");
         Debug.Log($"str : {loadPlayerData.str}");
         Debug.Log($"dex : {loadPlayerData.dex}");
         Debug.Log($"hp : {loadPlayerData.hp}");
@@ -437,7 +452,7 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     private void OnDataSave()
     {
-        Debug.Log("게임매니저에서 인벤토리의 변경 감지됨. 데이터 저장 실행.");
+        Debug.Log("게임매니저에서 플레이어 데이터 변경 혹은 인벤토리의 변경 감지됨. 데이터 저장 실행.");
 
 
         /*// 인벤토리 인스턴스가 준비되지 않았으면 저장하지 않음
@@ -498,6 +513,7 @@ public class GameManager : Singleton<GameManager>
             tempPlayerData.level = Player_Test.Level;
             tempPlayerData.xp = Player_Test.XP;
             tempPlayerData.maxXp = Player_Test.MaxXP;
+            tempPlayerData.statePoint = Player_Test.StatePoint;
             tempPlayerData.str = Player_Test.Strength;
             tempPlayerData.dex = Player_Test.Dexterity;
             tempPlayerData.hp = Player_Test.Health;
@@ -540,6 +556,7 @@ public class GameManager : Singleton<GameManager>
             Player_Test.Level = loadPlayerData.level;
             Player_Test.MaxXP = loadPlayerData.maxXp;   // 프로퍼티로 할당
             Player_Test.XP = loadPlayerData.xp;
+            Player_Test.StatePoint = loadPlayerData.statePoint;
             Player_Test.Strength = loadPlayerData.str;
             Player_Test.Dexterity = loadPlayerData.dex;
             Player_Test.Health = loadPlayerData.hp;

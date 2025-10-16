@@ -77,6 +77,7 @@ public class Test_12_PlayerState : TestBase
         Debug.Log($"level : {loadPlayerData.level}");
         Debug.Log($"xp : {loadPlayerData.xp}");
         Debug.Log($"maxXP : {loadPlayerData.maxXp}");
+        Debug.Log($"statePoint : {loadPlayerData.statePoint}");
         Debug.Log($"str : {loadPlayerData.str}");
         Debug.Log($"dex : {loadPlayerData.dex}");
         Debug.Log($"hp : {loadPlayerData.hp}");
@@ -112,6 +113,7 @@ public class Test_12_PlayerState : TestBase
         tempPlayerData.level = 1;
         tempPlayerData.xp = 0;
         tempPlayerData.maxXp = 100;
+        tempPlayerData.statePoint = 0;
         tempPlayerData.str = 1;
         tempPlayerData.dex = 1;
         tempPlayerData.hp = 1;
@@ -258,6 +260,7 @@ public class Test_12_PlayerState : TestBase
         player_Test.Level = loadPlayerData.level;
         player_Test.XP = loadPlayerData.xp;
         player_Test.MaxXP = loadPlayerData.maxXp;
+        player_Test.StatePoint = loadPlayerData.statePoint;
         player_Test.Strength = loadPlayerData.str;
         player_Test.Dexterity = loadPlayerData.dex;
         player_Test.Health = loadPlayerData.hp;

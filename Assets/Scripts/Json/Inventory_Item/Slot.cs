@@ -18,14 +18,57 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IP
     /// </summary>
     QuantityPanel quantityPanel;
 
-    // 드래그 중인 아이템 이미지를 표시할 GameObject
+    /// <summary>
+    /// 드래그 중인 아이템 이미지를 표시할 GameObject
+    /// </summary>
     public static GameObject dragItemIcon;
+
+    /// <summary>
+    /// 버튼들 상위 오브젝트
+    /// </summary>
+    GameObject buttons;
+
+    /// <summary>
+    /// 사용 버튼
+    /// </summary>
+    Button useButton;
+
+    /// <summary>
+    /// 취소 버튼
+    /// </summary>
+    Button cancelButton;
+
+    /// <summary>
+    /// 현재 활성화된 슬롯의 버튼을 추적할 static 변수
+    /// </summary>
+    private static Slot activeSlotWithButtons = null;
+
+    /// <summary>
+    /// 다른 곳 클릭 시 알림 받을 static 델리게이트
+    /// </summary>
+    public static Action OnAnyUIClickedOutside;
+
+    /// <summary>
+    /// 인벤토리 패널
+    /// </summary>
+    InventoryPanel inventoryPanel;
 
     private void Awake()
     {
         itemCountText = GetComponentInChildren<TMP_Text>();
         itemImage = transform.Find("ItemImage").GetComponent<Image>();
         inventoryViewer = FindObjectOfType<InventoryViewer>();
+
+        buttons = transform.GetChild(2).gameObject;
+        buttons.gameObject.SetActive(false);
+
+        OnAnyUIClickedOutside += HideButtons;
+
+        useButton = buttons.transform.GetChild(0).GetComponent<Button>();
+        useButton.onClick.AddListener(OnUseButton);
+
+        cancelButton = buttons.transform.GetChild(1).GetComponent<Button>();
+        cancelButton.onClick.AddListener(OnCancelButton);
     }
 
     private void Start()
@@ -41,6 +84,17 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IP
         {
             Debug.Log("quantityPanel을 못찾은건가");
         }
+
+        inventoryPanel = FindAnyObjectByType<InventoryPanel>();
+        inventoryPanel.onButtonsActiveFalse += OnButtonsActiveFalse;
+    }
+
+    private void OnDestroy()
+    {
+        OnAnyUIClickedOutside -= HideButtons;
+
+        if (inventoryPanel != null)
+            inventoryPanel.onButtonsActiveFalse -= OnButtonsActiveFalse;
     }
 
     public void Init(ItemDataSO item)
@@ -92,6 +146,9 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IP
     // IPointerDownHandler에 정의되어있음
     public void OnPointerDown(PointerEventData eventData)
     {
+        // 슬롯이 클릭되면, 우선 모든 슬롯의 버튼 닫기
+        OnAnyUIClickedOutside?.Invoke();
+
         // 좌클릭이라면?
         if (eventData.button == PointerEventData.InputButton.Left)
         {
@@ -121,10 +178,23 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IP
         {
             inventoryViewer.StartChange(this);
             Debug.Log("슬롯에서 아이템 우클릭");
+
+            // 여기서 비활성화된 버튼들 활성화 시키고
+            buttons.gameObject.SetActive(true);
+            activeSlotWithButtons = this;
+            // 사용, 취소 이런 버튼들
         }
     }
 
-
+    private void HideButtons()
+    {
+        if (buttons != null && buttons.activeSelf)
+        {
+            buttons.SetActive(false);
+            if (activeSlotWithButtons == this)
+                activeSlotWithButtons = null;
+        }
+    }
 
     /// <summary>
     /// 드래그 중일 때
@@ -256,5 +326,28 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IP
         quantityPanel.gameObject.SetActive(true);
         int maxCount = Inventory.Instance.GetItemCount(currentSaveItem);
         quantityPanel.Show(maxCount);
+    }
+
+    private void OnButtonsActiveFalse()
+    {
+        buttons.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// 아이템 사용 버튼
+    /// </summary>
+    private void OnUseButton()
+    {
+        // 사용 버튼을 누르면 아이템의 개수를 1개 감소시키고,
+        // 아이템의 효과 발동
+        // 하라고 델리게이트?
+    }
+
+    /// <summary>
+    /// 아이템 취소 버튼
+    /// </summary>
+    private void OnCancelButton()
+    {
+        buttons.gameObject.SetActive(false);
     }
 }

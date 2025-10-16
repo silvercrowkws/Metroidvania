@@ -37,6 +37,11 @@ public class PlayerData
     public float maxXp;
 
     /// <summary>
+    /// 레벨업시 스탯 분배를 할 수 있는 포인트
+    /// </summary>
+    public int statePoint;
+
+    /// <summary>
     /// 힘 관련 스탯
     /// </summary>
     public int str;

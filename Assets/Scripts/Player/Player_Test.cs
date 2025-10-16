@@ -37,6 +37,11 @@ public class Player_Test : MonoBehaviour
     /// </summary>
     public int Health { get; set; }
 
+    /// <summary>
+    /// 스탯 포인트
+    /// </summary>
+    public int StatePoint { get; set; }
+
     // 플레이어 조작 관련 --------------------------------------------------
 
     /// <summary>
@@ -293,6 +298,8 @@ public class Player_Test : MonoBehaviour
                     MaxXP += xpGrowthRate;      // 레벨업 필요 경험치량 증가
                     Level++;                    // 레벨 증가
                     onPlayerLevelUP?.Invoke(Level);     // 델리게이트
+
+                    StatePoint++;
                     Debug.Log("플레이어 레벨업!");
                 }
 

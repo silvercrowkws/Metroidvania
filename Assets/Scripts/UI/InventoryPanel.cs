@@ -12,6 +12,8 @@ public class InventoryPanel : MonoBehaviour
     Player player;
     Player_Test playerTest;
 
+    public Action onButtonsActiveFalse;
+
     private void Awake()
     {
         canvasGroup = GetComponent<CanvasGroup>();
@@ -46,8 +48,9 @@ public class InventoryPanel : MonoBehaviour
             SetInventoryAlpha(0f);
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = false;
+            onButtonsActiveFalse?.Invoke();
         }
-    }    
+    }
 
     private void SetInventoryAlpha(float alpha)
     {

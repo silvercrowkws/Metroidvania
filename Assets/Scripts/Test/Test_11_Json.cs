@@ -84,6 +84,7 @@ public class Test_11_Json : TestBase
         Debug.Log($"level : {loadPlayerData.level}");
         Debug.Log($"xp : {loadPlayerData.xp}");
         Debug.Log($"maxXP : {loadPlayerData.maxXp}");
+        Debug.Log($"statePoint : {loadPlayerData.statePoint}");
         Debug.Log($"str : {loadPlayerData.str}");
         Debug.Log($"dex : {loadPlayerData.dex}");
         Debug.Log($"hp : {loadPlayerData.hp}");
@@ -119,6 +120,7 @@ public class Test_11_Json : TestBase
         tempPlayerData.level = 1;
         tempPlayerData.xp = 1;
         tempPlayerData.maxXp = 1;
+        tempPlayerData.statePoint = 1;
         tempPlayerData.str = 1;
         tempPlayerData.dex = 1;
         tempPlayerData.hp = 1;
@@ -135,6 +137,7 @@ public class Test_11_Json : TestBase
         tempPlayerData.level = 2;
         tempPlayerData.xp = 2;
         tempPlayerData.maxXp = 2;
+        tempPlayerData.statePoint = 2;
         tempPlayerData.str = 2;
         tempPlayerData.dex = 2;
         tempPlayerData.hp = 2;
@@ -151,6 +154,7 @@ public class Test_11_Json : TestBase
         tempPlayerData.level = 3;
         tempPlayerData.xp = 3;
         tempPlayerData.maxXp = 3;
+        tempPlayerData.statePoint = 3;
         tempPlayerData.str = 3;
         tempPlayerData.dex = 3;
         tempPlayerData.hp = 3;
@@ -292,6 +296,7 @@ public class Test_11_Json : TestBase
         player_Test.Level = loadPlayerData.level;
         player_Test.XP = loadPlayerData.xp;
         player_Test.MaxXP = loadPlayerData.maxXp;
+        player_Test.StatePoint = loadPlayerData.statePoint;
         player_Test.Strength = loadPlayerData.str;
         player_Test.Dexterity = loadPlayerData.dex;
         player_Test.Health = loadPlayerData.hp;
