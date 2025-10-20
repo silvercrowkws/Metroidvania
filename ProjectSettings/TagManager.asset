@@ -17,6 +17,7 @@ TagManager:
   - EdgeCollider
   - MonsterBody
   - ColliderHolder
+  - Boss
   layers:
   - Default
   - TransparentFX
@@ -36,7 +37,7 @@ TagManager:
   - EdgeCollider
   - MonsterBody
   - Item
-  - 
+  - Boss
   - 
   - 
   - 
@@ -65,6 +66,9 @@ TagManager:
     locked: 0
   - name: Door
     uniqueID: 2012346867
+    locked: 0
+  - name: Boss
+    uniqueID: 1155245209
     locked: 0
   - name: Player
     uniqueID: 2444325617

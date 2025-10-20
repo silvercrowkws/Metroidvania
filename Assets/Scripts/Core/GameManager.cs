@@ -290,9 +290,19 @@ public class GameManager : Singleton<GameManager>
     public float shakeSpeed = 2f;
 
     /// <summary>
-    /// 어디선가 문이 열렸다! 패널
+    /// 정보 UI
     /// </summary>
-    public GameObject DoorOpenNotification;
+    Notification notification;
+
+    /// <summary>
+    /// Notification 클래스에 활성화 비활성화 알리는 델리게이트
+    /// </summary>
+    public Action<bool> onNotificationActive;
+
+    /// <summary>
+    /// Notification 클래스에 변경할 텍스트를 전달하는 델리게이트
+    /// </summary>
+    public Action<string> onNotificationText;
 
     // 카메라 진동 부분 끝 ------------------------------------------------------------
 
@@ -326,9 +336,25 @@ public class GameManager : Singleton<GameManager>
         }
 
         cameraShakeController = FindAnyObjectByType<CameraShakeController>();
-        cameraShakeController.onShakeFinished += OnShakeFinished;
+        if(cameraShakeController != null)
+        {
+            cameraShakeController.onShakeFinished += OnShakeFinished;
+        }
+        else
+        {
+            Debug.LogWarning("cameraShakeController 를 찾지 못했다");
+        }
 
-        DoorOpenNotification.gameObject.SetActive(false);
+        notification = FindAnyObjectByType<Notification>();
+        if (notification != null)
+        {
+            onNotificationActive?.Invoke(false);
+            //notification.gameObject.SetActive(false);
+        }
+        else
+        {
+            Debug.LogWarning("notification 를 찾지 못했다");
+        }
     }
 
     private void OnEnable()
@@ -618,13 +644,16 @@ public class GameManager : Singleton<GameManager>
     /// <returns></returns>
     IEnumerator DoorNotification()
     {
-        DoorOpenNotification.gameObject.SetActive(true);
+        //notification.gameObject.SetActive(true);
+        onNotificationActive?.Invoke(true);
+        onNotificationText?.Invoke("어디선가 문이 열렸다!");
 
         //yield return new WaitForSeconds(1);
         yield return new WaitForSecondsRealtime(1.5f);     // 실제 시간으로 1.5초 기다리고
 
         Time.timeScale = 1;     // 타임 스케일 1
-        DoorOpenNotification.gameObject.SetActive(false);
+        //notification.gameObject.SetActive(false);
+        onNotificationActive?.Invoke(false);
     }
 
 
