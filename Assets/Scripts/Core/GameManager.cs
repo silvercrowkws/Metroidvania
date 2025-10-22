@@ -20,6 +20,9 @@ public enum GameState
     GameComplete,               // 
 }
 
+/// <summary>
+/// 게임 난이도
+/// </summary>
 public enum GameDifficulty
 {
     Easy = 0,

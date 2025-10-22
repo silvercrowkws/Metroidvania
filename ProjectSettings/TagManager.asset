@@ -18,6 +18,7 @@ TagManager:
   - MonsterBody
   - ColliderHolder
   - Boss
+  - Laser
   layers:
   - Default
   - TransparentFX
@@ -90,4 +91,7 @@ TagManager:
     locked: 0
   - name: Item
     uniqueID: 2670099869
+    locked: 0
+  - name: Laser
+    uniqueID: 1536159745
     locked: 0

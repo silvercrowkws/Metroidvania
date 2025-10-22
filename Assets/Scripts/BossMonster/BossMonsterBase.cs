@@ -1,0 +1,264 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.UI;
+
+/// <summary>
+/// 게임 난이도에 따른 보스 종류
+/// </summary>
+public enum BossType
+{
+    None = 0,
+
+    EasyBoss,           // 시작 시 가로로 레이저를 쏘고 시계 방향으로 회전(레이저에 맞으면 피 2개 깎기)
+
+    NormalBoss,         // 시작 시 가로로 레이저를 쏘고 시계 방향으로 회전(레이저에 맞으면 피 3개 깎기)
+                        // 및 위에서 오브젝트 낙하
+
+    HardBoss,           // 시작 시 가로로 레이저를 쏘고 시계 방향으로 회전
+                        // 및 위에서 오브젝트 낙하(에 맞으면 잠시 못움직이게 기절)
+                        // 및 레이저 맞으면 피 5개 깎기
+
+    NightmareBoss,      // 시작 시 X 모양으로 레이저를 쏘고 시계 방향으로 회전 중간중간 방향 변경
+                        // 및 위에서 오브젝트 낙하(에 맞으면 잠시 못움직이게 기절)
+                        // 및 레이저 맞으면 피 10개 깎기
+                        // 및 맵 전역을 튕기는 오브젝트 추가(각도는 시작시 조절)
+
+    HellBoss,           // 시작 시 X 모양으로 레이저를 쏘고 시계 방향으로 회전 중간중간 방향 변경
+                        // 및 위에서 오브젝트 낙하(에 맞으면 잠시 못움직이게 기절)
+                        // 및 레이저 맞으면 즉사
+                        // 및 맵 전역을 튕기는 오브젝트 추가(각도는 시작시 조절)
+                        // 튕기는 오브젝트가 주기적으로 플레이어를 조준 및 바닥에 꽂히고 데미지를 주는 장판을 남긴다
+                        // 그 후 새로운 튕기는 오브젝트 생성(장판이 사라지는 시점에 새로 꽂히도록 조절 필요)
+}
+
+public class BossMonsterBase : MonoBehaviour
+{
+    // 모든 보스가 공통 적으로 해야 할 일
+    // 체력
+    // 일정 시간 간격으로 공격을 할건데 패턴은 자식에서?
+
+    protected BossType bossType = BossType.None;
+
+    /// <summary>
+    /// 게임 매니저
+    /// </summary>
+    protected GameManager gameManager;
+
+    /// <summary>
+    /// 보스가 죽었을 때 주는 돈
+    /// </summary>
+    protected float bossDieMoney = 1.0f;
+
+    /// <summary>
+    /// 보스가 죽었을 때 주는 경험치
+    /// </summary>
+    protected float bossDieieXP = 1.0f;
+
+    /// <summary>
+    /// 몬스터의 최대 체력
+    /// </summary>
+    protected float maxHP = 1.0f;
+    
+    /// <summary>
+    /// 몬스터의 현재 체력
+    /// </summary>
+    protected float currentHP = 1.0f;
+
+    /// <summary>
+    /// 몬스터 체력 프로퍼티
+    /// </summary>
+    public float HP
+    {
+        get => currentHP;
+        set
+        {
+            if (currentHP != value)
+            {
+                //currentHP = value;
+                currentHP = Mathf.Clamp(value, 0, maxHP);
+                bossHealthSlider.value = currentHP / maxHP;
+                if (currentHP < 1)
+                {
+                    currentHP = 0;
+                    
+                    onBossDie?.Invoke();          // 보스 몬스터가 죽었다고 델리게이트로 알림
+                    //Destroy(gameObject);        // 게임 오브젝트 파괴
+                    Debug.Log("보스 몬스터 사망");
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 몬스터가 죽었다고 알리는 델리게이트
+    /// </summary>
+    protected Action onBossDie;
+
+    /// <summary>
+    /// 몬스터가 죽었는지 확인하는 bool 변수
+    /// </summary>
+    protected bool isDead = false;
+
+    /// <summary>
+    /// 몬스터의 체력을 보여주기 위한 슬라이더
+    /// </summary>
+    Slider bossHealthSlider;
+
+    /// <summary>
+    /// 보스 몬스터의 공격력
+    /// </summary>
+    protected float bossAttackPower = 1.0f;
+
+    /// <summary>
+    /// 적의 공격으로 플레이어에게 데미지를 적용시키는 함수
+    /// </summary>
+    public Action<float> onPlayerApplyDamage;
+
+    /// <summary>
+    /// 스프라이트 랜더러
+    /// </summary>
+    protected SpriteRenderer spriteRenderer;
+
+    /// <summary>
+    /// 플레이어의 트랜스폼
+    /// </summary>
+    public Transform playerTransform;
+
+    /// <summary>
+    /// 플레이어
+    /// </summary>
+    Player_Test player_test;
+
+    /// <summary>
+    /// 공격 받을 수 있는지 확인하는 bool 변수(공격 받은 후 일정 시간 동안 데미지를 입지 않도록)
+    /// false : 공격 받을 수 있음, true : 공격 받을 수 없음
+    /// </summary>
+    private bool damageCoolDown = false;
+
+    /// <summary>
+    /// 공격할 목표 위치(Attack 함수가 호출된 시점의 playerTransform)
+    /// </summary>
+    private Vector3 targetPosition;
+
+    /// <summary>
+    /// 공격 중 여부
+    /// </summary>
+    public bool isAttacking = false;
+
+    /// <summary>
+    /// 원래 색상
+    /// </summary>
+    private Color originalColor;
+
+    /// <summary>
+    /// 깜빡임 횟수
+    /// </summary>
+    int blinkCount = 3;
+
+    /// <summary>
+    /// 깜빡일 때의 색상
+    /// </summary>
+    public Color blinkColor = Color.red;
+
+    Rigidbody2D rb2d;
+
+    /// <summary>
+    /// 레이저
+    /// </summary>
+    public GameObject LaserParent;
+
+    protected void Awake()
+    {
+        
+    }
+
+    protected virtual void OnEnable()
+    {
+        // 초기화
+        isDead = false;
+        damageCoolDown = false;
+        maxHP = currentHP;
+
+        gameManager = GameManager.Instance;
+        
+        player_test = gameManager.Player_Test;
+        playerTransform = player_test.transform;
+        onPlayerApplyDamage += player_test.OnPlayerApplyDamage;     // => 레이저는 패링 안되도록 조치 필요
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
+
+        // 스프라이트 색상(RGB, 알파) 초기화
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = new Color(1f, 1f, 1f, 1f);
+            originalColor = spriteRenderer.color;
+        }
+
+        onBossDie += OnBossDie;
+
+        Transform child = transform.GetChild(0);
+
+        bossHealthSlider = child.GetChild(0).GetComponent<Slider>();
+
+        rb2d = GetComponent<Rigidbody2D>();
+    }
+
+    protected virtual void OnDisable()
+    {
+        bossHealthSlider.value = 1;                       // 체력 슬라이더 조정
+        onBossDie -= OnBossDie;
+    }
+
+    protected virtual void Start()
+    {
+        StartAttackPattern();
+    }
+
+    /// <summary>
+    /// 보스가 죽었을 때 실행될 함수
+    /// </summary>
+    private void OnBossDie()
+    {
+        
+    }
+
+    protected void StartAttackPattern()
+    {
+        // 만약 EasyBoss면
+        if(bossType == BossType.EasyBoss)
+        {
+            // 시작 시 가로로 레이저를 쏘고 시계 방향으로 회전(레이저에 맞으면 피 2개 깎기)
+            StartCoroutine(HorizontalLaser(15));
+        }
+    }
+
+    /// <summary>
+    /// 가로 레이저 패턴
+    /// </summary>
+    /// <param name="speed">1초당 회전 각도(속도)</param>
+    /// <returns></returns>
+    IEnumerator HorizontalLaser(float speed)
+    {
+        // 플레이어의 등장 연출이 있으면 그 만큼 기다리기
+        //yield return new WaitForSeconds(5);
+
+        float elapsed = 0f;
+
+        // 플레이어가 살아있는 동안 반복
+        while (!player_test.playerDie)
+        {
+            //Debug.Log("레이저 회전 중");
+
+            // LaserParent를 Z축 기준 시계 방향 회전
+            LaserParent.transform.Rotate(0f, 0f, -speed * Time.deltaTime);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        Debug.Log($"플레이어 사망으로 레이저 정지");
+    }
+}

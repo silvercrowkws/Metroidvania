@@ -179,7 +179,7 @@ public class MonsterBase : MonoBehaviour
     /// <summary>
     /// 공격 중 여부
     /// </summary>
-    public bool isAttacking = false;        // 여기
+    public bool isAttacking = false;
 
     /// <summary>
     /// 하트 패널
