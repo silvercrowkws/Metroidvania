@@ -158,6 +158,9 @@ public class Player_Test : MonoBehaviour
                     Debug.Log("플레이어 사망");
 
                     // 사망 연출 실행 부분
+                    rb.velocity = Vector3.zero;
+                    rb.Sleep();
+
                     ResetTrigger();
                     animator.SetTrigger("Die");
                     OnDisable();
@@ -583,6 +586,8 @@ public class Player_Test : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (playerDie) return;
+
         if (isDash)
         {
             dashTimer -= Time.fixedDeltaTime;

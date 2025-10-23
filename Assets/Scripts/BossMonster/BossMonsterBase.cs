@@ -12,18 +12,18 @@ public enum BossType
 {
     None = 0,
 
-    EasyBoss,           // 시작 시 가로로 레이저를 쏘고 시계 방향으로 회전(레이저에 맞으면 피 2개 깎기)
+    EasyBoss,           // 시작 시 가로로 레이저를 쏘고 시계 방향으로 회전(레이저에 맞으면 피 2개 깎기 : 20)
 
-    NormalBoss,         // 시작 시 가로로 레이저를 쏘고 시계 방향으로 회전(레이저에 맞으면 피 3개 깎기)
+    NormalBoss,         // 시작 시 가로로 레이저를 쏘고 시계 방향으로 회전(레이저에 맞으면 피 3개 깎기 : 30)
                         // 및 위에서 오브젝트 낙하
 
     HardBoss,           // 시작 시 가로로 레이저를 쏘고 시계 방향으로 회전
                         // 및 위에서 오브젝트 낙하(에 맞으면 잠시 못움직이게 기절)
-                        // 및 레이저 맞으면 피 5개 깎기
+                        // 및 레이저 맞으면 피 5개 깎기 : 50
 
     NightmareBoss,      // 시작 시 X 모양으로 레이저를 쏘고 시계 방향으로 회전 중간중간 방향 변경
                         // 및 위에서 오브젝트 낙하(에 맞으면 잠시 못움직이게 기절)
-                        // 및 레이저 맞으면 피 10개 깎기
+                        // 및 레이저 맞으면 피 10개 깎기 : 100
                         // 및 맵 전역을 튕기는 오브젝트 추가(각도는 시작시 조절)
 
     HellBoss,           // 시작 시 X 모양으로 레이저를 쏘고 시계 방향으로 회전 중간중간 방향 변경
@@ -40,7 +40,7 @@ public class BossMonsterBase : MonoBehaviour
     // 체력
     // 일정 시간 간격으로 공격을 할건데 패턴은 자식에서?
 
-    protected BossType bossType = BossType.None;
+    public BossType bossType = BossType.None;
 
     /// <summary>
     /// 게임 매니저
@@ -166,13 +166,24 @@ public class BossMonsterBase : MonoBehaviour
     Rigidbody2D rb2d;
 
     /// <summary>
-    /// 레이저
+    /// 레이저 프리팹 원본
     /// </summary>
-    public GameObject LaserParent;
+    private GameObject horizontalLaser;
+
+    /// <summary>
+    /// 사망 연출 오브젝트 생성
+    /// </summary>
+    protected GameObject horizontalLaserInstance;
 
     protected void Awake()
     {
-        
+        // Resources.Load는 리소스를 로드하는 메서드
+        // <Sprite>는 로드할 에셋의 타입을 지정(Texture, AudioClip, GameObject 등 다른 타입도 있음)
+        // "Sprites/sprite1" 이 부분은 로딩할 리소스의 경로
+        // "Sprites"는 Resources 폴더 내에 있는 서브폴더
+        // "sprite1"은 해당 폴더 내에 있는 에셋의 이름
+        horizontalLaser = Resources.Load<GameObject>("GameObjects/HorizontalLaser");
+        // 생성은 HorizontalLaserCoroutine 코루틴에서 함
     }
 
     protected virtual void OnEnable()
@@ -230,8 +241,14 @@ public class BossMonsterBase : MonoBehaviour
         // 만약 EasyBoss면
         if(bossType == BossType.EasyBoss)
         {
-            // 시작 시 가로로 레이저를 쏘고 시계 방향으로 회전(레이저에 맞으면 피 2개 깎기)
-            StartCoroutine(HorizontalLaser(15));
+            // 시작 시 가로로 레이저를 쏘고 시계 방향으로 회전(레이저에 맞으면 피 2개 깎기) => Laser 클래스에서 처리
+            StartCoroutine(HorizontalLaserCoroutine(15));
+        }
+
+        // 만약 NormalBoss면
+        else if(bossType == BossType.NormalBoss)
+        {
+
         }
     }
 
@@ -240,12 +257,24 @@ public class BossMonsterBase : MonoBehaviour
     /// </summary>
     /// <param name="speed">1초당 회전 각도(속도)</param>
     /// <returns></returns>
-    IEnumerator HorizontalLaser(float speed)
+    IEnumerator HorizontalLaserCoroutine(float speed)
     {
         // 플레이어의 등장 연출이 있으면 그 만큼 기다리기
         //yield return new WaitForSeconds(5);
 
         float elapsed = 0f;
+
+        if (horizontalLaser != null)
+        {
+            horizontalLaserInstance = Instantiate(horizontalLaser, transform);
+            horizontalLaserInstance.transform.localPosition = Vector3.zero;         // 부모의 중심에 위치
+            horizontalLaserInstance.transform.localRotation = Quaternion.identity;  // 회전을 0,0,0으로 설정
+            //horizontalLaserInstance.SetActive(false);                             // 기본적으로 비활성화
+        }
+        else
+        {
+            Debug.Log("HorizontalLaser를 못찾았다!");
+        }
 
         // 플레이어가 살아있는 동안 반복
         while (!player_test.playerDie)
@@ -253,7 +282,7 @@ public class BossMonsterBase : MonoBehaviour
             //Debug.Log("레이저 회전 중");
 
             // LaserParent를 Z축 기준 시계 방향 회전
-            LaserParent.transform.Rotate(0f, 0f, -speed * Time.deltaTime);
+            horizontalLaserInstance.transform.Rotate(0f, 0f, -speed * Time.deltaTime);
 
             elapsed += Time.deltaTime;
             yield return null;
