@@ -19,6 +19,7 @@ TagManager:
   - ColliderHolder
   - Boss
   - Laser
+  - FallingObject
   layers:
   - Default
   - TransparentFX
@@ -56,9 +57,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: BackGround
-    uniqueID: 3112238179
-    locked: 0
   - name: Ground
     uniqueID: 749296415
     locked: 0
@@ -68,8 +66,14 @@ TagManager:
   - name: Door
     uniqueID: 2012346867
     locked: 0
+  - name: Laser
+    uniqueID: 1536159745
+    locked: 0
   - name: Boss
     uniqueID: 1155245209
+    locked: 0
+  - name: BackGround
+    uniqueID: 3112238179
     locked: 0
   - name: Player
     uniqueID: 2444325617
@@ -92,6 +96,6 @@ TagManager:
   - name: Item
     uniqueID: 2670099869
     locked: 0
-  - name: Laser
-    uniqueID: 1536159745
+  - name: FallingObject
+    uniqueID: 2277970119
     locked: 0

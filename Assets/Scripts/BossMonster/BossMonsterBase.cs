@@ -238,17 +238,50 @@ public class BossMonsterBase : MonoBehaviour
 
     protected void StartAttackPattern()
     {
-        // 만약 EasyBoss면
-        if(bossType == BossType.EasyBoss)
-        {
-            // 시작 시 가로로 레이저를 쏘고 시계 방향으로 회전(레이저에 맞으면 피 2개 깎기) => Laser 클래스에서 처리
-            StartCoroutine(HorizontalLaserCoroutine(15));
-        }
+        // 레이저 충돌 시 데미지는 Laser 클래스에서 처리
 
-        // 만약 NormalBoss면
-        else if(bossType == BossType.NormalBoss)
+        switch(bossType)
         {
+            // EasyBoss의 경우
+            case BossType.EasyBoss:
+                // 시작 시 가로로 레이저를 쏘고 시계 방향으로 회전(레이저에 맞으면 피 2개 깎기) => Laser 클래스에서 처리
+                StartCoroutine(HorizontalLaserCoroutine(15));
+                break;
 
+            // NormalBoss의 경우
+            case BossType.NormalBoss:
+                // 시작 시 가로로 레이저를 쏘고 시계 방향으로 회전(레이저에 맞으면 피 3개 깎기 : 30)
+                // 및 위에서 오브젝트 낙하
+                break;
+
+            // HardBoss의 경우
+            case BossType.HardBoss:
+                // 시작 시 가로로 레이저를 쏘고 시계 방향으로 회전
+                // 및 위에서 오브젝트 낙하(에 맞으면 잠시 못움직이게 기절)
+                // 및 레이저 맞으면 피 5개 깎기 : 50
+                // 및 맵 전역을 튕기는 오브젝트 추가(각도는 시작시 조절)
+                break;
+
+            // NightmareBoss의 경우
+            case BossType.NightmareBoss:
+                // 시작 시 X 모양으로 레이저를 쏘고 시계 방향으로 회전 중간중간 방향 변경
+                // 및 위에서 오브젝트 낙하(에 맞으면 잠시 못움직이게 기절)
+                // 및 레이저 맞으면 피 10개 깎기 : 100
+                // 및 맵 전역을 튕기는 오브젝트 추가(각도는 시작시 조절)
+                // 일정 간격으로 플레이어를 조준 및 바닥에 꽂히고 데미지를 주는 장판을 남기는 오브젝트 추가
+                break;
+
+            // HellBoss의 경우
+            case BossType.HellBoss:
+                // 시작 시 X 모양으로 레이저를 쏘고 시계 방향으로 회전 중간중간 방향 변경
+                // 및 위에서 오브젝트 낙하(에 맞으면 잠시 못움직이게 기절)
+                // 및 레이저 맞으면 즉사
+                // 및 맵 전역을 튕기는 오브젝트 추가(각도는 시작시 조절)
+                // 일정 간격으로 플레이어를 조준 및 바닥에 꽂히고 데미지를 주는 장판을 남기는 오브젝트 추가
+                // 
+
+                // 그 후 새로운 튕기는 오브젝트 생성(장판이 사라지는 시점에 새로 꽂히도록 조절 필요)
+                break;
         }
     }
 
