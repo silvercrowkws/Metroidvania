@@ -326,6 +326,16 @@ public class Player_Test : MonoBehaviour
     /// </summary>
     public Action<float> onPlayerMaxXPChange;
 
+    /// <summary>
+    /// 스프라이트 렌더러
+    /// </summary>
+    SpriteRenderer spriteRenderer;
+
+    /// <summary>
+    /// 중복 방지를 위한 코루틴 핸들
+    /// </summary>
+    private Coroutine hitFlashCoroutine;
+
     // 플레이어 조작 관련 끝 --------------------------------------------------
 
     // 문 및 열쇠 관련 --------------------------------------------------
@@ -390,6 +400,8 @@ public class Player_Test : MonoBehaviour
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         // 리지드 바디의 충돌 감지 모드를 연속으로 변경
         // 기존 값은 느린 속도에서는 충돌을 잘 감지하지만,빠르게 움직이면(대쉬) 한 프레임에 오브젝트가 벽을 통과(터널링)할 수 있음
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
         currentHP = maxHP;
     }
 
@@ -922,6 +934,9 @@ public class Player_Test : MonoBehaviour
             if(HP > 1)
             {
                 HP -= damage;
+
+                // 플레이어의 이미지 깜빡깜빡 필요
+                StartHitFlash();
             }
         }
 
@@ -936,6 +951,9 @@ public class Player_Test : MonoBehaviour
             //Debug.Log($"감소한 데미지 : {damage}");
 
             HP -= damage;
+
+            // 플레이어의 이미지 깜빡깜빡 필요
+            StartHitFlash();
         }
 
         else
@@ -943,6 +961,38 @@ public class Player_Test : MonoBehaviour
             Debug.Log("OnPlayerApplyDamage 에서 가드 버그");
         }
         //Debug.Log($"몬스터에게 공격받음! 남은 HP: {HP}");
+    }
+
+    /// <summary>
+    /// 플레이어가 짧은 시간에 여러 번 공격을 받으면 코루틴이 중복 실행되기 때문에 우회하는 함수
+    /// 색상 깜빡임이 꼬이거나, 마지막에 원래 색으로 복귀 안 되는 문제가 생길 수도 있음
+    /// </summary>
+    private void StartHitFlash()
+    {
+        if (hitFlashCoroutine != null)
+            StopCoroutine(hitFlashCoroutine);
+
+        hitFlashCoroutine = StartCoroutine(HitFlashRoutine());
+    }
+
+    private IEnumerator HitFlashRoutine()
+    {
+        Color original = Color.white;                           // 원래 (1, 1, 1)
+        Color flash = new Color(1f, 0.5f, 0.5f);                // 바뀐 (1, 0.5, 0.5)
+        float flashDuration = 1f;                               // 총 1초 동안
+        int blinkCount = 3;                                     // 바↔원 세 번 반복
+        float interval = flashDuration / (blinkCount * 2f);     // 각 색상 유지 시간
+
+        for (int i = 0; i < blinkCount; i++)
+        {
+            spriteRenderer.color = flash;   // 바
+            yield return new WaitForSeconds(interval);
+            spriteRenderer.color = original; // 원
+            yield return new WaitForSeconds(interval);
+        }
+
+        spriteRenderer.color = original; // 원상 복귀
+        hitFlashCoroutine = null;
     }
 
     /// <summary>
@@ -1035,6 +1085,40 @@ public class Player_Test : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);       // 현재 실행 중인 씬 +1 로 이동
+    }
+
+    /// <summary>
+    /// 플레이어 기절 코루틴 실행 함수
+    /// </summary>
+    public void StunPlayer()
+    {
+        StartCoroutine(StunCoroutine(1));
+    }
+
+    /// <summary>
+    /// 플레이어를 기절 시키는 코루틴
+    /// </summary>
+    /// <param name="player"></param>
+    /// <param name="duration"></param>
+    /// <returns></returns>
+    private IEnumerator StunCoroutine(float duration)
+    {
+        Debug.Log("플레이어 기절 시작!");
+
+        inputActions.Actions.Disable(); // 조작 막기
+        rb.velocity = Vector2.zero;
+
+        /*// 만약 애니메이터 트리거가 있다면
+        player_test.SendMessage("ResetTrigger", SendMessageOptions.DontRequireReceiver);
+        animator.SetTrigger("Stun");*/
+
+        yield return new WaitForSeconds(duration);
+
+        inputActions.Actions.Enable();
+        //animator.ResetTrigger("Stun");
+        //animator.SetTrigger("Idle");
+
+        Debug.Log("플레이어 기절 해제!");
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

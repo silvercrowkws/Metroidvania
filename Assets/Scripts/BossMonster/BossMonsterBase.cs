@@ -110,7 +110,7 @@ public class BossMonsterBase : MonoBehaviour
     /// <summary>
     /// 보스 몬스터의 공격력
     /// </summary>
-    protected float bossAttackPower = 1.0f;
+    //protected float bossAttackPower = 1.0f;
 
     /// <summary>
     /// 적의 공격으로 플레이어에게 데미지를 적용시키는 함수
@@ -171,9 +171,14 @@ public class BossMonsterBase : MonoBehaviour
     private GameObject horizontalLaser;
 
     /// <summary>
-    /// 사망 연출 오브젝트 생성
+    /// horizontal 레이저 오브젝트 생성
     /// </summary>
     protected GameObject horizontalLaserInstance;
+
+    /// <summary>
+    /// 낙하 오브젝트의 배열
+    /// </summary>
+    private GameObject[] fallingObjects;
 
     protected void Awake()
     {
@@ -184,6 +189,23 @@ public class BossMonsterBase : MonoBehaviour
         // "sprite1"은 해당 폴더 내에 있는 에셋의 이름
         horizontalLaser = Resources.Load<GameObject>("GameObjects/HorizontalLaser");
         // 생성은 HorizontalLaserCoroutine 코루틴에서 함
+
+        // FallingObject_1 ~ FallingObject_4 불러오기
+        fallingObjects = new GameObject[4];
+        for (int i = 0; i < 4; i++)
+        {
+            string path = $"GameObjects/FallingObject_{i + 1}";
+            fallingObjects[i] = Resources.Load<GameObject>(path);
+
+            if (fallingObjects[i] == null)
+            {
+                Debug.LogWarning($"{path} 프리팹을 찾을 수 없습니다!");
+            }
+            else
+            {
+                Debug.Log($"{path} 로드 성공!");
+            }
+        }
     }
 
     protected virtual void OnEnable()
@@ -236,6 +258,9 @@ public class BossMonsterBase : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// 보스 패턴 실행 함수
+    /// </summary>
     protected void StartAttackPattern()
     {
         // 레이저 충돌 시 데미지는 Laser 클래스에서 처리
@@ -251,13 +276,17 @@ public class BossMonsterBase : MonoBehaviour
             // NormalBoss의 경우
             case BossType.NormalBoss:
                 // 시작 시 가로로 레이저를 쏘고 시계 방향으로 회전(레이저에 맞으면 피 3개 깎기 : 30)
+                StartCoroutine(HorizontalLaserCoroutine(15));
                 // 및 위에서 오브젝트 낙하
+                StartCoroutine(FallingObjectCoroutine());
                 break;
 
             // HardBoss의 경우
             case BossType.HardBoss:
                 // 시작 시 가로로 레이저를 쏘고 시계 방향으로 회전
+                StartCoroutine(HorizontalLaserCoroutine(15));
                 // 및 위에서 오브젝트 낙하(에 맞으면 잠시 못움직이게 기절)
+                StartCoroutine(FallingObjectCoroutine());
                 // 및 레이저 맞으면 피 5개 깎기 : 50
                 // 및 맵 전역을 튕기는 오브젝트 추가(각도는 시작시 조절)
                 break;
@@ -322,5 +351,48 @@ public class BossMonsterBase : MonoBehaviour
         }
 
         Debug.Log($"플레이어 사망으로 레이저 정지");
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator FallingObjectCoroutine()
+    {
+        yield return null;
+
+        GameObject fallingObjectParent = new GameObject("FallingObjectParent");
+        fallingObjectParent.transform.SetParent(transform);         // 이 보스의 자식으로 설정
+        fallingObjectParent.transform.localPosition = Vector3.zero; // 위치 초기화
+
+        float spawnInterval = 1.5f; // 오브젝트 떨어뜨리는 간격 (원하는 값으로 조절 가능)
+
+        // 3️⃣ 플레이어가 살아있는 동안 반복
+        while (!player_test.playerDie)
+        {
+            // 3-1️⃣ 랜덤 위치 설정
+            float randomX = UnityEngine.Random.Range(-15f, 15f);
+            Vector3 spawnPos = new Vector3(randomX, 8f, 0f);
+
+            // 3-2️⃣ 랜덤 프리팹 선택
+            int randomIndex = UnityEngine.Random.Range(0, fallingObjects.Length);
+            GameObject prefab = fallingObjects[randomIndex];
+
+            // 3-3️⃣ 프리팹 존재 확인 후 생성
+            if (prefab != null)
+            {
+                GameObject obj = Instantiate(prefab, spawnPos, Quaternion.identity, fallingObjectParent.transform);
+                // 필요시 Rigidbody2D나 애니메이션 조정 가능
+            }
+            else
+            {
+                Debug.LogWarning($"fallingObjects[{randomIndex}] 프리팹이 null입니다!");
+            }
+
+            // 3-4️⃣ 다음 스폰까지 대기
+            yield return new WaitForSeconds(spawnInterval);
+        }
+
+        Debug.Log("플레이어 사망으로 낙하 오브젝트 생성 중단");
     }
 }

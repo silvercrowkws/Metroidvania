@@ -6,7 +6,7 @@ using UnityEngine;
 public class FallingObject : MonoBehaviour
 {
     /// <summary>
-    /// 레이저로 주는 데미지
+    /// 낙하 오브젝트로 주는 데미지
     /// </summary>
     float fallingObjectDamage = 10;
 
@@ -18,16 +18,11 @@ public class FallingObject : MonoBehaviour
     /// <summary>
     /// 플레이어
     /// </summary>
-    Player_Test player_test;
-
-    /// <summary>
-    /// 플레이어가 낙하 오브젝트에 맞아 잠시 못 움직인다고 알리는 델리게이트
-    /// </summary>
-    public Action onFallingObject;
+    Player_Test player_test;    
 
     private void Start()
     {
-        bossMonsterBase = GetComponentInParent<BossMonsterBase>();
+        bossMonsterBase = FindAnyObjectByType<BossMonsterBase>();
         player_test = GameManager.Instance.Player_Test;
     }
 
@@ -39,7 +34,7 @@ public class FallingObject : MonoBehaviour
         if(bossMonsterBase.bossType == BossType.HardBoss || bossMonsterBase.bossType == BossType.NightmareBoss || bossMonsterBase.bossType == BossType.HellBoss)
         {
             // 플레이어의 움직임 잠시동안 정지 부분
-            onFallingObject?.Invoke();
+            player_test.StunPlayer();
         }
     }
 

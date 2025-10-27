@@ -33,6 +33,9 @@ public class Notification : MonoBehaviour
         gameManager = GameManager.Instance;
         gameManager.onNotificationActive += OnNotificationActive;
         gameManager.onNotificationText += OnNotificationText;
+
+        // 시작 시 안보이게
+        canvasGroup.alpha = 0f;
     }
 
     /// <summary>
