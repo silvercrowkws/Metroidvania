@@ -974,7 +974,7 @@ public class Player_Test : MonoBehaviour
 
         hitFlashCoroutine = StartCoroutine(HitFlashRoutine());
     }
-
+    
     private IEnumerator HitFlashRoutine()
     {
         Color original = Color.white;                           // 원래 (1, 1, 1)

@@ -20,6 +20,7 @@ TagManager:
   - Boss
   - Laser
   - FallingObject
+  - TopWall
   layers:
   - Default
   - TransparentFX
@@ -98,4 +99,7 @@ TagManager:
     locked: 0
   - name: FallingObject
     uniqueID: 2277970119
+    locked: 0
+  - name: BounceObject
+    uniqueID: 2246704551
     locked: 0

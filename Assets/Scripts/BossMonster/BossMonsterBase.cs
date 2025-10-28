@@ -354,12 +354,12 @@ public class BossMonsterBase : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// 낙하 오브젝트를 주기적으로 생성하는 코루틴
     /// </summary>
     /// <returns></returns>
     IEnumerator FallingObjectCoroutine()
     {
-        yield return null;
+        //yield return null;
 
         GameObject fallingObjectParent = new GameObject("FallingObjectParent");
         fallingObjectParent.transform.SetParent(transform);         // 이 보스의 자식으로 설정
@@ -367,29 +367,28 @@ public class BossMonsterBase : MonoBehaviour
 
         float spawnInterval = 1.5f; // 오브젝트 떨어뜨리는 간격 (원하는 값으로 조절 가능)
 
-        // 3️⃣ 플레이어가 살아있는 동안 반복
+        // 플레이어가 살아있는 동안 반복
         while (!player_test.playerDie)
         {
-            // 3-1️⃣ 랜덤 위치 설정
+            // 랜덤 위치 설정
             float randomX = UnityEngine.Random.Range(-15f, 15f);
             Vector3 spawnPos = new Vector3(randomX, 8f, 0f);
 
-            // 3-2️⃣ 랜덤 프리팹 선택
+            // 랜덤한 낙하 오브젝트 선택
             int randomIndex = UnityEngine.Random.Range(0, fallingObjects.Length);
             GameObject prefab = fallingObjects[randomIndex];
 
-            // 3-3️⃣ 프리팹 존재 확인 후 생성
+            // 해당 낙하 오브젝트의 존재 확인 후 생성
             if (prefab != null)
             {
                 GameObject obj = Instantiate(prefab, spawnPos, Quaternion.identity, fallingObjectParent.transform);
-                // 필요시 Rigidbody2D나 애니메이션 조정 가능
             }
             else
             {
                 Debug.LogWarning($"fallingObjects[{randomIndex}] 프리팹이 null입니다!");
             }
 
-            // 3-4️⃣ 다음 스폰까지 대기
+            // 다음 스폰까지 대기
             yield return new WaitForSeconds(spawnInterval);
         }
 
