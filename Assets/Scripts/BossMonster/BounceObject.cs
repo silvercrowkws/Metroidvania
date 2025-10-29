@@ -20,14 +20,9 @@ public class BounceObject : MonoBehaviour
     private Vector2 velocity;
 
     /// <summary>
-    /// 이 오브젝트(공)의 콜라이더
+    /// 이 오브젝트(공)의 콜라이더(벽, 바닥, 천장과 튕김용)
     /// </summary>
     CircleCollider2D circleCollider;
-
-    /// <summary>
-    /// 코루틴 중복 방지 핸들
-    /// </summary>
-    private Coroutine ignoreCoroutine;
 
     /// <summary>
     /// 플레이어
@@ -48,6 +43,9 @@ public class BounceObject : MonoBehaviour
     void Start()
     {
         player_test = GameManager.Instance.Player_Test;
+
+        // 플레이어와의 충돌 무시
+        Physics2D.IgnoreCollision(circleCollider, player_test.GetComponent<Collider2D>(), true);
     }
 
     void FixedUpdate()
@@ -87,40 +85,6 @@ public class BounceObject : MonoBehaviour
             Debug.Log($"충돌 후 velocity : {velocity}");
         }
 
-        // 만약 플레이어와 충돌하면
-        else if (tag == "Player")
-        {
-            Debug.Log("OnColliderEnter2D에서 공과 플레이어의 충돌은 확인");
-
-            // 데미지 적용 부분
-            player_test.OnPlayerApplyDamage(5);
-
-            // 코루틴 진행 확인 후 무시 코루틴 적용
-            if (ignoreCoroutine != null)
-            {
-                StopCoroutine(ignoreCoroutine);
-            }
-            ignoreCoroutine = StartCoroutine(IgnoreCoroutine(collision));
-        }
-
         rb.velocity = velocity;
-    }
-
-    /// <summary>
-    /// 플레이어와의 충돌을 무시하는 코루틴
-    /// </summary>
-    /// <param name="other"></param>
-    /// <returns></returns>
-    IEnumerator IgnoreCoroutine(Collision2D other)
-    {
-        // 플레이어와 충돌 무시 시작
-        Debug.Log("Player와 충돌! (충돌 무시 시작)");
-        Physics2D.IgnoreCollision(circleCollider, other.collider, true);
-
-        yield return new WaitForSeconds(1.5f);
-
-        // 플레이어와 충돌 무시 끝
-        Debug.Log("Player와 충돌! (충돌 무시 끝)");
-        Physics2D.IgnoreCollision(circleCollider, other.collider, false);
     }
 }
