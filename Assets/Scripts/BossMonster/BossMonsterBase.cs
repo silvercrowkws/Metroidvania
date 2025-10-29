@@ -180,6 +180,16 @@ public class BossMonsterBase : MonoBehaviour
     /// </summary>
     private GameObject[] fallingObjects;
 
+    /// <summary>
+    /// bounceObject 프리팹 원본
+    /// </summary>
+    private GameObject bounceObject;
+
+    /// <summary>
+    /// bounceObject 레이저 오브젝트 생성
+    /// </summary>
+    protected GameObject bounceObjectInstance;
+
     protected void Awake()
     {
         // Resources.Load는 리소스를 로드하는 메서드
@@ -189,6 +199,8 @@ public class BossMonsterBase : MonoBehaviour
         // "sprite1"은 해당 폴더 내에 있는 에셋의 이름
         horizontalLaser = Resources.Load<GameObject>("GameObjects/HorizontalLaser");
         // 생성은 HorizontalLaserCoroutine 코루틴에서 함
+
+        bounceObject = Resources.Load<GameObject>("GameObjects/BounceObject");
 
         // FallingObject_1 ~ FallingObject_4 불러오기
         fallingObjects = new GameObject[4];
@@ -289,6 +301,7 @@ public class BossMonsterBase : MonoBehaviour
                 StartCoroutine(FallingObjectCoroutine());
                 // 및 레이저 맞으면 피 5개 깎기 : 50
                 // 및 맵 전역을 튕기는 오브젝트 추가(각도는 시작시 조절)
+                BounceObjectInstantiate();
                 break;
 
             // NightmareBoss의 경우
@@ -297,7 +310,9 @@ public class BossMonsterBase : MonoBehaviour
                 // 및 위에서 오브젝트 낙하(에 맞으면 잠시 못움직이게 기절)
                 // 및 레이저 맞으면 피 10개 깎기 : 100
                 // 및 맵 전역을 튕기는 오브젝트 추가(각도는 시작시 조절)
+                BounceObjectInstantiate();
                 // 일정 간격으로 플레이어를 조준 및 바닥에 꽂히고 데미지를 주는 장판을 남기는 오브젝트 추가
+                // 그 후 새로운 튕기는 오브젝트 생성(장판이 사라지는 시점에 새로 꽂히도록 조절 필요)
                 break;
 
             // HellBoss의 경우
@@ -306,9 +321,8 @@ public class BossMonsterBase : MonoBehaviour
                 // 및 위에서 오브젝트 낙하(에 맞으면 잠시 못움직이게 기절)
                 // 및 레이저 맞으면 즉사
                 // 및 맵 전역을 튕기는 오브젝트 추가(각도는 시작시 조절)
+                BounceObjectInstantiate();
                 // 일정 간격으로 플레이어를 조준 및 바닥에 꽂히고 데미지를 주는 장판을 남기는 오브젝트 추가
-                // 
-
                 // 그 후 새로운 튕기는 오브젝트 생성(장판이 사라지는 시점에 새로 꽂히도록 조절 필요)
                 break;
         }
@@ -393,5 +407,32 @@ public class BossMonsterBase : MonoBehaviour
         }
 
         Debug.Log("플레이어 사망으로 낙하 오브젝트 생성 중단");
+    }
+
+    /// <summary>
+    /// 튕기는 오브젝트 생성 함수
+    /// </summary>
+    private void BounceObjectInstantiate()
+    {
+        int count = 0;
+        switch (bossType)
+        {
+            case BossType.HardBoss:
+                count = 1;
+                break;
+            case BossType.NightmareBoss:
+                count = 2;
+                break;
+            case BossType.HellBoss:
+                count = 3;
+                break;
+        }
+
+        for(int i = 0; i < count; i++)
+        {
+            bounceObjectInstance = Instantiate(bounceObject, transform);
+            bounceObjectInstance.transform.localPosition = new Vector2(0, (2 * i) + 2);   // 0, 4 6 8에 생성
+            bounceObjectInstance.transform.localRotation = Quaternion.identity;           // 회전을 0,0,0으로 설정
+        }
     }
 }
