@@ -117,9 +117,10 @@ public class Player_Test : MonoBehaviour
     HeartPanel heartPanel;
 
     /// <summary>
-    /// 플레이어의 최대 체력
+    /// 플레이어의 최대 체력(체력 10당 하트 1칸)
+    /// public 이기 때문에 인스펙터에서 바꿔야 의미 있음
     /// </summary>
-    public float maxHP = 100f;
+    public float maxHP = 100;
 
     /// <summary>
     /// 플레이어의 현재 체력
@@ -159,7 +160,7 @@ public class Player_Test : MonoBehaviour
 
                     // 사망 연출 실행 부분
                     rb.velocity = Vector3.zero;
-                    rb.Sleep();
+                    //rb.Sleep();
 
                     ResetTrigger();
                     animator.SetTrigger("Die");

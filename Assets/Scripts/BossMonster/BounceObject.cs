@@ -39,7 +39,7 @@ public class BounceObject : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0;
 
-        circleCollider = GetComponent<CircleCollider2D>(); // 자신의 콜라이더 정보 가져오기
+        circleCollider = GetComponent<CircleCollider2D>();
     }
 
     void Start()
@@ -57,8 +57,8 @@ public class BounceObject : MonoBehaviour
         float yValue1 = 0;
         float yValue2 = 0;*/
 
-        float minSpeedAbs = 0f; // 속도의 절댓값 최소
-        float maxSpeedAbs = 0f; // 속도의 절댓값 최대
+        float minSpeedAbs = 0f;     // 속도의 절댓값 최소
+        float maxSpeedAbs = 0f;     // 속도의 절댓값 최대
 
         switch (bossMonsterBase.bossType)
         {
@@ -80,18 +80,18 @@ public class BounceObject : MonoBehaviour
         }
 
         float randomXAbs = UnityEngine.Random.Range(minSpeedAbs, maxSpeedAbs);
-        // 2. 50% 확률로 방향을 결정합니다.
-        //    (true일 경우 음수, false일 경우 양수)
+        // 50% 확률로 방향을 결정
+        // (true일 경우 음수, false일 경우 양수)
         if (UnityEngine.Random.value < 0.5f)
         {
-            randomXAbs = -randomXAbs; // 음수 방향으로 반전
+            randomXAbs = -randomXAbs;       // 음수 방향으로 반전
         }
 
         // Y축 속도 생성 (X축과 동일한 방식으로 처리)
         float randomYAbs = UnityEngine.Random.Range(minSpeedAbs, maxSpeedAbs);
         if (UnityEngine.Random.value < 0.5f)
         {
-            randomYAbs = -randomYAbs; // 음수 방향으로 반전
+            randomYAbs = -randomYAbs;       // 음수 방향으로 반전
         }
 
         initialVelocity = new Vector2(randomXAbs, randomYAbs);
@@ -116,25 +116,25 @@ public class BounceObject : MonoBehaviour
         // 만약 땅, 천장에 부딪히면
         if (tag == "Ground" || tag == "TopWall")
         {
-            Debug.Log("Ground 또는 TopWall과 충돌");
-            Debug.Log($"충돌 전 velocity : {velocity}");
+            //Debug.Log("Ground 또는 TopWall과 충돌");
+            //Debug.Log($"충돌 전 velocity : {velocity}");
 
             // y축 방향 반전
             velocity.y = -velocity.y;
 
-            Debug.Log($"충돌 후 velocity : {velocity}");
+            //Debug.Log($"충돌 후 velocity : {velocity}");
         }
 
         // 만약 벽에 충돌하면
         else if (tag == "Wall")
         {
-            Debug.Log("Wall과 충돌");
-            Debug.Log($"충돌 전 velocity : {velocity}");
+            //Debug.Log("Wall과 충돌");
+            //Debug.Log($"충돌 전 velocity : {velocity}");
 
             // x축 방향 반전
             velocity.x = -velocity.x;
 
-            Debug.Log($"충돌 후 velocity : {velocity}");
+            //Debug.Log($"충돌 후 velocity : {velocity}");
         }
 
         rb.velocity = velocity;

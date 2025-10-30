@@ -166,7 +166,7 @@ public class BossMonsterBase : MonoBehaviour
     Rigidbody2D rb2d;
 
     /// <summary>
-    /// 레이저 프리팹 원본
+    /// horizontal 레이저 프리팹 원본
     /// </summary>
     private GameObject horizontalLaser;
 
@@ -174,6 +174,16 @@ public class BossMonsterBase : MonoBehaviour
     /// horizontal 레이저 오브젝트 생성
     /// </summary>
     protected GameObject horizontalLaserInstance;
+
+    /// <summary>
+    /// cross 레이저 프리팹 원본
+    /// </summary>
+    private GameObject crossLaser;
+
+    /// <summary>
+    /// cross 레이저 오브젝트 생성
+    /// </summary>
+    protected GameObject crossLaserInstance;
 
     /// <summary>
     /// 낙하 오브젝트의 배열
@@ -201,6 +211,8 @@ public class BossMonsterBase : MonoBehaviour
         // 생성은 HorizontalLaserCoroutine 코루틴에서 함
 
         bounceObject = Resources.Load<GameObject>("GameObjects/BounceObject");
+
+        crossLaser = Resources.Load<GameObject>("GameObjects/CrossLaser");
 
         // FallingObject_1 ~ FallingObject_4 불러오기
         fallingObjects = new GameObject[4];
@@ -289,17 +301,20 @@ public class BossMonsterBase : MonoBehaviour
             case BossType.NormalBoss:
                 // 시작 시 가로로 레이저를 쏘고 시계 방향으로 회전(레이저에 맞으면 피 3개 깎기 : 30)
                 StartCoroutine(HorizontalLaserCoroutine(15));
+
                 // 및 위에서 오브젝트 낙하
                 StartCoroutine(FallingObjectCoroutine());
                 break;
 
             // HardBoss의 경우
             case BossType.HardBoss:
-                // 시작 시 가로로 레이저를 쏘고 시계 방향으로 회전
+                // 시작 시 가로로 레이저를 쏘고 시계 방향으로 회전 중간중간 방향 변경
+                // 및 레이저 맞으면 피 5개 깎기 : 50
                 StartCoroutine(HorizontalLaserCoroutine(15));
+
                 // 및 위에서 오브젝트 낙하(에 맞으면 잠시 못움직이게 기절)
                 StartCoroutine(FallingObjectCoroutine());
-                // 및 레이저 맞으면 피 5개 깎기 : 50
+
                 // 및 맵 전역을 튕기는 오브젝트 추가(각도는 시작시 조절)
                 BounceObjectInstantiate();
                 break;
@@ -307,10 +322,15 @@ public class BossMonsterBase : MonoBehaviour
             // NightmareBoss의 경우
             case BossType.NightmareBoss:
                 // 시작 시 X 모양으로 레이저를 쏘고 시계 방향으로 회전 중간중간 방향 변경
+                // 및 레이저 맞으면 피 8개 깎기 : 80
+                StartCoroutine(CrossLaserCoroutine(15));
+
                 // 및 위에서 오브젝트 낙하(에 맞으면 잠시 못움직이게 기절)
-                // 및 레이저 맞으면 피 10개 깎기 : 100
+                StartCoroutine(FallingObjectCoroutine());
+
                 // 및 맵 전역을 튕기는 오브젝트 추가(각도는 시작시 조절)
                 BounceObjectInstantiate();
+
                 // 일정 간격으로 플레이어를 조준 및 바닥에 꽂히고 데미지를 주는 장판을 남기는 오브젝트 추가
                 // 그 후 새로운 튕기는 오브젝트 생성(장판이 사라지는 시점에 새로 꽂히도록 조절 필요)
                 break;
@@ -318,10 +338,13 @@ public class BossMonsterBase : MonoBehaviour
             // HellBoss의 경우
             case BossType.HellBoss:
                 // 시작 시 X 모양으로 레이저를 쏘고 시계 방향으로 회전 중간중간 방향 변경
-                // 및 위에서 오브젝트 낙하(에 맞으면 잠시 못움직이게 기절)
                 // 및 레이저 맞으면 즉사
+
+                // 및 위에서 오브젝트 낙하(에 맞으면 잠시 못움직이게 기절)
+
                 // 및 맵 전역을 튕기는 오브젝트 추가(각도는 시작시 조절)
                 BounceObjectInstantiate();
+
                 // 일정 간격으로 플레이어를 조준 및 바닥에 꽂히고 데미지를 주는 장판을 남기는 오브젝트 추가
                 // 그 후 새로운 튕기는 오브젝트 생성(장판이 사라지는 시점에 새로 꽂히도록 조절 필요)
                 break;
@@ -338,8 +361,6 @@ public class BossMonsterBase : MonoBehaviour
         // 플레이어의 등장 연출이 있으면 그 만큼 기다리기
         //yield return new WaitForSeconds(5);
 
-        float elapsed = 0f;
-
         if (horizontalLaser != null)
         {
             horizontalLaserInstance = Instantiate(horizontalLaser, transform);
@@ -352,15 +373,113 @@ public class BossMonsterBase : MonoBehaviour
             Debug.Log("HorizontalLaser를 못찾았다!");
         }
 
+        // 회전 방향 (1 = 시계 방향, -1 = 반시계 방향)
+        int direction = 1;
+
+        // 하드보스 여부
+        bool isHardBoss = false;
+        if (bossType == BossType.HardBoss)
+        {
+            isHardBoss = true;
+        }
+
+        // 시간 관련 변수
+        float directionTimer = 0f;
+        float nextDirectionChangeTime = 0f;
+
+        // 하드보스라면 첫 랜덤 시간 설정
+        if (isHardBoss)
+        {
+            nextDirectionChangeTime = UnityEngine.Random.Range(20f, 24f);
+        }
+
         // 플레이어가 살아있는 동안 반복
         while (!player_test.playerDie)
         {
             //Debug.Log("레이저 회전 중");
 
-            // LaserParent를 Z축 기준 시계 방향 회전
-            horizontalLaserInstance.transform.Rotate(0f, 0f, -speed * Time.deltaTime);
+            // 기본 회전 (시계 방향)
+            horizontalLaserInstance.transform.Rotate(0f, 0f, -direction * speed * Time.deltaTime);
 
-            elapsed += Time.deltaTime;
+            // 하드보스일 경우에만 방향 전환 로직 작동
+            if (isHardBoss)
+            {
+                directionTimer += Time.deltaTime;
+
+                if (directionTimer >= nextDirectionChangeTime)
+                {
+                    // 회전 방향 반전
+                    direction = direction * -1;
+
+                    // 타이머 초기화
+                    directionTimer = 0f;
+
+                    // 다음 전환 시간 다시 랜덤 설정
+                    nextDirectionChangeTime = UnityEngine.Random.Range(10f, 20f);
+                    
+                    //Debug.Log($"HardBoss 레이저 회전 방향 전환! (다음 전환까지 {nextDirectionChangeTime.ToString("F1")} 초");
+                }
+            }
+
+            yield return null;
+        }
+
+        Debug.Log($"플레이어 사망으로 레이저 정지");
+    }
+
+    /// <summary>
+    /// 크로스 레이저 패턴
+    /// </summary>
+    /// <param name="speed">1초당 회전 각도(속도)</param>
+    /// <returns></returns>
+    IEnumerator CrossLaserCoroutine(float speed)
+    {
+        // 플레이어의 등장 연출이 있으면 그 만큼 기다리기
+        //yield return new WaitForSeconds(5);
+
+        if (crossLaser != null)
+        {
+            crossLaserInstance = Instantiate(crossLaser, transform);
+            crossLaserInstance.transform.localPosition = Vector3.zero;         // 부모의 중심에 위치
+            crossLaserInstance.transform.localRotation = Quaternion.identity;  // 회전을 0,0,0으로 설정
+        }
+        else
+        {
+            Debug.Log("crossLaser를 못찾았다!");
+        }
+
+        // 회전 방향 (1 = 시계 방향, -1 = 반시계 방향)
+        int direction = 1;
+
+        // 시간 관련 변수
+        float directionTimer = 0f;
+        float nextDirectionChangeTime = 0f;
+
+        // 첫 랜덤 시간 설정
+        nextDirectionChangeTime = UnityEngine.Random.Range(20f, 24f);
+
+        // 플레이어가 살아있는 동안 반복
+        while (!player_test.playerDie)
+        {
+            //Debug.Log("레이저 회전 중");
+
+            // 기본 회전 (시계 방향)
+            crossLaserInstance.transform.Rotate(0f, 0f, -direction * speed * Time.deltaTime);
+            
+            directionTimer += Time.deltaTime;
+
+            if (directionTimer >= nextDirectionChangeTime)
+            {
+                // 회전 방향 반전
+                direction = direction * -1;
+
+                // 타이머 초기화
+                directionTimer = 0f;
+
+                // 다음 전환 시간 다시 랜덤 설정
+                nextDirectionChangeTime = UnityEngine.Random.Range(10f, 20f);
+            }
+
             yield return null;
         }
 

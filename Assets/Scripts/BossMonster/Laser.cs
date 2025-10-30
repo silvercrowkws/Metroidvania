@@ -55,7 +55,7 @@ public class Laser : MonoBehaviour
                 laserDamage = 50f;
                 break;
             case BossType.NightmareBoss:
-                laserDamage = 100f;
+                laserDamage = 80f;
                 break;
             case BossType.HellBoss:
                 laserDamage = 9999f;    // 즉사 처리용
