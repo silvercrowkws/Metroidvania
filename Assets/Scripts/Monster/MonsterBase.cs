@@ -284,7 +284,7 @@ public class MonsterBase : MonoBehaviour
         else
         {
             playerTransform = player.transform;
-            //onPlayerApplyDamage += player.OnPlayerApplyDamage;
+            //onPlayerApplyDamage += playerTransform.OnPlayerApplyDamage;
         }
 
         animator = GetComponent<Animator>();
@@ -1173,12 +1173,12 @@ public class MonsterBase : MonoBehaviour
 
             if (player != null)
             {
-                //player.HP -= attackPower;         // 플레이어에게 델리게이트로 HP 변경 요청으로 수정
+                //playerTransform.HP -= attackPower;         // 플레이어에게 델리게이트로 HP 변경 요청으로 수정
                 onPlayerApplyDamage?.Invoke(attackPower);
 
                 if (heartPanel != null)
                 {
-                    //heartPanel.UpdateHearts(player.HP); -> 플레이어의 HP가 변동될때 스스로 하게끔 수정
+                    //heartPanel.UpdateHearts(playerTransform.HP); -> 플레이어의 HP가 변동될때 스스로 하게끔 수정
                 }
             }
             else if (player_test != null)

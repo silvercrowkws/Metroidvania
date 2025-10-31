@@ -16,7 +16,7 @@ public class TestJson : MonoBehaviour
 
     void Start()
     {
-        /*PlayerData player = new PlayerData                  // 데이터 객체 생성
+        /*PlayerData playerTransform = new PlayerData                  // 데이터 객체 생성
         {
             name = "Player",
             level = 5,
@@ -26,7 +26,7 @@ public class TestJson : MonoBehaviour
         //SaveManager saveManager = new SaveManager();        // SaveManager 객체 생성
         saveManager = GameManager.Instance.SaveManager;
 
-        saveManager.SaveData(player);                       // 데이터 저장
+        saveManager.SaveData(playerTransform);                       // 데이터 저장
 
         //LoadManager loadManager = new LoadManager();        // LoadManager 객체 생성
         loadManager = GameManager.Instance.LoadManager;

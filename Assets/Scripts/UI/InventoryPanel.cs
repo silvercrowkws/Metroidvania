@@ -29,7 +29,7 @@ public class InventoryPanel : MonoBehaviour
         }
         else
         {
-            //player.onInventoryToggle += OnInventoryToggle;
+            //playerTransform.onInventoryToggle += OnInventoryToggle;
         }
 
         SetInventoryAlpha(0);        // 초기 알파값 설정
