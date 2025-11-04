@@ -193,66 +193,6 @@ public class ChaseMissile : MonoBehaviour
     /// <returns></returns>
     IEnumerator FireMissile()
     {
-        /*float groundY = -8.7f;                  // Y 기본값
-        Vector3 targetPos = Vector3.zero;       // 최종 낙하 위치
-
-        Vector3 hitNormal = Vector3.up;  // 기본값
-
-        RaycastHit2D hitInfo = new RaycastHit2D();
-
-        // 나이트메어 보스의 경우 바닥에서만 장판 생성 가능
-        if (bossMonsterBase.bossType == BossType.NightmareBoss)
-        {
-            Vector3 firePos = new Vector3(lockedPlayerPosition.x, 100f, lockedPlayerPosition.z);
-            RaycastHit2D[] hits = Physics2D.RaycastAll(firePos, Vector2.down, Mathf.Infinity);
-
-            foreach (var hit in hits)
-            {
-                if (hit.collider != null && hit.collider.CompareTag("Ground"))
-                {
-                    groundY = hit.point.y;
-                    targetPos = hit.point;
-                    hitNormal = hit.normal;   // ✅ 표면 법선 저장
-                    hitInfo = hit;
-                    break;
-                }
-            }
-
-            if (targetPos == Vector3.zero)
-                targetPos = new Vector3(lockedPlayerPosition.x, groundY, lockedPlayerPosition.z);
-        }
-        else // Hell 방식
-        {
-            Vector2 fireDir = transform.up;
-            Vector3 startPos = transform.position;
-
-            RaycastHit2D[] hits = Physics2D.RaycastAll(startPos, fireDir, Mathf.Infinity);
-            foreach (var hit in hits)
-            {
-                if (hit.collider != null && (hit.collider.CompareTag("Ground") || hit.collider.CompareTag("Wall") || hit.collider.CompareTag("TopWall")))
-                {
-                    targetPos = hit.point;
-                    hitNormal = hit.normal;   // ✅ 표면 법선 저장
-                    hitInfo = hit;
-                    break;
-                }
-            }
-
-            if (targetPos == Vector3.zero)
-                targetPos = new Vector3(lockedPlayerPosition.x, groundY, lockedPlayerPosition.z);
-        }
-
-        // 낙하 애니메이션
-        float speed = 20f;
-        while (Vector3.Distance(transform.position, targetPos) > 0.1f)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
-            yield return null;
-        }
-
-        //Debug.Log("[ChaseMissile] 착지! 폭발 발생!");
-        MissileExplosion(hitNormal);*/
-
         Vector3 targetPos = Vector3.zero;
         float groundY = -8.7f;
 
@@ -293,58 +233,64 @@ public class ChaseMissile : MonoBehaviour
                 targetPos = new Vector3(lockedPlayerPosition.x, groundY, lockedPlayerPosition.z);
         }
 
-        // 🔸 변경: 직접 MoveTowards 대신 Rigidbody2D 이동으로 전환
+        // 직접 MoveTowards 대신 Rigidbody2D 이동으로 전환
         Vector2 dir = (targetPos - transform.position).normalized;
         rb.velocity = dir * moveSpeed;
 
-        yield break; // 🔹 추가: 이동은 물리로 진행, 이후 Trigger에서 폭발 처리
+        yield break;        // 이동은 물리로 진행, 이후 Trigger에서 폭발 처리
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         string tag = other.tag;
+        float rotationZ = 0f;       // 기본값: Ground (0도)
 
         if (tag == "Ground" || tag == "Wall" || tag == "TopWall")
         {
-            // 🔹 역방향 Raycast로 충돌 표면 법선 계산
-            Vector2 backDir = -rb.velocity.normalized;
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, backDir, 1f);
-            Vector3 normal = hit ? (Vector3)hit.normal : Vector3.up;
-
-            if (hit)
-                transform.position = hit.point;
-
-            // 🔹 이동 멈추고 충돌체 비활성화
             rb.velocity = Vector2.zero;
             rb.isKinematic = true;
             GetComponent<Collider2D>().enabled = false;
 
-            MissileExplosion(normal); // 폭발 처리
+            // 태그 기반 Z축 회전값 결정
+            if (tag == "TopWall")
+            {
+                rotationZ = 180f;   // 천장이면 180
+            }
+            else if (tag == "Wall")
+            {
+                // 미사일의 x 위치가 충돌한 오브젝트의 x 위치보다 크면 (오른쪽에서 부딪힘) -> 왼쪽 벽 (법선: Right, 회전: 90)
+                if (transform.position.x > other.transform.position.x)
+                {
+                    rotationZ = 90f;
+                }
+                // 미사일의 x 위치가 충돌한 오브젝트의 x 위치보다 작으면 (왼쪽에서 부딪힘) -> 오른쪽 벽 (법선: Left, 회전: -90)
+                else
+                {
+                    rotationZ = -90f;
+                }
+            }
+            else
+            {
+                // "Ground" 태그는 기본값 0f 유지
+                rotationZ = 0f;
+            }
+
+            //Debug.Log($"[ChaseMissile] 충돌 태그: {tag}, 결정된 Z 회전: {rotationZ}도");
+
+            // Z 회전 값을 전달
+            MissileExplosion(rotationZ);
         }
     }
 
     /// <summary>
     /// 로켓이 폭발하는 연출 함수
+    /// (고정된 Z축 회전 값을 적용)
     /// </summary>
-    void MissileExplosion(Vector3 surfaceNormal)
+    void MissileExplosion(float rotationZ)
     {
-        /*// 이 오브젝트의 알파값 0으로 변경
-
-        // 자식으로 폭발 생성
-        bigExplosionInstance = Instantiate(bigExplosionObject, transform);
-        bigExplosionInstance.transform.localPosition = Vector3.zero;
-
-        // ✅ 법선 방향에 맞춰 회전
-        Quaternion normalRotation = Quaternion.FromToRotation(Vector3.up, surfaceNormal);
-        bigExplosionInstance.transform.rotation = normalRotation;*/
-
-        // 🔸 부모 대신 독립적인 폭발 오브젝트로 생성
-        GameObject explosion = Instantiate(bigExplosionObject, transform.position, Quaternion.identity);
-
-        Quaternion normalRot = Quaternion.FromToRotation(Vector3.up, surfaceNormal);
-        explosion.transform.rotation = normalRot;
-
-        // 🔹 폭발 후 미사일 제거
+        // 폭발 오브젝트 생성 및 계산된 Z축 회전 적용
+        // Z축 회전 값을 그대로 적용
+        GameObject explosion = Instantiate(bigExplosionObject, transform.position, Quaternion.Euler(0f, 0f, rotationZ));
         Destroy(gameObject);
     }
 }
