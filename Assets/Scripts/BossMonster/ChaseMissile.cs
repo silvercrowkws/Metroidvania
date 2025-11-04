@@ -7,8 +7,8 @@ public class ChaseMissile : MonoBehaviour
 {
     // 보스가 미사일을 생성하고
     // 미사일은 n초 동안 플레이어를 바라보게 회전하다가  v
-    // n초에 찍힌 플레이어의 위치 가장 아래 바닥으로 n+1초에 발사
-    // 미사일은 바닥에 꽂친 후 폭발 이펙트 나오고
+    // n초에 찍힌 플레이어의 위치 가장 아래 바닥으로 n+1초에 발사  v
+    // 미사일은 바닥에 꽂친 후 폭발 이펙트 나오고 v
     // @초 동안 지속되며, 일정 시간 간격으로 데미지를 주는 불 장판을 남긴다
 
     /// <summary>
@@ -57,16 +57,24 @@ public class ChaseMissile : MonoBehaviour
     private bool isChasing = true;
 
     /// <summary>
-    /// BigExplosion 프리팹 원본
+    /// BigExplosion 프리팹
     /// </summary>
     private GameObject bigExplosionObject;
 
     /// <summary>
-    /// BigExplosion 오브젝트 생성
+    /// FireFloor 프리팹
     /// </summary>
-    private GameObject bigExplosionInstance;
+    private GameObject fireFloor;
 
     private Rigidbody2D rb;
+
+    /// <summary>
+    /// 폭발의 회전값
+    /// </summary>
+    float rotationZ = 0f;
+
+    float positionX = 0f;
+    float positionY = 0f;
 
     private void Awake()
     {
@@ -77,6 +85,8 @@ public class ChaseMissile : MonoBehaviour
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         rb.isKinematic = false;
+
+        fireFloor = Resources.Load<GameObject>("GameObjects/FireFloor");
 
     }
 
@@ -243,7 +253,7 @@ public class ChaseMissile : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         string tag = other.tag;
-        float rotationZ = 0f;       // 기본값: Ground (0도)
+        rotationZ = 0f;       // 기본값: Ground (0도)
 
         if (tag == "Ground" || tag == "Wall" || tag == "TopWall")
         {
@@ -255,6 +265,7 @@ public class ChaseMissile : MonoBehaviour
             if (tag == "TopWall")
             {
                 rotationZ = 180f;   // 천장이면 180
+                positionY = 8.7f;
             }
             else if (tag == "Wall")
             {
@@ -262,17 +273,20 @@ public class ChaseMissile : MonoBehaviour
                 if (transform.position.x > other.transform.position.x)
                 {
                     rotationZ = 90f;
+                    positionX = 16.7f;
                 }
                 // 미사일의 x 위치가 충돌한 오브젝트의 x 위치보다 작으면 (왼쪽에서 부딪힘) -> 오른쪽 벽 (법선: Left, 회전: -90)
                 else
                 {
                     rotationZ = -90f;
+                    positionX = -16.7f;
                 }
             }
             else
             {
                 // "Ground" 태그는 기본값 0f 유지
                 rotationZ = 0f;
+                positionY = -8.7f;
             }
 
             //Debug.Log($"[ChaseMissile] 충돌 태그: {tag}, 결정된 Z 회전: {rotationZ}도");
@@ -291,6 +305,35 @@ public class ChaseMissile : MonoBehaviour
         // 폭발 오브젝트 생성 및 계산된 Z축 회전 적용
         // Z축 회전 값을 그대로 적용
         GameObject explosion = Instantiate(bigExplosionObject, transform.position, Quaternion.Euler(0f, 0f, rotationZ));
-        Destroy(gameObject);
+
+        // 이 오브젝트의 자식으로 변경
+        explosion.transform.SetParent(this.transform);
+    }
+
+    public void FireFloorInstantiate()
+    {
+        Vector3 finalPosition = transform.position;
+
+        // rotationZ 값(0, 180, 90, -90)을 사용하여 충돌 벽을 구분하고 위치를 보정합니다.
+        // rotationZ = 0f (Ground, 바닥): Y 고정 (-8.7f)
+        if (Mathf.Approximately(rotationZ, 0f))
+        {
+            finalPosition.y = positionY; // positionY = -8.7f
+        }
+        // rotationZ = 180f (TopWall, 천장): Y 고정 (8.7f)
+        else if (Mathf.Approximately(rotationZ, 180f))
+        {
+            finalPosition.y = positionY; // positionY = 8.7f
+        }
+        // rotationZ = 90f 또는 -90f (Wall, 벽): X 고정 (-16.8f 또는 16.8f)
+        else if (Mathf.Abs(rotationZ) == 90f)
+        {
+            finalPosition.x = positionX; // positionX = -16.8f 또는 16.8f
+        }
+
+        GameObject fire = Instantiate(fireFloor, finalPosition, Quaternion.Euler(0f, 0f, rotationZ));
+
+        StopAllCoroutines();        // 이 클래스에서 사용중인 모든 코루틴 정지
+        Destroy(this.gameObject);
     }
 }
