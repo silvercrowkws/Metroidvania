@@ -361,15 +361,17 @@ public class BossMonsterBase : MonoBehaviour
             case BossType.HellBoss:
                 // 시작 시 X 모양으로 레이저를 쏘고 시계 방향으로 회전 중간중간 방향 변경
                 // 및 레이저 맞으면 즉사
+                //StartCoroutine(CrossLaserCoroutine(15));
 
                 // 및 위에서 오브젝트 낙하(에 맞으면 잠시 못움직이게 기절)
+                StartCoroutine(FallingObjectCoroutine());
 
                 // 및 맵 전역을 튕기는 오브젝트 추가(각도는 시작시 조절)
                 BounceObjectInstantiate();
 
                 // 일정 간격으로 플레이어를 조준 및 바닥에 꽂히고 데미지를 주는 장판을 남기는 오브젝트 추가
                 // 그 후 새로운 튕기는 오브젝트 생성(장판이 사라지는 시점에 새로 꽂히도록 조절 필요)
-                StartCoroutine(ChaseMissileCoroutine());
+                //StartCoroutine(ChaseMissileCoroutine());
                 break;
         }
     }
@@ -479,7 +481,7 @@ public class BossMonsterBase : MonoBehaviour
         float nextDirectionChangeTime = 0f;
 
         // 첫 랜덤 시간 설정
-        nextDirectionChangeTime = UnityEngine.Random.Range(20f, 24f);
+        nextDirectionChangeTime = UnityEngine.Random.Range(10f, 20f);
 
         // 플레이어가 살아있는 동안 반복
         while (!player_test.playerDie)
@@ -500,7 +502,7 @@ public class BossMonsterBase : MonoBehaviour
                 directionTimer = 0f;
 
                 // 다음 전환 시간 다시 랜덤 설정
-                nextDirectionChangeTime = UnityEngine.Random.Range(10f, 20f);
+                nextDirectionChangeTime = UnityEngine.Random.Range(20f, 40f);
             }
 
             yield return null;

@@ -18,12 +18,19 @@ public class FallingObject : MonoBehaviour
     /// <summary>
     /// 플레이어
     /// </summary>
-    Player_Test player_test;    
+    Player_Test player_test;
+
+    /// <summary>
+    /// 이 오브젝트의 지속 시간
+    /// </summary>
+    float duration = 3;
 
     private void Start()
     {
         bossMonsterBase = FindAnyObjectByType<BossMonsterBase>();
         player_test = GameManager.Instance.Player_Test;
+
+        StartCoroutine(LifeDuration());
     }
 
     private void ApplyFallingObjectDamage()
@@ -46,5 +53,18 @@ public class FallingObject : MonoBehaviour
             Debug.Log("플레이어와 낙하오브젝트가 충돌 감지");
             ApplyFallingObjectDamage();
         }
+    }
+
+    /// <summary>
+    /// 이 오브젝트의 파괴까지 걸리는 시간
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator LifeDuration()
+    {
+        // 지속시간까지 기다리고
+        yield return new WaitForSeconds(duration);
+
+        // 이 오브젝트 파괴
+        Destroy(this.gameObject);
     }
 }
