@@ -196,9 +196,14 @@ public class BossMonsterBase : MonoBehaviour
     private GameObject bounceObject;
 
     /// <summary>
-    /// bounceObject 레이저 오브젝트 생성
+    /// bounceObject 오브젝트 생성
     /// </summary>
     protected GameObject bounceObjectInstance;
+
+    /// <summary>
+    /// 추적 미사일 오브젝트 프리팹
+    /// </summary>
+    private GameObject[] chaseMissileObject;
 
     protected void Awake()
     {
@@ -222,6 +227,22 @@ public class BossMonsterBase : MonoBehaviour
             fallingObjects[i] = Resources.Load<GameObject>(path);
 
             if (fallingObjects[i] == null)
+            {
+                Debug.LogWarning($"{path} 프리팹을 찾을 수 없습니다!");
+            }
+            else
+            {
+                Debug.Log($"{path} 로드 성공!");
+            }
+        }
+
+        chaseMissileObject = new GameObject[4];
+        for (int i = 0; i < 4; i++)
+        {
+            string path = $"GameObjects/ChaseMissile_{i + 1}";
+            chaseMissileObject[i] = Resources.Load<GameObject>(path);
+
+            if (chaseMissileObject[i] == null)
             {
                 Debug.LogWarning($"{path} 프리팹을 찾을 수 없습니다!");
             }
@@ -333,6 +354,7 @@ public class BossMonsterBase : MonoBehaviour
 
                 // 일정 간격으로 플레이어를 조준 및 바닥에 꽂히고 데미지를 주는 장판을 남기는 오브젝트 추가
                 // 그 후 새로운 튕기는 오브젝트 생성(장판이 사라지는 시점에 새로 꽂히도록 조절 필요)
+                StartCoroutine(ChaseMissileCoroutine());
                 break;
 
             // HellBoss의 경우
@@ -347,6 +369,7 @@ public class BossMonsterBase : MonoBehaviour
 
                 // 일정 간격으로 플레이어를 조준 및 바닥에 꽂히고 데미지를 주는 장판을 남기는 오브젝트 추가
                 // 그 후 새로운 튕기는 오브젝트 생성(장판이 사라지는 시점에 새로 꽂히도록 조절 필요)
+                StartCoroutine(ChaseMissileCoroutine());
                 break;
         }
     }
@@ -498,7 +521,7 @@ public class BossMonsterBase : MonoBehaviour
         fallingObjectParent.transform.SetParent(transform);         // 이 보스의 자식으로 설정
         fallingObjectParent.transform.localPosition = Vector3.zero; // 위치 초기화
 
-        float spawnInterval = 1.5f; // 오브젝트 떨어뜨리는 간격 (원하는 값으로 조절 가능)
+        float spawnInterval = 1.5f; // 오브젝트 떨어뜨리는 간격
 
         // 플레이어가 살아있는 동안 반복
         while (!player_test.playerDie)
@@ -553,5 +576,58 @@ public class BossMonsterBase : MonoBehaviour
             bounceObjectInstance.transform.localPosition = new Vector2(0, (2 * i) + 2);   // 0, 4 6 8에 생성
             bounceObjectInstance.transform.localRotation = Quaternion.identity;           // 회전을 0,0,0으로 설정
         }
+    }
+
+    /// <summary>
+    /// 추적 미사일을 주기적으로 생성하는 패턴
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator ChaseMissileCoroutine()
+    {
+        GameObject chaseMissileObjectParent = new GameObject("ChaseMissileObjectParent");
+        chaseMissileObjectParent.transform.SetParent(transform);         // 이 보스의 자식으로 설정
+        chaseMissileObjectParent.transform.localPosition = Vector3.zero; // 위치 초기화
+
+        // 난이도에 따른 미사일 개수 및 스폰 간격 설정
+        int missileCount = 0;
+        float spawnInterval = 0f;
+
+        Vector2[] spawnPos = new Vector2[4];
+
+        spawnPos[0] = new Vector2(3f, 0f);
+        spawnPos[1] = new Vector2(-3f, 0f);
+        spawnPos[2] = new Vector2(0f, 3f);
+        spawnPos[3] = new Vector2(0f, -3f);
+
+        switch (bossType)
+        {
+            case BossType.NightmareBoss:                
+                missileCount = 2;
+                spawnInterval = 11f;
+                break;
+            case BossType.HellBoss:                
+                missileCount = 4;
+                spawnInterval = 7f;
+                break;
+            default:
+                // 이 패턴을 사용하지 않는 보스는 바로 종료
+                Debug.LogWarning($"BossType.{bossType}은 ChaseMissileCoroutine을 사용하지 않는데?");
+                yield break;
+        }
+
+        // 플레이어가 살아있는 동안 반복
+        while (!player_test.playerDie)
+        {
+            for (int i = 0; i < missileCount; i++)
+            {
+                // 미사일을 스폰 위치에 생성하고 부모에 연결
+                GameObject obj = Instantiate(chaseMissileObject[i], spawnPos[i], Quaternion.identity, chaseMissileObjectParent.transform);
+            }
+
+            // 다음 스폰까지 대기
+            yield return new WaitForSeconds(spawnInterval);
+        }
+
+        Debug.Log("플레이어 사망으로 낙하 오브젝트 생성 중단");
     }
 }

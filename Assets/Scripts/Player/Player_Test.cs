@@ -203,6 +203,11 @@ public class Player_Test : MonoBehaviour
     public bool canFall = true;
 
     /// <summary>
+    /// 불 장판 데미지를 받을 수 있는지 확인하는 변수
+    /// </summary>
+    public bool canFireDamage = true;
+
+    /// <summary>
     /// 공격 범위 확인용
     /// </summary>
     GameObject attackRange;
@@ -962,6 +967,36 @@ public class Player_Test : MonoBehaviour
             Debug.Log("OnPlayerApplyDamage 에서 가드 버그");
         }
         //Debug.Log($"몬스터에게 공격받음! 남은 HP: {HP}");
+    }
+
+    /// <summary>
+    /// 불 장판 적용 데미지
+    /// </summary>
+    /// <param name="damage"></param>
+    public void OnPlayerApplyFireFloorDamage(float damage)
+    {
+        if (canFireDamage)
+        {
+            if (HP > 1)
+            {
+                canFireDamage = false;
+                StartCoroutine(CanFireDamage());
+                HP -= damage;
+
+                // 플레이어의 이미지 깜빡깜빡 필요
+                StartHitFlash();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 불장판 데미지 bool 변수 컨트롤하는 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator CanFireDamage()
+    {
+        yield return new WaitForSeconds(1);
+        canFireDamage = true;
     }
 
     /// <summary>

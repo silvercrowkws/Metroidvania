@@ -378,7 +378,7 @@ public class MonsterBase : MonoBehaviour
         {
             if(monsterMoveType == MonsterMoveType.Walk)
             {
-                float attackSpeed = moveSpeed * 5f;       // 공격 속도(원하는 값으로 조절)
+                float attackSpeed = moveSpeed * 5f;       // 공격 속도
                 transform.position = Vector3.MoveTowards(transform.position, targetPosition, attackSpeed * Time.deltaTime);     // 적 위치로 빠르게 이동하는 부분
 
                 // 목표 위치에 도달하면 공격 종료, 다시 추격 시작

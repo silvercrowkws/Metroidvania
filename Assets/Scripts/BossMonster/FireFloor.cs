@@ -30,12 +30,7 @@ public class FireFloor : MonoBehaviour
     /// <summary>
     /// 장판 데미지
     /// </summary>
-    float damage = 10;
-
-    /// <summary>
-    /// 데미지 적용이 가능한지 확인하는 bool 변수
-    /// </summary>
-    bool canDamage = true;
+    float damage = 0f;
 
     private void Awake()
     {
@@ -66,21 +61,6 @@ public class FireFloor : MonoBehaviour
         }
 
         StartCoroutine(LifeDuration());
-
-        // 만약 헬 보스면 미사일 바로 생성하라고 알림
-        if (bossMonsterBase.bossType == BossType.HellBoss)
-        {
-
-        }
-    }
-
-    private void OnDestroy()
-    {
-        // 만약 나이트메어 보스면 지금 생성하라고 알림
-        if (bossMonsterBase.bossType == BossType.NightmareBoss)
-        {
-
-        }
     }
 
     /// <summary>
@@ -96,26 +76,53 @@ public class FireFloor : MonoBehaviour
         Destroy(this.gameObject);
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    /*private void OnTriggerStay2D(Collider2D collision)
     {
-        if (canDamage)
+        *//*if (canDamage)
         {
             if (collision.gameObject.CompareTag("Player"))
             {
-                player_test.OnPlayerApplyDamage(damage);
+                player_test.OnPlayerApplyFireFloorDamage(damage);
                 canDamage = false;
                 StartCoroutine(CanDamageCoroutine());
             }
+        }*//*
+
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            //Debug.Log("불 장판과 플레이어의 충돌 확인");
+            player_test.OnPlayerApplyFireFloorDamage(damage);
+        }
+    }*/
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            StartCoroutine(FireDamageCoroutine());
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            //Debug.Log("플레이어의 탈출로 모든 코루틴 종료");
+            StopCoroutine(FireDamageCoroutine());
         }
     }
 
     /// <summary>
-    /// 데미지 넣을 수 있는지 결정하는 bool변수
+    /// 1초 간격으로 불 장판 데미지 적용 시도하는 코루틴
     /// </summary>
     /// <returns></returns>
-    IEnumerator CanDamageCoroutine()
+    IEnumerator FireDamageCoroutine()
     {
-        yield return new WaitForSeconds(0.5f);
-        canDamage = true;
+        while(player_test.HP > 1)
+        {
+            //Debug.Log("FireDamageCoroutine 실행");
+            player_test.OnPlayerApplyFireFloorDamage(damage);
+            yield return new WaitForSeconds(1f);
+        }
     }
 }
