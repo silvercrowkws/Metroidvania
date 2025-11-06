@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5433744973875221462}
   - component: {fileID: 8874318945252449244}
   - component: {fileID: 900494957630941726}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: ChaseMissile_3
   m_TagString: ChaseMissile
   m_Icon: {fileID: 0}

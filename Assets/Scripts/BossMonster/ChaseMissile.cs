@@ -86,8 +86,13 @@ public class ChaseMissile : MonoBehaviour
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         rb.isKinematic = false;
 
-        fireFloor = Resources.Load<GameObject>("GameObjects/FireFloor");
+        fireFloor = Resources.Load<GameObject>("GameObjects/FireFloor");        
 
+        int missileLayer = LayerMask.NameToLayer("Missile");
+        int ignoreGroundLayer = LayerMask.NameToLayer("IgnoreGround");
+
+        // 두 레이어 간 충돌 비활성화 (전역 적용)
+        Physics2D.IgnoreLayerCollision(missileLayer, ignoreGroundLayer, true);
     }
 
     private void Start()
@@ -252,9 +257,6 @@ public class ChaseMissile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("IgnoreGround"))
-            return;
-
         string tag = other.tag;
         rotationZ = 0f;       // 기본값: Ground (0도)
 

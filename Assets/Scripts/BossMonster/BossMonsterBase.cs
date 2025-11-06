@@ -572,10 +572,28 @@ public class BossMonsterBase : MonoBehaviour
                 break;
         }
 
-        for(int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             bounceObjectInstance = Instantiate(bounceObject, transform);
-            bounceObjectInstance.transform.localPosition = new Vector2(0, (2 * i) + 2);   // 0, 4 6 8에 생성
+            //bounceObjectInstance.transform.localPosition = new Vector2(0, (2 * i) + 2);   // 0, 4 6 8에 생성
+
+            // x 좌표 계산
+            float xOffset = 0f;
+
+            if (count == 1)
+            {
+                xOffset = 0f;
+            }
+            else if (count == 2)
+            {
+                xOffset = (i == 0) ? -2f : 2f;
+            }
+            else if (count == 3)
+            {
+                xOffset = (i - 1) * 2f; // i=0→-2, i=1→0, i=2→2
+            }
+
+            bounceObjectInstance.transform.localPosition = new Vector2(xOffset, 1);   // 0, 2, -2에 생성
             bounceObjectInstance.transform.localRotation = Quaternion.identity;           // 회전을 0,0,0으로 설정
         }
     }
@@ -596,10 +614,15 @@ public class BossMonsterBase : MonoBehaviour
 
         Vector2[] spawnPos = new Vector2[4];
 
-        spawnPos[0] = new Vector2(3f, 0f);
+        /*spawnPos[0] = new Vector2(3f, 0f);
         spawnPos[1] = new Vector2(-3f, 0f);
         spawnPos[2] = new Vector2(0f, 3f);
-        spawnPos[3] = new Vector2(0f, -3f);
+        spawnPos[3] = new Vector2(0f, -3f);*/
+
+        spawnPos[0] = new Vector2(2f, 2f);
+        spawnPos[1] = new Vector2(2f, -2f);
+        spawnPos[2] = new Vector2(-2f, 2f);
+        spawnPos[3] = new Vector2(-2f, -2f);
 
         switch (bossType)
         {
