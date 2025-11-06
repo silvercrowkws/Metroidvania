@@ -252,6 +252,9 @@ public class ChaseMissile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (other.gameObject.layer == LayerMask.NameToLayer("IgnoreGround"))
+            return;
+
         string tag = other.tag;
         rotationZ = 0f;       // 기본값: Ground (0도)
 

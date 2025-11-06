@@ -32,6 +32,11 @@ public class FireFloor : MonoBehaviour
     /// </summary>
     float damage = 0f;
 
+    /// <summary>
+    /// 실행 중인 불 장판 데미지 코루틴의 참조
+    /// </summary>
+    private Coroutine fireDamageCoroutine;
+
     private void Awake()
     {
         
@@ -76,6 +81,8 @@ public class FireFloor : MonoBehaviour
         Destroy(this.gameObject);
     }
 
+    // Stay에서 계속 실행되어야 하지만 122 번 정도밖에 디버그가 나오지 않는 것으로 봐서 중간에 멈추는 듯 함
+    // 그래서 Enter와 Exit로 나눠서 기능하도록 수정
     /*private void OnTriggerStay2D(Collider2D collision)
     {
         *//*if (canDamage)
@@ -99,7 +106,11 @@ public class FireFloor : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            StartCoroutine(FireDamageCoroutine());
+            // 이미 코루틴이 실행 중이 아니라면 시작
+            if (fireDamageCoroutine == null)
+            {
+                fireDamageCoroutine = StartCoroutine(FireDamageCoroutine());
+            }
         }
     }
 
@@ -107,8 +118,12 @@ public class FireFloor : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            //Debug.Log("플레이어의 탈출로 모든 코루틴 종료");
-            StopCoroutine(FireDamageCoroutine());
+            if (fireDamageCoroutine != null)
+            {
+                // 저장된 참조를 사용하여 실행 중인 코루틴을 멈춤
+                StopCoroutine(fireDamageCoroutine);
+                fireDamageCoroutine = null;
+            }
         }
     }
 

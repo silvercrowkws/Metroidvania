@@ -371,7 +371,7 @@ public class BossMonsterBase : MonoBehaviour
 
                 // 일정 간격으로 플레이어를 조준 및 바닥에 꽂히고 데미지를 주는 장판을 남기는 오브젝트 추가
                 // 그 후 새로운 튕기는 오브젝트 생성(장판이 사라지는 시점에 새로 꽂히도록 조절 필요)
-                //StartCoroutine(ChaseMissileCoroutine());
+                StartCoroutine(ChaseMissileCoroutine());
                 break;
         }
     }

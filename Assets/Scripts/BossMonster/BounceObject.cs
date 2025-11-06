@@ -110,7 +110,9 @@ public class BounceObject : MonoBehaviour
     /// </summary>
     void OnCollisionEnter2D(Collision2D collision)
     {
-        // 충돌한 오브젝트의 태그를 가져옴
+        // 태그 당 반전 -> 법선벡터로 변경
+
+        /*// 충돌한 오브젝트의 태그를 가져옴
         string tag = collision.gameObject.tag;
 
         // 만약 땅, 천장에 부딪히면
@@ -137,6 +139,31 @@ public class BounceObject : MonoBehaviour
             //Debug.Log($"충돌 후 velocity : {velocity}");
         }
 
-        rb.velocity = velocity;
+        rb.velocity = velocity;*/
+
+        string tag = collision.gameObject.tag;
+        if (tag == "Ground" || tag == "TopWall" || tag == "Wall")
+        {
+            // 충돌한 첫 번째 접촉점의 법선 벡터
+            ContactPoint2D contact = collision.contacts[0];
+            Vector2 normal = contact.normal;
+
+            // 디버깅용
+            // Debug.Log($"충돌: {collision.gameObject.tag}, normal: {normal}");
+
+            // 법선 방향에 따라 반사 처리
+            if (Mathf.Abs(normal.y) > Mathf.Abs(normal.x))
+            {
+                // 수직 충돌(바닥 또는 천장)
+                velocity.y = -velocity.y;
+            }
+            else
+            {
+                // 수평 충돌(벽)
+                velocity.x = -velocity.x;
+            }
+
+            rb.velocity = velocity;
+        }
     }
 }

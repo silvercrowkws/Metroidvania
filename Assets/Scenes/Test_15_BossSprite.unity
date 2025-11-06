@@ -9570,11 +9570,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7273928580862105494, guid: 7a0fa04e670319f498b36aee568c35df, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.62
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7273928580862105494, guid: 7a0fa04e670319f498b36aee568c35df, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -5.99
+      value: -9.1
       objectReference: {fileID: 0}
     - target: {fileID: 7273928580862105494, guid: 7a0fa04e670319f498b36aee568c35df, type: 3}
       propertyPath: m_LocalPosition.z
@@ -9797,7 +9797,7 @@ GameObject:
   - component: {fileID: 557497275}
   - component: {fileID: 557497274}
   - component: {fileID: 557497276}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Structure
   m_TagString: Ground
   m_Icon: {fileID: 0}
