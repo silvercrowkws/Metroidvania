@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using static Cinemachine.DocumentationSortingAttribute;
 
-public class Player_Test : MonoBehaviour
+public class Player_Test : Singleton<Player_Test>
 {
     /// <summary>
     /// 플레이어의 이름
@@ -400,6 +400,19 @@ public class Player_Test : MonoBehaviour
 
     private void Awake()
     {
+        var others = FindObjectsOfType<Player_Test>();
+        if (others.Length > 1)
+        {
+            // 이미 다른 인스턴스가 존재하면 자신을 파괴하고 초기화 중단
+            Destroy(gameObject);
+            return;
+        }
+
+        // 씬 전환 시 이 게임오브젝트가 파괴되지 않도록 설정
+        DontDestroyOnLoad(gameObject);
+
+
+
         inputActions = new PlayerInputActions();
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
@@ -1121,6 +1134,9 @@ public class Player_Test : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);       // 현재 실행 중인 씬 +1 로 이동
+
+        this.gameObject.transform.position = new Vector3(0,-9.05f, 0);
+        inputActions.Actions.Enable();
     }
 
     /// <summary>

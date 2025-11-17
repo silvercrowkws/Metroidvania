@@ -33,6 +33,17 @@ public class Inventory : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+
+        var others = FindObjectsOfType<Inventory>();
+        if (others.Length > 1)
+        {
+            // 이미 다른 인스턴스가 존재하면 자신을 파괴하고 초기화 중단
+            Destroy(gameObject);
+            return;
+        }
+
+        // 씬 전환 시 이 게임오브젝트가 파괴되지 않도록 설정
+        DontDestroyOnLoad(gameObject);
     }
 
     /// <summary>

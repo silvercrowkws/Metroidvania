@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InventoryViewer : MonoBehaviour
+public class InventoryViewer : Singleton<InventoryViewer>
 {
     [SerializeField] private Slot slotPrefab;
     [SerializeField] private Transform slotParent;
@@ -20,6 +20,20 @@ public class InventoryViewer : MonoBehaviour
     /// 현재 포인터가 가리키고있는 슬롯
     /// </summary>
     private Slot pointerUpSlot;
+
+    private void Awake()
+    {
+        var others = FindObjectsOfType<InventoryViewer>();
+        if (others.Length > 1)
+        {
+            // 이미 다른 인스턴스가 존재하면 자신을 파괴하고 초기화 중단
+            Destroy(gameObject);
+            return;
+        }
+
+        // 씬 전환 시 이 게임오브젝트가 파괴되지 않도록 설정
+        DontDestroyOnLoad(gameObject);
+    }
 
     private void Start()
     {

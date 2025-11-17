@@ -109,6 +109,7 @@ public class Test_14_GameDifficulty : TestBase
 
     protected override void OnTest1(InputAction.CallbackContext context)
     {
+        player_test.hasAllKeys = true;
         Debug.Log("플레이어의 레벨업에 필요한 경험치");
         Debug.Log(player_test.MaxXP);
     }

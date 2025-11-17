@@ -6,9 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Test_03_Portal.unity
-    guid: 0dafb72d7d009d44cb7bd41145b0d54c
+    path: Assets/Scenes/Test_16_MainScene.unity
+    guid: c626d7c582f948d42bcffae7b0be97e3
   - enabled: 1
-    path: Assets/Scenes/Test_04_PortalTest.unity
-    guid: 773c55da040f2be4bb344e7fbe1e606f
+    path: Assets/Scenes/Test_14_GameDifficulty.unity
+    guid: 42630d797cb77ac46ac379711fc54056
+  - enabled: 1
+    path: Assets/Scenes/Test_15_BossRoom.unity
+    guid: 49dd5f59a9944b243a049125a6f2664f
   m_configObjects: {}

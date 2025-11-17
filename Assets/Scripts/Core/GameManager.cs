@@ -15,8 +15,8 @@ using UnityEngine.UI;
 public enum GameState
 {
     Main = 0,                   // 
-    SelectCharacter,            // 
-    SelectCard,                 // 
+    MazeExploration,            // 
+    BossRoom,                 // 
     GameComplete,               // 
 }
 
@@ -61,13 +61,13 @@ public class GameManager : Singleton<GameManager>
                     case GameState.Main:
                         Debug.Log("메인 상태");
                         break;
-                    case GameState.SelectCharacter:
-                        Debug.Log("캐릭터 선택 상태");
-                        onSelectCharacter?.Invoke();
+                    case GameState.MazeExploration:
+                        Debug.Log("미궁 탐색 상태");
+                        onMazeExploration?.Invoke();
                         break;
-                    case GameState.SelectCard:
-                        Debug.Log("카드 선택 상태");
-                        onSelectCard?.Invoke();
+                    case GameState.BossRoom:
+                        Debug.Log("보스 룸 상태");
+                        onBossRoom?.Invoke();
                         break;
                     case GameState.GameComplete:
                         Debug.Log("게임 완료 상태");
@@ -80,8 +80,8 @@ public class GameManager : Singleton<GameManager>
 
 
     // 게임상태 델리게이트
-    public Action onSelectCharacter;
-    public Action onSelectCard;
+    public Action onMazeExploration;
+    public Action onBossRoom;
     public Action onGameComplete;
 
     /// <summary>
@@ -407,12 +407,12 @@ public class GameManager : Singleton<GameManager>
                 gameState = GameState.Main;
                 break;
             case 1:
-                Debug.Log("캐릭터 선택 씬");
-                gameState = GameState.SelectCharacter;
+                Debug.Log("미궁 탐색 씬");
+                gameState = GameState.MazeExploration;
                 break;
             case 2:
-                Debug.Log("카드 선택 씬");
-                gameState = GameState.SelectCard;
+                Debug.Log("보스 방 씬");
+                gameState = GameState.BossRoom;
                 break;
             case 3:
                 Debug.Log("전투 완료 씬");
