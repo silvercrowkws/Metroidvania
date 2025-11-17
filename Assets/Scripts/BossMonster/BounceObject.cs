@@ -34,12 +34,24 @@ public class BounceObject : MonoBehaviour
     /// </summary>
     BossMonsterBase bossMonsterBase;
 
+    /// <summary>
+    /// FireFloor 프리팹
+    /// </summary>
+    private GameObject fireFloor;
+
+    /// <summary>
+    /// FireFloor 클래스
+    /// </summary>
+    FireFloor fireFloorClass;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0;
 
         circleCollider = GetComponent<CircleCollider2D>();
+
+        fireFloor = Resources.Load<GameObject>("GameObjects/FireFloor");
     }
 
     void Start()
@@ -164,6 +176,30 @@ public class BounceObject : MonoBehaviour
             }
 
             rb.velocity = velocity;
+
+            // 만약 보스가 Hell 이면
+            if (bossMonsterBase.bossType == BossType.HellBoss)
+            {
+                if (fireFloor != null)
+                {
+                    Vector3 spawnPos = contact.point;
+
+                    // 법선 방향 기준 회전
+                    Quaternion rot = Quaternion.FromToRotation(Vector2.up, normal);
+
+                    // 표면으로부터 약간 씌우기
+                    float offset = 0.3f;
+                    spawnPos += (Vector3)normal * offset;
+
+                    GameObject obj = Instantiate(fireFloor, spawnPos, rot);
+
+                    // 스케일을 1로
+                    obj.transform.localScale = Vector3.one;
+
+                    fireFloorClass = obj.GetComponent<FireFloor>();
+                    fireFloorClass.source = FireFloorSource.Ball;
+                }
+            }
         }
     }
 }

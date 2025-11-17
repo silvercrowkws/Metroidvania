@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+public enum FireFloorSource
+{
+    Missile,   // 미사일에서 생성됨 → 기존 로직 유지
+    Ball       // 공(BounceObject)에서 생성됨 → 커스텀 적용
+}
+
 public class FireFloor : MonoBehaviour
 {
     // 장판 지속시간은 약 5초 정도
@@ -11,6 +17,11 @@ public class FireFloor : MonoBehaviour
     // 미사일 회전 5초, 발사 전까지 1초에
     // 나이트메어는 보스가 장판 사라지고 미사일 생성하고
     // 헬은 장판 생성과 동시에 미사일 생성하면 되겠네.
+
+    /// <summary>
+    /// 누가 불장판을 생성했는지(기본값은 미사일)
+    /// </summary>
+    public FireFloorSource source = FireFloorSource.Missile;
 
     /// <summary>
     /// 이 오브젝트의 지속 시간
@@ -48,22 +59,33 @@ public class FireFloor : MonoBehaviour
 
         bossMonsterBase = FindAnyObjectByType<BossMonsterBase>();
 
-        // 보스 타입에 따라 데미지와 지속시간 결정
-        switch (bossMonsterBase.bossType)
+        // 미사일로 생성된 경우
+        if (source == FireFloorSource.Missile)
         {
-            case BossType.NightmareBoss:
-                damage = 10f;
-                duration = 5;
-                break;
-            case BossType.HellBoss:
-                damage = 20f;
-                duration = 5;
-                break;
-            default:
-                damage = 1;
-                duration = 1;
-                break;
+            // 보스 타입에 따라 데미지와 지속시간 결정
+            switch (bossMonsterBase.bossType)
+            {
+                case BossType.NightmareBoss:
+                    damage = 10f;
+                    duration = 5;
+                    break;
+                case BossType.HellBoss:
+                    damage = 20f;
+                    duration = 5;
+                    break;
+                default:
+                    damage = 1;
+                    duration = 1;
+                    break;
+            }
         }
+        // 볼(BounceObject)로 생성된 경우
+        else if (source == FireFloorSource.Ball)
+        {
+            damage = 10f;
+            duration = 1.5f;
+        }
+
 
         StartCoroutine(LifeDuration());
     }

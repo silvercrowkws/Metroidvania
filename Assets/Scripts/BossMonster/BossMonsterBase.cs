@@ -361,12 +361,13 @@ public class BossMonsterBase : MonoBehaviour
             case BossType.HellBoss:
                 // 시작 시 X 모양으로 레이저를 쏘고 시계 방향으로 회전 중간중간 방향 변경
                 // 및 레이저 맞으면 즉사
-                //StartCoroutine(CrossLaserCoroutine(15));
+                StartCoroutine(CrossLaserCoroutine(15));
 
                 // 및 위에서 오브젝트 낙하(에 맞으면 잠시 못움직이게 기절)
                 StartCoroutine(FallingObjectCoroutine());
 
                 // 및 맵 전역을 튕기는 오브젝트 추가(각도는 시작시 조절)
+                // 여기서 오브젝트가 튕길때 마다 그 자리에 불 장판을 짧게 남기면 어떨까
                 BounceObjectInstantiate();
 
                 // 일정 간격으로 플레이어를 조준 및 바닥에 꽂히고 데미지를 주는 장판을 남기는 오브젝트 추가
