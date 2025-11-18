@@ -14,10 +14,10 @@ using UnityEngine.UI;
 /// </summary>
 public enum GameState
 {
-    Main = 0,                   // 
-    MazeExploration,            // 
-    BossRoom,                 // 
-    GameComplete,               // 
+    Main = 0,                   // 메인
+    MazeExploration,            // 미궁 탐색
+    BossRoom,                   // 보스 룸
+    GameComplete,               // 게임 완료
 }
 
 /// <summary>
@@ -157,6 +157,7 @@ public class GameManager : Singleton<GameManager>
                 player_test.onPlayerMaxXPChange += OnPlayerMaxXPChange;
 
                 player_test.onKeyCountChanged += OnKeyCountChanged;
+                player_test.onSceneChange += OnSceneChange;
             }
             return player_test;
         }
@@ -309,6 +310,15 @@ public class GameManager : Singleton<GameManager>
 
     // 카메라 진동 부분 끝 ------------------------------------------------------------
 
+    // 씬 전환시 패널 부분 ------------------------------------------------------------
+
+    /// <summary>
+    /// 로딩 패널
+    /// </summary>
+    LoadingPanel loadingPanel;
+
+    // 씬 전환시 패널 부분 끝 ------------------------------------------------------------
+
 
     private void Start()
     {
@@ -358,6 +368,9 @@ public class GameManager : Singleton<GameManager>
         {
             Debug.LogWarning("notification 를 찾지 못했다");
         }
+
+        // 자식에서 로딩 패널 찾음
+        loadingPanel = GetComponentInChildren<LoadingPanel>();
     }
 
     private void OnEnable()
@@ -405,14 +418,20 @@ public class GameManager : Singleton<GameManager>
             case 0:
                 Debug.Log("메인 씬");
                 gameState = GameState.Main;
+
+                
                 break;
             case 1:
                 Debug.Log("미궁 탐색 씬");
                 gameState = GameState.MazeExploration;
+
+                // 미궁 탐색 씬으로 넘어왔으면
                 break;
             case 2:
                 Debug.Log("보스 방 씬");
                 gameState = GameState.BossRoom;
+
+                // 보스 씬으로 넘어왔으면 로딩 패널의 쿼터 증가
                 break;
             case 3:
                 Debug.Log("전투 완료 씬");
@@ -421,6 +440,28 @@ public class GameManager : Singleton<GameManager>
         }
 
         StartCoroutine(DataRecoverCoroutine());
+    }
+
+    /// <summary>
+    /// 로딩 패널을 활성화할지 알리는 델리게이트
+    /// </summary>
+    public Action<bool> onPanelActive;
+
+    /// <summary>
+    /// 로딩바
+    /// </summary>
+    public Action<float> onLoadingBar;
+
+    /// <summary>
+    /// 플레이어의 요청으로 보스 씬으로 이동하는 함수
+    /// </summary>
+    private void OnSceneChange(int index)
+    {
+        // 여기 직전에 패널 활성화
+        onPanelActive?.Invoke(true);
+        onLoadingBar?.Invoke(0.25f);
+
+        SceneManager.LoadScene(index);       // index 번째 씬으로 이동
     }
 
     /// <summary>

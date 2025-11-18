@@ -3,14 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Inventory : MonoBehaviour
+public class Inventory : Singleton<Inventory>
 {
     /// <summary>
     /// 아이템을 저장할 딕셔너리
     /// </summary>
     private Dictionary<ItemDataSO, int> itemContainer = new();
 
-    public static Inventory Instance { get; private set; }
+    // 싱글톤으로 변경되면서 없어짐
+    //public static Inventory Instance { get; private set; }
 
     /// <summary>
     /// 아이템이 바뀌었을때의 이벤트
@@ -30,11 +31,11 @@ public class Inventory : MonoBehaviour
     public float throwPower;
 
 
-    private void Awake()
+    /*private void Awake()
     {
         Instance = this;
 
-        var others = FindObjectsOfType<Inventory>();
+        *//*var others = FindObjectsOfType<Inventory>();
         if (others.Length > 1)
         {
             // 이미 다른 인스턴스가 존재하면 자신을 파괴하고 초기화 중단
@@ -43,8 +44,8 @@ public class Inventory : MonoBehaviour
         }
 
         // 씬 전환 시 이 게임오브젝트가 파괴되지 않도록 설정
-        DontDestroyOnLoad(gameObject);
-    }
+        DontDestroyOnLoad(gameObject);*//*
+    }*/
 
     /// <summary>
     /// 외부에서 인벤토리 데이터를 읽기 위한 메서드 (for Saving)
@@ -184,8 +185,9 @@ public class Inventory : MonoBehaviour
         return -1;
     }
 
-    private void OnDestroy()
+    // 마찬가지로 싱글톤에서 처리
+    /*private void OnDestroy()
     {
         Instance = null;
-    }
+    }*/
 }

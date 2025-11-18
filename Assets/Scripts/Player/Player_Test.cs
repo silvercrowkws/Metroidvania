@@ -398,6 +398,11 @@ public class Player_Test : Singleton<Player_Test>
 
     // 애니메이션의 이름을 해쉬로 변환 끝 --------------------------------------------------
 
+    /// <summary>
+    /// 씬을 이동하라고 알리는 델리게이트
+    /// </summary>
+    public Action<int> onSceneChange;
+
     private void Awake()
     {
         var others = FindObjectsOfType<Player_Test>();
@@ -1133,7 +1138,9 @@ public class Player_Test : Singleton<Player_Test>
 
         yield return new WaitForSeconds(1.5f);
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);       // 현재 실행 중인 씬 +1 로 이동
+        // 게임매니저에서 처리하도록 수정
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);       // 현재 실행 중인 씬 +1 로 이동
+        onSceneChange?.Invoke(2);
 
         this.gameObject.transform.position = new Vector3(0,-9.05f, 0);
         inputActions.Actions.Enable();

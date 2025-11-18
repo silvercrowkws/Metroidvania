@@ -30,7 +30,7 @@ public class Singleton<T> : MonoBehaviour where T : Component
             if (isShutdown)  // 종료처리에 들어갔으면
             {
                 Debug.LogWarning("싱글톤은 이미 삭제중이다.");     // 경고출력하고
-                return null;                                     // null 리턴
+                return null;                                       // null 리턴
             }
 
             if (instance == null)    // 객체가 없으면

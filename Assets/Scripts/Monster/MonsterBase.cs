@@ -953,16 +953,16 @@ public class MonsterBase : MonoBehaviour
     }
 
     /// <summary>
-      /// 원위치로 돌아가는 함수
+    /// 원위치로 돌아가는 함수
     /// </summary>
     private void ComeBack()
     {
-        Debug.Log("복귀 함수 실행");
+        //Debug.Log("복귀 함수 실행");
 
         if (monsterMoveType == MonsterMoveType.Walk)
         {
             float distToSpawn = Vector3.Distance(transform.position, spawnPosition);
-            Debug.Log(distToSpawn);
+            //Debug.Log(distToSpawn);
             //float velocityMag = rb2d.velocity.magnitude;
 
             //if (distToSpawn <= 0.1f || velocityMag <= 0.05f)
