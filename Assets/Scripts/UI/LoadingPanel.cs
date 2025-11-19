@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+//using UnityEngine.UIElements;
 
 public class LoadingPanel : MonoBehaviour
 {
@@ -15,9 +17,21 @@ public class LoadingPanel : MonoBehaviour
     /// </summary>
     CanvasGroup canvasGroup;
 
+    /// <summary>
+    /// 로딩바 슬라이더
+    /// </summary>
+    Slider loadingSlider;
+
     private void Awake()
     {
         canvasGroup = GetComponent<CanvasGroup>();
+
+        canvasGroup.alpha = 0;                  // 알파값 0
+        canvasGroup.interactable = true;        // 상호작용 가능
+        canvasGroup.blocksRaycasts = false;     // 레이케스트 가능
+
+        Transform child = transform.GetChild(1);
+        loadingSlider = child.GetComponent<Slider>();
     }
 
     private void Start()
@@ -47,8 +61,8 @@ public class LoadingPanel : MonoBehaviour
         }
     }
 
-    private void OnLoadingBar(float obj)
+    private void OnLoadingBar(float sliderValue)
     {
-
+        loadingSlider.value = sliderValue;
     }
 }

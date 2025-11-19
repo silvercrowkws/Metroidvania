@@ -61,6 +61,11 @@ public class RoomGenerator : MonoBehaviour
 
     int monstersPerType = 0;
 
+    /// <summary>
+    /// 룸이 준비되었다고 알리는 bool 변수
+    /// </summary>
+    public bool onRoomReady = false;
+
     void Awake()
     {
         if (seed != AllRandom)
@@ -156,6 +161,8 @@ public class RoomGenerator : MonoBehaviour
 
         // 기즈모 위치에 BoxCollider2D 생성
         CreateBoxCollidersAtGizmoPositions();
+
+        onRoomReady = true;
     }
 
     public Sprite testMiniMapSprite;

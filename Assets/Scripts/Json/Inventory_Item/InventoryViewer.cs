@@ -37,6 +37,20 @@ public class InventoryViewer : Singleton<InventoryViewer>
 
     private void Start()
     {
+        // "InventoryPanel" 태그를 가진 오브젝트를 찾아 부모로 설정
+        GameObject panelObject = GameObject.FindGameObjectWithTag("InventoryPanel");
+
+        if (panelObject != null)
+        {
+            // InventoryPanel 오브젝트의 Transform을 slotParent로 설정
+            slotParent = panelObject.transform;
+            Debug.Log("슬롯 부모(slotParent)를 InventoryPanel 태그를 가진 오브젝트로 성공적으로 설정했습니다.");
+        }
+        else
+        {
+            Debug.LogError("씬에서 'InventoryPanel' 태그를 가진 오브젝트를 찾을 수 없습니다! 슬롯 생성이 불가능합니다.");
+        }
+
         //이벤트 구독
         Inventory.Instance.OnNewItemAdded += HandleItemAdded;
     }

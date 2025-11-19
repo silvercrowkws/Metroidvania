@@ -317,7 +317,22 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     LoadingPanel loadingPanel;
 
+    /// <summary>
+    /// 데이터가 복구되었는지 확인하는 bool 변수
+    /// </summary>
+    private bool isDataRecovered = false;
+
     // 씬 전환시 패널 부분 끝 ------------------------------------------------------------
+
+    /// <summary>
+    /// 보스의 배열
+    /// </summary>
+    private GameObject[] bosses;
+
+    /// <summary>
+    /// 룸 생성기
+    /// </summary>
+    RoomGenerator roomGenerator;
 
 
     private void Start()
@@ -348,7 +363,8 @@ public class GameManager : Singleton<GameManager>
             Inventory.Instance.OnItemChanged += (itemData, count) => OnDataSave();
         }
 
-        cameraShakeController = FindAnyObjectByType<CameraShakeController>();
+        // 미궁 탐색씬으로 이동하면 찾도록 수정
+        /*cameraShakeController = FindAnyObjectByType<CameraShakeController>();
         if(cameraShakeController != null)
         {
             cameraShakeController.onShakeFinished += OnShakeFinished;
@@ -367,10 +383,27 @@ public class GameManager : Singleton<GameManager>
         else
         {
             Debug.LogWarning("notification 를 찾지 못했다");
-        }
+        }*/
 
         // 자식에서 로딩 패널 찾음
         loadingPanel = GetComponentInChildren<LoadingPanel>();
+
+        // 폴더에서 보스 찾기
+        bosses = new GameObject[5];
+        for (int i = 0; i < 4; i++)
+        {
+            string path = $"GameObjects/Boss_{i + 1}";
+            bosses[i] = Resources.Load<GameObject>(path);
+
+            if (bosses[i] == null)
+            {
+                Debug.LogWarning($"{path} 프리팹을 찾을 수 없습니다!");
+            }
+            else
+            {
+                Debug.Log($"{path} 로드 성공!");
+            }
+        }
     }
 
     private void OnEnable()
@@ -418,20 +451,50 @@ public class GameManager : Singleton<GameManager>
             case 0:
                 Debug.Log("메인 씬");
                 gameState = GameState.Main;
-
-                
                 break;
             case 1:
                 Debug.Log("미궁 탐색 씬");
                 gameState = GameState.MazeExploration;
 
-                // 미궁 탐색 씬으로 넘어왔으면
+                // 미궁 탐색 씬으로 넘어왔으면 RoomGenerator를 찾고
+                roomGenerator = FindAnyObjectByType<RoomGenerator>();
+
+                cameraShakeController = FindAnyObjectByType<CameraShakeController>();
+                if (cameraShakeController != null)
+                {
+                    cameraShakeController.onShakeFinished += OnShakeFinished;
+                }
+                else
+                {
+                    Debug.LogWarning("cameraShakeController 를 찾지 못했다");
+                }
+
+                notification = FindAnyObjectByType<Notification>();
+                if (notification != null)
+                {
+                    onNotificationActive?.Invoke(false);
+                    //notification.gameObject.SetActive(false);
+                }
+                else
+                {
+                    Debug.LogWarning("notification 를 찾지 못했다");
+                }
+
+
+                // 데이터 복구
+                StartCoroutine(DataRecoverCoroutine());
+
+
                 break;
             case 2:
                 Debug.Log("보스 방 씬");
                 gameState = GameState.BossRoom;
 
-                // 보스 씬으로 넘어왔으면 로딩 패널의 쿼터 증가
+
+                // 데이터 복구
+                StartCoroutine(DataRecoverCoroutine());
+
+
                 break;
             case 3:
                 Debug.Log("전투 완료 씬");
@@ -439,8 +502,98 @@ public class GameManager : Singleton<GameManager>
                 break;
         }
 
-        StartCoroutine(DataRecoverCoroutine());
+        // 씬 이동 후 로딩 바를 50% 로
+        onLoadingBar?.Invoke(0.5f);
+
+        // 데이터 복구를 SceneInitCoroutine 코루틴에서 처리
+        //StartCoroutine(DataRecoverCoroutine());
+
+        // 이 후 3/4, 4/4 는 코루틴에서 처리
+        StartCoroutine(SceneInitCoroutine());
     }
+
+    /// <summary>
+    /// 씬 이동시 실행될 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator SceneInitCoroutine()
+    {
+        // 씬별 초기화 (3/4)
+        while (!isDataRecovered)
+        {
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(0.5f);
+        onLoadingBar?.Invoke(0.75f);
+
+
+        // 공통 후처리 (4/4)
+        // ex 현재 씬이
+        // 보스씬이면 보스 생성 완료되었는지
+        // 탐색씬이면 미로 생성 완료되었는지
+        
+        if(gameState == GameState.BossRoom)
+        {
+            // 보스 생성이 완료될 때까지 대기
+
+            GameObject bossObj = null;
+            switch (gameDifficulty)
+            {
+                case GameDifficulty.Easy:
+                    bossObj = Instantiate(bosses[0], new Vector3(0, 0, 0), Quaternion.identity);
+                    break;
+                case GameDifficulty.Normal:
+                    bossObj = Instantiate(bosses[1], new Vector3(0, 0, 0), Quaternion.identity);
+                    break;
+                case GameDifficulty.Hard:
+                    bossObj = Instantiate(bosses[2], new Vector3(0, 0, 0), Quaternion.identity);
+                    break;
+                case GameDifficulty.Nightmare:
+                    bossObj = Instantiate(bosses[3], new Vector3(0, 0, 0), Quaternion.identity);
+                    break;
+                case GameDifficulty.Hell:
+                    bossObj = Instantiate(bosses[4], new Vector3(0, 0, 0), Quaternion.identity);
+                    break;
+            }
+
+            if (bossObj == null)
+            {
+                Debug.LogError("보스 생성 실패!");
+            }
+            else
+            {
+                Debug.Log("보스 생성 성공!");
+                bossObj.name = gameDifficulty.ToString();
+
+                yield return new WaitForSeconds(0.5f);
+                onLoadingBar?.Invoke(1f);
+            }
+        }
+        else if(gameState == GameState.MazeExploration)
+        {
+            while (!roomGenerator.onRoomReady)
+            {
+                yield return null;
+            }
+
+            // 빠져나오면 미로 생성 완료이니까
+            yield return new WaitForSeconds(0.5f);
+            onLoadingBar?.Invoke(1f);
+        }
+        else
+        {
+            // 여기는 기본 경우이니까
+            yield return new WaitForSeconds(0.5f);
+            onLoadingBar?.Invoke(1f);
+        }
+
+        // 패널 종료
+        yield return new WaitForSeconds(0.1f);
+        onPanelActive?.Invoke(false);
+        onLoadingBar?.Invoke(0f);
+    }
+
 
     /// <summary>
     /// 로딩 패널을 활성화할지 알리는 델리게이트
@@ -453,7 +606,7 @@ public class GameManager : Singleton<GameManager>
     public Action<float> onLoadingBar;
 
     /// <summary>
-    /// 플레이어의 요청으로 보스 씬으로 이동하는 함수
+    /// 다른 클래스의 요청으로 씬을 이동하는 함수
     /// </summary>
     private void OnSceneChange(int index)
     {
@@ -514,8 +667,6 @@ public class GameManager : Singleton<GameManager>
             Debug.Log("인벤토리 아이템이 없습니다.");
         }
     }
-
-    private bool isDataRecovered = false;
 
     /// <summary>
     /// 데이터를 저장하는 함수

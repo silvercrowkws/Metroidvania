@@ -25,7 +25,7 @@ public class InventoryPanel : Singleton<InventoryPanel>
         }
 
         // 씬 전환 시 이 게임오브젝트가 파괴되지 않도록 설정
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
 
         canvasGroup = GetComponent<CanvasGroup>();
     }
