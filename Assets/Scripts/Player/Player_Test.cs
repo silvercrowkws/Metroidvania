@@ -342,6 +342,11 @@ public class Player_Test : Singleton<Player_Test>
     /// </summary>
     private Coroutine hitFlashCoroutine;
 
+    /// <summary>
+    /// 플레이어의 피격 범위 콜라이더
+    /// </summary>
+    BoxCollider2D box2D;
+
     // 플레이어 조작 관련 끝 --------------------------------------------------
 
     // 문 및 열쇠 관련 --------------------------------------------------
@@ -403,6 +408,11 @@ public class Player_Test : Singleton<Player_Test>
     /// </summary>
     public Action<int> onSceneChange;
 
+    /// <summary>
+    /// 플레이어가 시작할 준비가 되었는지 확인하는 bool 변수
+    /// </summary>
+    public bool isPlayerReady = false;
+
     private void Awake()
     {
         var others = FindObjectsOfType<Player_Test>();
@@ -416,8 +426,6 @@ public class Player_Test : Singleton<Player_Test>
         // 씬 전환 시 이 게임오브젝트가 파괴되지 않도록 설정
         DontDestroyOnLoad(gameObject);
 
-
-
         inputActions = new PlayerInputActions();
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
@@ -427,6 +435,8 @@ public class Player_Test : Singleton<Player_Test>
 
         spriteRenderer = GetComponent<SpriteRenderer>();
         currentHP = maxHP;
+
+        box2D = GetComponent<BoxCollider2D>();
     }
 
     private void OnEnable()
@@ -1340,6 +1350,25 @@ public class Player_Test : Singleton<Player_Test>
                 canEnterDoor = true;
                 doorCenter = collision.transform;       // 문의 중앙은 충돌한 문의 위치
             }
+        }
+    }
+
+    /// <summary>
+    /// 씬 이동으로 콜라이더를 컨트롤하는 함수
+    /// </summary>
+    public void OnColliderControll(bool onoff)
+    {
+        if(onoff)
+        {
+            box2D.enabled = true;
+            isPlayerReady = true;
+            rb.gravityScale = 1;
+        }
+        else
+        {
+            box2D.enabled = false;
+            isPlayerReady = false;
+            rb.gravityScale = 0;
         }
     }
 }

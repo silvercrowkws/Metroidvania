@@ -65,4 +65,14 @@ public class LoadingPanel : MonoBehaviour
     {
         loadingSlider.value = sliderValue;
     }
+
+    private void OnDestroy()
+    {
+        // 오브젝트가 파괴될 때, GameManager의 이벤트를 구독 해제해야 함
+        if (gameManager != null)
+        {
+            gameManager.onPanelActive -= OnPanelActive;
+            gameManager.onLoadingBar -= OnLoadingBar;
+        }
+    }
 }

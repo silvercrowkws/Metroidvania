@@ -300,7 +300,7 @@ public class BossMonsterBase : MonoBehaviour
     /// </summary>
     private void OnBossDie()
     {
-        
+        // 여기서 경험치, 돈, 아이템등 추가 필요
     }
 
     /// <summary>
@@ -310,7 +310,11 @@ public class BossMonsterBase : MonoBehaviour
     {
         // 레이저 충돌 시 데미지는 Laser 클래스에서 처리
 
-        switch(bossType)
+        // 생성되고 플레이어가 준비되기를 기다리는 시간이 필요
+        StartCoroutine(YieldPlayer());
+
+        // 시간 조절을 위해 YieldPlayer 코루틴에서 하도록 변경
+        /*switch(bossType)
         {
             // EasyBoss의 경우
             case BossType.EasyBoss:
@@ -374,7 +378,7 @@ public class BossMonsterBase : MonoBehaviour
                 // 그 후 새로운 튕기는 오브젝트 생성(장판이 사라지는 시점에 새로 꽂히도록 조절 필요)
                 StartCoroutine(ChaseMissileCoroutine());
                 break;
-        }
+        }*/
     }
 
     /// <summary>
@@ -655,5 +659,88 @@ public class BossMonsterBase : MonoBehaviour
         }
 
         Debug.Log("플레이어 사망으로 낙하 오브젝트 생성 중단");
+    }
+
+    /// <summary>
+    /// 플레이어가 준비될때까지 패턴을 실행하지 않고 기다리는 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator YieldPlayer()
+    {
+        // 플레이어가 준비되지 않았으면 계속 반복
+        while (!player_test.isPlayerReady)
+        {
+            yield return null;
+        }
+
+        // 빠져나오면 1초 후 패턴 시작
+        yield return new WaitForSeconds(5);
+        Debug.Log("보스 패턴 실행");
+
+        switch (bossType)
+        {
+            // EasyBoss의 경우
+            case BossType.EasyBoss:
+                // 시작 시 가로로 레이저를 쏘고 시계 방향으로 회전(레이저에 맞으면 피 2개 깎기) => Laser 클래스에서 처리
+                StartCoroutine(HorizontalLaserCoroutine(15));
+                break;
+
+            // NormalBoss의 경우
+            case BossType.NormalBoss:
+                // 시작 시 가로로 레이저를 쏘고 시계 방향으로 회전(레이저에 맞으면 피 3개 깎기 : 30)
+                StartCoroutine(HorizontalLaserCoroutine(15));
+
+                // 및 위에서 오브젝트 낙하
+                StartCoroutine(FallingObjectCoroutine());
+                break;
+
+            // HardBoss의 경우
+            case BossType.HardBoss:
+                // 시작 시 가로로 레이저를 쏘고 시계 방향으로 회전 중간중간 방향 변경
+                // 및 레이저 맞으면 피 5개 깎기 : 50
+                StartCoroutine(HorizontalLaserCoroutine(15));
+
+                // 및 위에서 오브젝트 낙하(에 맞으면 잠시 못움직이게 기절)
+                StartCoroutine(FallingObjectCoroutine());
+
+                // 및 맵 전역을 튕기는 오브젝트 추가(각도는 시작시 조절)
+                BounceObjectInstantiate();
+                break;
+
+            // NightmareBoss의 경우
+            case BossType.NightmareBoss:
+                // 시작 시 X 모양으로 레이저를 쏘고 시계 방향으로 회전 중간중간 방향 변경
+                // 및 레이저 맞으면 피 8개 깎기 : 80
+                StartCoroutine(CrossLaserCoroutine(15));
+
+                // 및 위에서 오브젝트 낙하(에 맞으면 잠시 못움직이게 기절)
+                StartCoroutine(FallingObjectCoroutine());
+
+                // 및 맵 전역을 튕기는 오브젝트 추가(각도는 시작시 조절)
+                BounceObjectInstantiate();
+
+                // 일정 간격으로 플레이어를 조준 및 바닥에 꽂히고 데미지를 주는 장판을 남기는 오브젝트 추가
+                // 그 후 새로운 튕기는 오브젝트 생성(장판이 사라지는 시점에 새로 꽂히도록 조절 필요)
+                StartCoroutine(ChaseMissileCoroutine());
+                break;
+
+            // HellBoss의 경우
+            case BossType.HellBoss:
+                // 시작 시 X 모양으로 레이저를 쏘고 시계 방향으로 회전 중간중간 방향 변경
+                // 및 레이저 맞으면 즉사
+                StartCoroutine(CrossLaserCoroutine(15));
+
+                // 및 위에서 오브젝트 낙하(에 맞으면 잠시 못움직이게 기절)
+                StartCoroutine(FallingObjectCoroutine());
+
+                // 및 맵 전역을 튕기는 오브젝트 추가(각도는 시작시 조절)
+                // 여기서 오브젝트가 튕길때 마다 그 자리에 불 장판을 짧게 남기면 어떨까
+                BounceObjectInstantiate();
+
+                // 일정 간격으로 플레이어를 조준 및 바닥에 꽂히고 데미지를 주는 장판을 남기는 오브젝트 추가
+                // 그 후 새로운 튕기는 오브젝트 생성(장판이 사라지는 시점에 새로 꽂히도록 조절 필요)
+                StartCoroutine(ChaseMissileCoroutine());
+                break;
+        }
     }
 }

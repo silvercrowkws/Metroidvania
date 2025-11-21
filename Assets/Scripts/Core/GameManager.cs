@@ -334,6 +334,11 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     RoomGenerator roomGenerator;
 
+    /// <summary>
+    /// 메인씬에서 탐색씬으로 이동하는 버튼 클래스
+    /// </summary>
+    MainSceneBusson mainSceneBusson;
+
 
     private void Start()
     {
@@ -451,10 +456,30 @@ public class GameManager : Singleton<GameManager>
             case 0:
                 Debug.Log("메인 씬");
                 gameState = GameState.Main;
+
+                mainSceneBusson = FindAnyObjectByType<MainSceneBusson>();
+                mainSceneBusson.onSceneChangeButton += OnSceneChange;
                 break;
             case 1:
                 Debug.Log("미궁 탐색 씬");
                 gameState = GameState.MazeExploration;
+
+                // 메인씬에는 인벤토리 관련이 없으므로 미궁 탐색씬에서 찾음
+                inventoryViewer = FindObjectOfType<InventoryViewer>();
+                if (inventoryViewer != null)
+                {
+                    inventoryViewer.OnInventoryOrderChanged += OnDataSave;
+                }
+
+                // Inventory 인스턴스에 접근
+                if (Inventory.Instance != null)
+                {
+                    // **이전에 구독 해지했는지 확인하고 다시 구독해야 합니다.
+                    // Start()에서 실패했더라도 여기서 다시 시도해야 합니다.**
+                    Inventory.Instance.OnNewItemAdded += (itemData) => OnDataSave();
+                    Inventory.Instance.OnItemChanged += (itemData, count) => OnDataSave();
+                }
+
 
                 // 미궁 탐색 씬으로 넘어왔으면 RoomGenerator를 찾고
                 roomGenerator = FindAnyObjectByType<RoomGenerator>();
@@ -480,10 +505,8 @@ public class GameManager : Singleton<GameManager>
                     Debug.LogWarning("notification 를 찾지 못했다");
                 }
 
-
                 // 데이터 복구
                 StartCoroutine(DataRecoverCoroutine());
-
 
                 break;
             case 2:
@@ -500,6 +523,13 @@ public class GameManager : Singleton<GameManager>
                 Debug.Log("전투 완료 씬");
                 gameState = GameState.GameComplete;
                 break;
+        }
+
+        // 만약 이동한 씬에 플레이어가 있으면
+        if(player_test != null)
+        {
+            // 피격 범위를 일단 끄고
+            player_test.OnColliderControll(false);
         }
 
         // 씬 이동 후 로딩 바를 50% 로
@@ -587,6 +617,15 @@ public class GameManager : Singleton<GameManager>
             yield return new WaitForSeconds(0.5f);
             onLoadingBar?.Invoke(1f);
         }
+
+
+        // 만약 이동한 씬에 플레이어가 있으면
+        if (player_test != null)
+        {
+            // 피격 범위를 일단 켜고
+            player_test.OnColliderControll(true);
+        }
+
 
         // 패널 종료
         yield return new WaitForSeconds(0.1f);
