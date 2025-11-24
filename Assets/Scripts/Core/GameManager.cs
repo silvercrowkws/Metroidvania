@@ -339,6 +339,11 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     MainSceneBusson mainSceneBusson;
 
+    /// <summary>
+    /// 클로우즈 도어 게임오브젝트
+    /// </summary>
+    GameObject closeDoorObject;
+
 
     private void Start()
     {
@@ -409,6 +414,8 @@ public class GameManager : Singleton<GameManager>
                 Debug.Log($"{path} 로드 성공!");
             }
         }
+
+        closeDoorObject = Resources.Load<GameObject>("GameObjects/CloseDoor");
     }
 
     private void OnEnable()
@@ -530,6 +537,7 @@ public class GameManager : Singleton<GameManager>
         {
             // 피격 범위를 일단 끄고
             player_test.OnColliderControll(false);
+            Debug.Log("이동한 씬에 플레이어가 있다");
         }
 
         // 씬 이동 후 로딩 바를 50% 로
@@ -540,6 +548,7 @@ public class GameManager : Singleton<GameManager>
 
         // 이 후 3/4, 4/4 는 코루틴에서 처리
         StartCoroutine(SceneInitCoroutine());
+        Debug.Log("OnSceneLoaded 호출");
     }
 
     /// <summary>
@@ -548,6 +557,8 @@ public class GameManager : Singleton<GameManager>
     /// <returns></returns>
     IEnumerator SceneInitCoroutine()
     {
+        Debug.Log("SceneInitCoroutine 호출");
+
         // 씬별 초기화 (3/4)
         while (!isDataRecovered)
         {
@@ -624,6 +635,16 @@ public class GameManager : Singleton<GameManager>
         {
             // 피격 범위를 일단 켜고
             player_test.OnColliderControll(true);
+
+            // 플레이어의 위치에 CloseDoor 생성
+            Instantiate(closeDoorObject, player_test.transform.position, Quaternion.identity);
+            Debug.LogError("플레이어의 위치에 CloseDoor 생성");
+
+            player_test.EnableFC();     // 움직임 가능하도록 변경
+        }
+        else
+        {
+            Debug.LogError("이동한 씬에서 플레이어를 못찾았다..");
         }
 
 

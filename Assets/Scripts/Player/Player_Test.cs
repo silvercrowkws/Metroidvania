@@ -1144,7 +1144,7 @@ public class Player_Test : Singleton<Player_Test>
         }
 
         ResetTrigger();
-        animator.SetTrigger("Idle");
+        animator.SetTrigger("Idle");        // 아마 Disable 한 상태라 안먹힐 거임
 
         yield return new WaitForSeconds(1.5f);
 
@@ -1153,6 +1153,11 @@ public class Player_Test : Singleton<Player_Test>
         onSceneChange?.Invoke(2);
 
         this.gameObject.transform.position = new Vector3(0,-9.05f, 0);
+        //inputActions.Actions.Enable();        => 씬 이동 후 활성화하도록 변경
+    }
+
+    public void EnableFC()
+    {
         inputActions.Actions.Enable();
     }
 
