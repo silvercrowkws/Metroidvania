@@ -673,8 +673,8 @@ public class BossMonsterBase : MonoBehaviour
             yield return null;
         }
 
-        // 빠져나오면 1초 후 패턴 시작
-        yield return new WaitForSeconds(5);
+        // 빠져나오면 n초 후 패턴 시작
+        yield return new WaitForSeconds(0.5f);
         Debug.Log("보스 패턴 실행");
 
         switch (bossType)

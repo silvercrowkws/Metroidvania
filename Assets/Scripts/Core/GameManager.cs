@@ -344,6 +344,11 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     GameObject closeDoorObject;
 
+    /// <summary>
+    /// 클로우즈 도어 클래스
+    /// </summary>
+    CloseDoor closeDoor;
+
 
     private void Start()
     {
@@ -537,6 +542,7 @@ public class GameManager : Singleton<GameManager>
         {
             // 피격 범위를 일단 끄고
             player_test.OnColliderControll(false);
+            player_test.DisableFC();        // 움직임 비활성화
             Debug.Log("이동한 씬에 플레이어가 있다");
         }
 
@@ -636,11 +642,22 @@ public class GameManager : Singleton<GameManager>
             // 피격 범위를 일단 켜고
             player_test.OnColliderControll(true);
 
-            // 플레이어의 위치에 CloseDoor 생성
-            Instantiate(closeDoorObject, player_test.transform.position, Quaternion.identity);
-            Debug.LogError("플레이어의 위치에 CloseDoor 생성");
+            if(GameObject.FindObjectOfType<CloseDoor>() == null)
+            {
+                // 플레이어의 위치에 CloseDoor 생성
+                Vector3 spawnCloseDoor = new Vector3(player_test.transform.position.x, player_test.transform.position.y + 0.7f, player_test.transform.position.z);
 
-            player_test.EnableFC();     // 움직임 가능하도록 변경
+                GameObject newCloseDoorObject = Instantiate(closeDoorObject, spawnCloseDoor, Quaternion.identity);
+                closeDoor = newCloseDoorObject.GetComponent<CloseDoor>();
+                //Debug.Log("플레이어의 위치에 CloseDoor 생성");
+            }
+            else
+            {
+                //Debug.Log("이미 맵에 CloseDoor가 있으니 생성 안함");
+            }
+
+            // 패널 종료 후 가능하도록 수정
+            //player_test.EnableFC();     // 움직임 가능하도록 변경
         }
         else
         {
@@ -652,6 +669,11 @@ public class GameManager : Singleton<GameManager>
         yield return new WaitForSeconds(0.1f);
         onPanelActive?.Invoke(false);
         onLoadingBar?.Invoke(0f);
+
+        // 패널 종료하고 일정 시간 후에 문 닫히고 사라지는 연출 필요
+        closeDoor.OnAnimationStart();
+
+        player_test.EnableFC();     // 움직임 가능하도록 변경
     }
 
 
@@ -668,7 +690,7 @@ public class GameManager : Singleton<GameManager>
     /// <summary>
     /// 다른 클래스의 요청으로 씬을 이동하는 함수
     /// </summary>
-    private void OnSceneChange(int index)
+    public void OnSceneChange(int index)
     {
         // 여기 직전에 패널 활성화
         onPanelActive?.Invoke(true);

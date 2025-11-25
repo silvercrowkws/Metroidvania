@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Test_15_BossSprite : TestBase
+public class Test_16_BossSprite : TestBase
 {
     GameManager gameManager;
 

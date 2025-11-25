@@ -1161,6 +1161,11 @@ public class Player_Test : Singleton<Player_Test>
         inputActions.Actions.Enable();
     }
 
+    public void DisableFC()
+    {
+        inputActions.Actions.Disable();
+    }
+
     /// <summary>
     /// 플레이어 기절 코루틴 실행 함수
     /// </summary>
