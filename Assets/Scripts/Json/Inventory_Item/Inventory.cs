@@ -185,6 +185,31 @@ public class Inventory : Singleton<Inventory>
         return -1;
     }
 
+    /// <summary>
+    /// 아이템을 1개 사용하고 인벤토리에서 개수를 감소시키는 메서드
+    /// </summary>
+    public void UseItem(ItemDataSO item)
+    {
+        // 아이템이 존재하고 개수가 1개 이상이라면
+        if (itemContainer.TryGetValue(item, out int currentCount) && currentCount > 0)
+        {
+            // 카운트 1 감소
+            itemContainer[item]--;
+
+            // 이벤트 실행 (Slot UI 업데이트)
+            OnItemChanged?.Invoke(item, itemContainer[item]);
+
+            // 0이하로 떨어졌다면 딕셔너리에서 제거 (OnItemChanged 이벤트가 Slot을 파괴함)
+            if (itemContainer[item] <= 0)
+            {
+                itemContainer.Remove(item);
+            }
+
+            // 여기에 아이템의 '효과 발동' 로직이 들어갈 수 있습니다.
+            Debug.Log($"아이템 {item.ItemName} 사용됨. 남은 개수: {itemContainer.GetValueOrDefault(item)}");
+        }
+    }
+
     // 마찬가지로 싱글톤에서 처리
     /*private void OnDestroy()
     {

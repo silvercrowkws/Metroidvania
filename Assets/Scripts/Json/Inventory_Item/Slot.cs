@@ -179,10 +179,19 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IP
             inventoryViewer.StartChange(this);
             Debug.Log("슬롯에서 아이템 우클릭");
 
-            // 여기서 비활성화된 버튼들 활성화 시키고
+            // 소모품인 경우에만 사용/취소 버튼 활성화시키록 변경
+            if (currentSaveItem.Type == ItemType.Consumable)
+            {
+                // 여기서 비활성화된 버튼들 활성화 시키고
+                buttons.gameObject.SetActive(true);
+                activeSlotWithButtons = this;
+                // 사용, 취소 이런 버튼들
+            }
+
+            /*// 여기서 비활성화된 버튼들 활성화 시키고
             buttons.gameObject.SetActive(true);
             activeSlotWithButtons = this;
-            // 사용, 취소 이런 버튼들
+            // 사용, 취소 이런 버튼들*/
         }
     }
 
@@ -341,6 +350,16 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IP
         // 사용 버튼을 누르면 아이템의 개수를 1개 감소시키고,
         // 아이템의 효과 발동
         // 하라고 델리게이트?
+
+        // 1. 아이템의 개수를 1개 감소
+        Inventory.Instance.UseItem(currentSaveItem);
+
+        // 2. 아이템의 효과 발동 (주석 처리된 델리게이트 부분, 추후 구현)
+
+        // 사용 후 버튼 숨기기
+        buttons.gameObject.SetActive(false);
+
+        Debug.Log($"슬롯에서 {currentSaveItem.ItemName} 사용 시도.");
     }
 
     /// <summary>

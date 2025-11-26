@@ -15,4 +15,5 @@ MonoBehaviour:
   <ItemSprite>k__BackingField: {fileID: 21300000, guid: 7660b40d1800e9d4cbc840c07030de47, type: 3}
   <ItemName>k__BackingField: Apple
   <MaxStackCount>k__BackingField: 10
+  <Type>k__BackingField: 1
   <ItemPrefab>k__BackingField: {fileID: 3330491614711406106, guid: c69cf7fe6cbc25a48905af551eec2638, type: 3}
