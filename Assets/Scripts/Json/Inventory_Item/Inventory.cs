@@ -135,7 +135,54 @@ public class Inventory : Singleton<Inventory>
         // 아이템이 존재한다면?
         if (itemContainer.ContainsKey(item))
         {
+            // 아이템을 생성할 기준 위치 (플레이어 위치)
+            Vector2 playerPos;
+            float dirX;
+
+            if (GameManager.Instance.Player != null)
+            {
+                playerPos = GameManager.Instance.Player.transform.position;
+                dirX = GameManager.Instance.Player.transform.localScale.x;
+            }
+            else if (GameManager.Instance.Player_Test != null)
+            {
+                playerPos = GameManager.Instance.Player_Test.transform.position;
+                dirX = GameManager.Instance.Player_Test.transform.localScale.x;
+            }
+            else
+            {
+                // 플레이어 인스턴스가 없을 경우
+                playerPos = Vector2.zero;
+                dirX = 1f;
+            }
+
+            // 👇 수정: 아이템이 플레이어의 중심 위치(playerPos)에서 Y값 1만큼 위로 생성되도록 설정
+            Vector2 dropPos = playerPos + Vector2.up * 1f;
+
             // 실제로 버릴 개수만큼 반복해서 아이템 생성
+            for (int i = 0; i < removeCount; i++)
+            {
+                var dropped = Instantiate(item.ItemPrefab, dropPos, Quaternion.identity); // dropPos(플레이어 중심) 사용
+
+                // 휙 던지기: Rigidbody2D가 있으면 힘을 준다
+                var rb = dropped.GetComponent<Rigidbody2D>();
+                if (rb != null)
+                {
+                    // 플레이어 방향(localScale.x) 기준으로 던지기
+                    Vector2 throwDir = new Vector2(dirX, 1).normalized; // 위로 살짝 던지기
+
+                    // 👇 수정된 부분: 최소 던지기 힘을 2.0f로 대폭 상향
+                    float randomthrowPower = UnityEngine.Random.Range(2.0f, 4.0f);
+
+                    // throwPower를 사용하여 강력하게 던집니다.
+                    rb.AddForce(throwDir * (throwPower + randomthrowPower), ForceMode2D.Impulse);
+                }
+            }
+
+
+
+
+            /*// 실제로 버릴 개수만큼 반복해서 아이템 생성
             for (int i = 0; i < removeCount; i++)
             {
                 //Instantiate(item.ItemPrefab, pos, Quaternion.identity);
@@ -156,7 +203,7 @@ public class Inventory : Singleton<Inventory>
 
                     rb.AddForce(throwDir * (throwPower + randomthrowPower), ForceMode2D.Impulse);
                 }
-            }
+            }*/
 
             // 카운트 1 빼주기
             //itemContainer[item]--;

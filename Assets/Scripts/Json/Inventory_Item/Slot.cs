@@ -179,6 +179,9 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IP
             inventoryViewer.StartChange(this);
             Debug.Log("슬롯에서 아이템 우클릭");
 
+            // 우클릭한 아이템의 이름 출력
+            Debug.Log($"슬롯에서 아이템 우클릭: **{currentSaveItem.ItemName}**"); // currentSaveItem의 ItemName에 접근
+
             // 소모품인 경우에만 사용/취소 버튼 활성화시키록 변경
             if (currentSaveItem.Type == ItemType.Consumable)
             {
@@ -355,11 +358,20 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IP
         Inventory.Instance.UseItem(currentSaveItem);
 
         // 2. 아이템의 효과 발동 (주석 처리된 델리게이트 부분, 추후 구현)
+        switch (currentSaveItem.ItemName)
+        {
+            case "Health Potion":
+                Debug.Log("힐 포션 아이템 발동");
+                // 플레이어의 체력 일정량 회복
+                Player_Test player_test = GameManager.Instance.Player_Test;
+                player_test.HP += 30;
+                break;
+        }
 
         // 사용 후 버튼 숨기기
         buttons.gameObject.SetActive(false);
 
-        Debug.Log($"슬롯에서 {currentSaveItem.ItemName} 사용 시도.");
+        //Debug.Log($"슬롯에서 {currentSaveItem.ItemName} 사용 시도.");
     }
 
     /// <summary>

@@ -6,11 +6,28 @@ public class Item : MonoBehaviour
 {
     [field: SerializeField] public ItemDataSO itemData { get; private set; }
 
-
     BoxCollider2D col;
+
+    // 👇 추가: 아이템이 주워질 수 있는지 여부 플래그
+    private bool canBePickedUp = false;
+
+    // 👇 추가: 주워질 수 있게 되기까지의 딜레이 시간 (예: 0.5초)
+    private const float PICKUP_DELAY = 0.5f;
     private void Awake()
     {
         col = GetComponent<BoxCollider2D>();
+
+        // 아이템이 생성될 때 바로 주워지지 않도록 딜레이 코루틴 시작
+        StartCoroutine(EnablePickupAfterDelay());
+    }
+
+    // 👇 추가: 딜레이 후 줍기 활성화 코루틴
+    private IEnumerator EnablePickupAfterDelay()
+    {
+        // PICKUP_DELAY만큼 기다립니다.
+        yield return new WaitForSeconds(PICKUP_DELAY);
+        // 딜레이가 끝나면 주워질 수 있도록 설정
+        canBePickedUp = true;
     }
 
     //디버그용 코드
@@ -25,7 +42,8 @@ public class Item : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        // 👇 수정: canBePickedUp이 true일 때만 줍기 허용
+        if (canBePickedUp && collision.CompareTag("Player"))
         {
             Debug.Log("플레이어와 충돌");
             Inventory.Instance.AddItem(this);
