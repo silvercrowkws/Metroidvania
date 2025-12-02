@@ -21,4 +21,14 @@ public class Test_15_PlayerUI : TestBase
         player_test.transform.position = new Vector3(0, -9.05f, 0);
         gameManager.OnSceneChange(2);
     }
+
+    protected override void OnTest2(InputAction.CallbackContext context)
+    {
+        player_test.Fullness += 10;
+    }
+
+    protected override void OnTest3(InputAction.CallbackContext context)
+    {
+        player_test.Fullness -= 10;
+    }
 }

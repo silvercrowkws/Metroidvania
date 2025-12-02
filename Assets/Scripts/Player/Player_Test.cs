@@ -173,6 +173,163 @@ public class Player_Test : Singleton<Player_Test>
     }
 
     /// <summary>
+    /// 플레이어의 최대 배부름
+    /// public 이기 때문에 인스펙터에서 바꿔야 의미 있음
+    /// </summary>
+    public float maxFullness = 100;
+
+    /// <summary>
+    /// 플레이어의 현재 배부름 수치
+    /// </summary>
+    private float currentFullness;
+
+    public float Fullness
+    {
+        get => currentFullness;
+        set
+        {
+            if (currentFullness != value)
+            {
+                currentFullness = Mathf.Clamp(value, 0, maxFullness);
+
+                Debug.LogError($"플레이어의 남은 배부름: {Fullness}");
+
+                // % 경우 계산
+                float Percent70 = maxFullness * 0.7f;
+                float Percent50 = maxFullness * 0.5f;
+                float Percent30 = maxFullness * 0.3f;
+                float Percent10 = maxFullness * 0.1f;
+
+                // ---------- 버프 로직 ----------
+
+                // 만약 배부름이 70% 초과이면
+                if (currentFullness > Percent70)
+                {
+                    // 버프 추가
+                    if (!isBuff)
+                    {
+                        ApplyBuff();
+                    }
+                }
+                else
+                {
+                    // 버프 제거
+                    if (isBuff)
+                    {
+                        RemoveBuff();
+                    }
+                }
+
+                // ---------- 디버프 로직 ----------
+
+                if(currentFullness < Percent10)
+                {
+                    ApplyDeBuff(1);
+                }
+                else if(currentFullness < Percent30)
+                {
+                    ApplyDeBuff(3);
+                }
+                else if(currentFullness < Percent50)
+                {
+                    ApplyDeBuff(5);
+                }
+                // 모든 디버프 조건(50% 미만)에 해당하지 않을 때
+                else
+                {
+                    // 모든 디버프 제거
+                    // 만약 버프 중이면 그것도 고려해야 함
+                    RemoveDeBuff();
+                }
+
+                // 적절한 패널로 수정 필요
+                //heartPanel.UpdateHearts(currentHP);
+            }
+        }
+    }
+
+    private const float BuffSpeedMultiplier = 1.25f;      // 이동 속도 25% 증가
+    private const float Debuff_C_SpeedMultiplier = 0.9f;   // 이동 속도 10% 감소
+    private const float Debuff_B_SpeedMultiplier = 0.75f;  // 이동 속도 25% 감소
+    private const float Debuff_A_SpeedMultiplier = 0.5f;   // 이동 속도 50% 감소
+    private const float Debuff_A_AttackMultiplier = 0.5f;  // 공격력 50% 감소
+
+    private bool isBuff = false;
+
+    /// <summary>
+    /// 버프를 적용하는 함수
+    /// </summary>
+    private void ApplyBuff()
+    {
+        // 기본 이동 속도에 배율 적용
+        moveSpeed = defaultMoveSpeed * BuffSpeedMultiplier;
+        isBuff = true;
+        Debug.LogError($"버프 적용: 이동 속도 {moveSpeed}로 증가");
+    }
+
+    /// <summary>
+    /// 버프를 제거하는 함수
+    /// </summary>
+    private void RemoveBuff()
+    {
+        // 이동 속도를 기본값으로 복구
+        moveSpeed = defaultMoveSpeed;
+        isBuff = false;
+        Debug.Log("버프 제거: 이동 속도 기본값으로 복구");
+    }
+
+    /// <summary>
+    /// 디버프를 적용하는 함수
+    /// </summary>
+    private void ApplyDeBuff(int index)
+    {
+        switch (index)
+        {
+            case 1:
+                moveSpeed = defaultMoveSpeed * Debuff_A_SpeedMultiplier;                    // 이동 속도 감소
+                playerAttackPower = playerBaseAttackPower * Debuff_A_AttackMultiplier;      // 공격력 감소
+                Debug.Log($"디버프 A 적용: 속도/공격력 감소. 속도: {moveSpeed}, 공격력: {playerAttackPower}");
+                break;
+
+            case 3:
+                moveSpeed = defaultMoveSpeed * Debuff_B_SpeedMultiplier;
+                // 공격력 변화 없음 (ResetAttackPower()에 의해 기본값 유지)
+                Debug.Log($"디버프 B 적용: 속도 감소. 속도: {moveSpeed}");
+                break;
+
+            case 5:
+                moveSpeed = defaultMoveSpeed * Debuff_C_SpeedMultiplier;
+                // 공격력 변화 없음
+                Debug.Log($"디버프 C 적용: 약한 속도 감소. 속도: {moveSpeed}");
+                break;
+
+            default:
+                Debug.LogError($"ApplyDeBuff: 알 수 없는 인덱스 ({index})");
+                break;
+        }
+    }
+
+    /// <summary>
+    /// 디버프를 제거하는 함수
+    /// </summary>
+    private void RemoveDeBuff()
+    {
+        if (isBuff)
+        {
+            // 버프 중이면 애초에 피가 70% 이상이기 때문에 제거할 일이 없다
+            return;
+        }
+        else
+        {
+            // 공격력 원위치
+            playerAttackPower = playerBaseAttackPower;
+
+            // 이동 속도 원위치
+            moveSpeed = defaultMoveSpeed;
+        }
+    }
+
+    /// <summary>
     /// 플레이어가 죽었음을 알리는 델리게이트
     /// </summary>
     public Action<float> onPlayerDie;
@@ -181,6 +338,8 @@ public class Player_Test : Singleton<Player_Test>
     /// 플레이어의 공격력
     /// </summary>
     public float playerAttackPower = 25.0f;
+
+    private float playerBaseAttackPower;
 
     /// <summary>
     /// Hang 트리거 이후에 다른 트리거들 들어가지 않도록 코루틴에서 딜레이 주는 용도
@@ -437,6 +596,15 @@ public class Player_Test : Singleton<Player_Test>
         currentHP = maxHP;
 
         box2D = GetComponent<BoxCollider2D>();
+
+        // 기본 공격력 초기화
+        playerBaseAttackPower = playerAttackPower;
+
+        // 기본 속도 초기화
+        defaultMoveSpeed = moveSpeed;
+
+        // 배부름 초기화
+        Fullness = maxFullness;
     }
 
     private void OnEnable()

@@ -15,5 +15,5 @@ MonoBehaviour:
   <ItemSprite>k__BackingField: {fileID: 21300000, guid: cb2a358cb282dd34d9b866d1e6b70838, type: 3}
   <ItemName>k__BackingField: Banana
   <MaxStackCount>k__BackingField: 10
-  <Type>k__BackingField: 1
+  <Type>k__BackingField: 0
   <ItemPrefab>k__BackingField: {fileID: 8177130360252738506, guid: b68b388a3c7fd694ca7fccf6f45bb215, type: 3}

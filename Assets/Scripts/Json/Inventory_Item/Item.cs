@@ -42,10 +42,10 @@ public class Item : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // 👇 수정: canBePickedUp이 true일 때만 줍기 허용
+        // canBePickedUp이 true일 때만 줍기 허용
         if (canBePickedUp && collision.CompareTag("Player"))
         {
-            Debug.Log("플레이어와 충돌");
+            Debug.Log("아이템이 플레이어와 충돌");
             Inventory.Instance.AddItem(this);
         }
     }

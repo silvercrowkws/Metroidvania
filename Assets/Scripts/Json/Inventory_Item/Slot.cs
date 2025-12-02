@@ -53,6 +53,8 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IP
     /// </summary>
     InventoryPanel inventoryPanel;
 
+    Player_Test player_test;
+
     private void Awake()
     {
         itemCountText = GetComponentInChildren<TMP_Text>();
@@ -87,6 +89,8 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IP
 
         inventoryPanel = FindAnyObjectByType<InventoryPanel>();
         inventoryPanel.onButtonsActiveFalse += OnButtonsActiveFalse;
+
+        player_test = GameManager.Instance.Player_Test;
     }
 
     private void OnDestroy()
@@ -363,8 +367,13 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IP
             case "Health Potion":
                 Debug.Log("힐 포션 아이템 발동");
                 // 플레이어의 체력 일정량 회복
-                Player_Test player_test = GameManager.Instance.Player_Test;
-                player_test.HP += 30;
+                player_test = GameManager.Instance.Player_Test;
+                player_test.HP += 50;
+                break;
+            case "Bread":
+                Debug.Log("빵 아이템 발동");
+                player_test = GameManager.Instance.Player_Test;
+                player_test.HP += 10;
                 break;
         }
 

@@ -131,6 +131,7 @@ MonoBehaviour:
   jumpCount: 0
   playerDie: 0
   maxHP: 100
+  maxFullness: 100
   playerAttackPower: 25
   canFall: 1
   canFireDamage: 1
@@ -140,6 +141,7 @@ MonoBehaviour:
   parryingTimerate: 1
   xpGrowthRate: 20
   hasAllKeys: 0
+  isPlayerReady: 0
   isFall: 0
 --- !u!50 &7081139375339651205
 Rigidbody2D:
