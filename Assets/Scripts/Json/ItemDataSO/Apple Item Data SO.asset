@@ -16,4 +16,9 @@ MonoBehaviour:
   <ItemName>k__BackingField: Apple
   <MaxStackCount>k__BackingField: 10
   <Type>k__BackingField: 0
+  recoveryList:
+  - type: 2
+    amount: 15
+  <PurchasePrice>k__BackingField: 15
+  <SelliPrice>k__BackingField: 8
   <ItemPrefab>k__BackingField: {fileID: 3330491614711406106, guid: c69cf7fe6cbc25a48905af551eec2638, type: 3}

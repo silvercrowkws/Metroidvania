@@ -358,11 +358,19 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IP
         // 아이템의 효과 발동
         // 하라고 델리게이트?
 
-        // 1. 아이템의 개수를 1개 감소
-        Inventory.Instance.UseItem(currentSaveItem);
+        // 1. 아이템의 개수를 1개 감소 => 효과 발동 후 개수 감소
+        //Inventory.Instance.UseItem(currentSaveItem);
+
+        // 소모품이 아닌 경우엔 리턴
+        if (currentSaveItem.Type != ItemType.Consumable)
+        {
+            Debug.LogWarning($"[Slot] {currentSaveItem.ItemName}은(는) 소모품이 아닙니다.");
+            buttons.gameObject.SetActive(false);
+            return;
+        }
 
         // 2. 아이템의 효과 발동 (주석 처리된 델리게이트 부분, 추후 구현)
-        switch (currentSaveItem.ItemName)
+        /*switch (currentSaveItem.ItemName)
         {
             case "Health Potion":
                 Debug.Log("힐 포션 아이템 발동");
@@ -375,6 +383,42 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IP
                 player_test = GameManager.Instance.Player_Test;
                 player_test.HP += 10;
                 break;
+        }*/
+
+        if (player_test != null)
+        {
+            // 2. 아이템의 효과 발동 - recoveryList 순회
+            Debug.Log($"슬롯에서 {currentSaveItem.ItemName} 사용 시작.");
+
+            foreach (var recoveryInfo in currentSaveItem.recoveryList)
+            {
+                switch (recoveryInfo.type)
+                {
+                    case RecoveryType.HP:
+                        // 플레이어의 HP 증가
+                        player_test.HP += recoveryInfo.amount;
+                        Debug.Log($"HP {recoveryInfo.amount} 회복!");
+                        break;
+                    case RecoveryType.Fullness:
+                        // 플레이어의 Fullness 증가
+                        player_test.Fullness += recoveryInfo.amount;
+                        Debug.Log($"Fullness {recoveryInfo.amount} 회복!");
+                        break;
+                    case RecoveryType.None:
+                        // 회복 효과 없음
+                        break;
+                    default:
+                        Debug.LogWarning($"미지원 RecoveryType: {recoveryInfo.type}");
+                        break;
+                }
+            }
+
+            // 아이템 개수 감소
+            Inventory.Instance.UseItem(currentSaveItem);
+        }
+        else
+        {
+            Debug.LogError("Player_Test 인스턴스를 찾을 수 없습니다.");
         }
 
         // 사용 후 버튼 숨기기

@@ -16,4 +16,9 @@ MonoBehaviour:
   <ItemName>k__BackingField: Cherry
   <MaxStackCount>k__BackingField: 10
   <Type>k__BackingField: 0
+  recoveryList:
+  - type: 2
+    amount: 5
+  <PurchasePrice>k__BackingField: 5
+  <SelliPrice>k__BackingField: 3
   <ItemPrefab>k__BackingField: {fileID: 3805672852180447019, guid: 3d46f03464fb78f42bc49948aafe4107, type: 3}

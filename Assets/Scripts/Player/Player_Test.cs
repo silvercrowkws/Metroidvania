@@ -179,6 +179,11 @@ public class Player_Test : Singleton<Player_Test>
     public float maxFullness = 100;
 
     /// <summary>
+    /// 플레이어의 현재 배부름이 변경했음을 알리는 델리게이트
+    /// </summary>
+    public Action<float> onPlayerFullnessChange;
+
+    /// <summary>
     /// 플레이어의 현재 배부름 수치
     /// </summary>
     private float currentFullness;
@@ -192,7 +197,7 @@ public class Player_Test : Singleton<Player_Test>
             {
                 currentFullness = Mathf.Clamp(value, 0, maxFullness);
 
-                Debug.LogError($"플레이어의 남은 배부름: {Fullness}");
+                Debug.Log($"플레이어의 남은 배부름: {Fullness}");
 
                 // % 경우 계산
                 float Percent70 = maxFullness * 0.7f;
@@ -243,7 +248,7 @@ public class Player_Test : Singleton<Player_Test>
                 }
 
                 // 적절한 패널로 수정 필요
-                //heartPanel.UpdateHearts(currentHP);
+                onPlayerFullnessChange?.Invoke(Fullness);
             }
         }
     }
@@ -264,7 +269,7 @@ public class Player_Test : Singleton<Player_Test>
         // 기본 이동 속도에 배율 적용
         moveSpeed = defaultMoveSpeed * BuffSpeedMultiplier;
         isBuff = true;
-        Debug.LogError($"버프 적용: 이동 속도 {moveSpeed}로 증가");
+        Debug.Log($"버프 적용: 이동 속도 {moveSpeed}로 증가");
     }
 
     /// <summary>
@@ -797,6 +802,23 @@ public class Player_Test : Singleton<Player_Test>
     /// 인스펙터에서 확인하기 위한 변수
     /// </summary>
     public bool isFall = false;
+
+    /// <summary>
+    /// 배부름 게이지 초당 감소량
+    /// </summary>
+    //private const float FullnessDrainRate = 0.172f;
+    private const float FullnessDrainRate = 1f;
+
+    private void Update()
+    {
+        if (playerDie) return;
+
+        // 배부름이 0보다 클 때만 감소
+        if (currentFullness > 0)
+        {
+            Fullness -= FullnessDrainRate * Time.deltaTime;
+        }
+    }
 
     private void FixedUpdate()
     {

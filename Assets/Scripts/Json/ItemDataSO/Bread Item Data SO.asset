@@ -16,4 +16,11 @@ MonoBehaviour:
   <ItemName>k__BackingField: Bread
   <MaxStackCount>k__BackingField: 10
   <Type>k__BackingField: 0
+  recoveryList:
+  - type: 1
+    amount: 10
+  - type: 2
+    amount: 30
+  <PurchasePrice>k__BackingField: 50
+  <SelliPrice>k__BackingField: 25
   <ItemPrefab>k__BackingField: {fileID: 7491290291676476663, guid: 72344299aa6a50e459291808a5507b16, type: 3}
