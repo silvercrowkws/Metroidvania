@@ -197,7 +197,7 @@ public class Player_Test : Singleton<Player_Test>
             {
                 currentFullness = Mathf.Clamp(value, 0, maxFullness);
 
-                Debug.Log($"플레이어의 남은 배부름: {Fullness}");
+                //Debug.Log($"플레이어의 남은 배부름: {Fullness}");
 
                 // % 경우 계산
                 float Percent70 = maxFullness * 0.7f;
