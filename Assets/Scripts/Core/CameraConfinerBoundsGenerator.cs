@@ -32,8 +32,9 @@ public class CameraConfinerBoundsGenerator : MonoBehaviour
     private void Start()
     {
         roomGenerator = FindAnyObjectByType<RoomGenerator>();
+        roomGenerator.onRadiusChange += GenerateBounds;
 
-        GenerateBounds(roomGenerator.radius);
+        //GenerateBounds(roomGenerator.radius); => 델리게이트로 수정
     }
 
     private void GenerateBounds(int radius)
@@ -41,6 +42,11 @@ public class CameraConfinerBoundsGenerator : MonoBehaviour
         int roomsPerSide = 2 * radius + 1;
         float totalSize = roomsPerSide * roomTileSize;
         float half = totalSize / 2f;
+
+        Debug.Log($"roomGenerator로부터 받은 radius : {radius}");
+        Debug.Log($"roomsPerSide : 2 * radius + 1 = {roomsPerSide}");
+        Debug.Log($"totalSize : roomsPerSide * roomTileSize = {roomsPerSide}");
+        Debug.Log($"half : totalSize / 2f = {half} ");
 
         Vector2[] points = new Vector2[]
         {

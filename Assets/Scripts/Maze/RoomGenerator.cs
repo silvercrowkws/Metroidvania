@@ -99,6 +99,11 @@ public class RoomGenerator : MonoBehaviour
         mazePositions = GenerateOrderedRectangularPositions(radius);*/
     }
 
+    /// <summary>
+    /// CameraConfinerBoundsGenerator 클래스에 반지름을 알려 버츄얼 카메라 끝을 수정하는 함수
+    /// </summary>
+    public Action<int> onRadiusChange;
+
     void Start()
     {
         gameManager = GameManager.Instance;
@@ -107,8 +112,8 @@ public class RoomGenerator : MonoBehaviour
         {
             // [Tooltip("미로의 반지름(방 개수는 반지름에 따라 4:9², 5:11², 6:13², 7:15², 8:17²... 뒷배경이 반지름 8까지 커버 가능함)")]
             case GameDifficulty.Easy:
-                radius = 4;
                 monstersPerType = 2;
+                radius = 4;
                 break;
             case GameDifficulty.Normal:
                 monstersPerType = 3;
@@ -127,6 +132,7 @@ public class RoomGenerator : MonoBehaviour
                 radius = 8;
                 break;
         }
+        onRadiusChange?.Invoke(radius);
         mazePositions = GenerateOrderedRectangularPositions(radius);
 
         // RenderTexture가 없으면 직접 생성해서 카메라에 할당

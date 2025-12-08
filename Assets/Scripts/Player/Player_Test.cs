@@ -100,6 +100,11 @@ public class Player_Test : Singleton<Player_Test>
     private int maxJumpCount = 2;
 
     /// <summary>
+    /// 인스펙터에서 확인하기 위한 변수
+    /// </summary>
+    public bool isFall = false;
+
+    /// <summary>
     /// 캐릭터가 대쉬 중인지 확인하기 위한 bool 변수
     /// </summary>
     bool isDash = false;
@@ -262,6 +267,19 @@ public class Player_Test : Singleton<Player_Test>
     private bool isBuff = false;
 
     /// <summary>
+    /// 배부름 게이지 초당 감소량
+    /// 🔽 난이도별 적당한 감소 속도 제안
+    /// 난이도 추천 배부름 감소(n/sec)
+    /// Easy	    0.25/sec 배부름 스트레스를 거의 느끼지 않고 탐험
+    /// Normal	    0.3/sec 일반적인 플레이 감
+    /// Hard	    0.35/sec 자원 관리 체감 시작
+    /// Nightmare	0.4/sec 디버프 구간을 자주 경험
+    /// Hell	    0.45/sec 식량이 중요한 난이도 공략 요소가 됨
+    /// 0.172f 는 10분에 배부름 게이지가 다 떨어지는 속도
+    /// </summary>
+    private float FullnessDrainRate = 0.172f;
+
+    /// <summary>
     /// 버프를 적용하는 함수
     /// </summary>
     private void ApplyBuff()
@@ -293,23 +311,23 @@ public class Player_Test : Singleton<Player_Test>
             case 1:
                 moveSpeed = defaultMoveSpeed * Debuff_A_SpeedMultiplier;                    // 이동 속도 감소
                 playerAttackPower = playerBaseAttackPower * Debuff_A_AttackMultiplier;      // 공격력 감소
-                Debug.Log($"디버프 A 적용: 속도/공격력 감소. 속도: {moveSpeed}, 공격력: {playerAttackPower}");
+                //Debug.Log($"디버프 A 적용: 속도/공격력 감소. 속도: {moveSpeed}, 공격력: {playerAttackPower}");
                 break;
 
             case 3:
                 moveSpeed = defaultMoveSpeed * Debuff_B_SpeedMultiplier;
                 // 공격력 변화 없음 (ResetAttackPower()에 의해 기본값 유지)
-                Debug.Log($"디버프 B 적용: 속도 감소. 속도: {moveSpeed}");
+                //Debug.Log($"디버프 B 적용: 속도 감소. 속도: {moveSpeed}");
                 break;
 
             case 5:
                 moveSpeed = defaultMoveSpeed * Debuff_C_SpeedMultiplier;
                 // 공격력 변화 없음
-                Debug.Log($"디버프 C 적용: 약한 속도 감소. 속도: {moveSpeed}");
+                //Debug.Log($"디버프 C 적용: 약한 속도 감소. 속도: {moveSpeed}");
                 break;
 
             default:
-                Debug.LogError($"ApplyDeBuff: 알 수 없는 인덱스 ({index})");
+                //Debug.LogError($"ApplyDeBuff: 알 수 없는 인덱스 ({index})");
                 break;
         }
     }
@@ -640,6 +658,40 @@ public class Player_Test : Singleton<Player_Test>
         //inventoryPanel = GameObject.Find("InventoryPanel");
         inventoryPanel = FindAnyObjectByType<InventoryPanel>().gameObject;
         heartPanel = FindAnyObjectByType<HeartPanel>();
+
+        /*GameManager gameManager = GameManager.Instance;
+        if (gameManager.gameDifficulty == GameDifficulty.Easy)
+        {
+
+        }*/
+        
+        // 배부름 게이지 초당 감소량
+        // 🔽 난이도별 적당한 감소 속도 제안
+        // 난이도 추천 배부름 감소(n/sec)
+        // Easy	        0.25/sec 배부름 스트레스를 거의 느끼지 않고 탐험    약 6분 40초
+        // Normal	    0.3/sec 일반적인 플레이 감                          약 5분 33초
+        // Hard	        0.35/sec 자원 관리 체감 시작                        약 4분 45초
+        // Nightmare	0.4/sec 디버프 구간을 자주 경험                     약 4분 10초
+        // Hell	        0.45/sec 식량이 중요한 난이도 공략 요소가 됨        약 3분 42초
+        // 0.167f 는 9분 58초 에 배부름 게이지가 다 떨어지는 속도
+        switch (GameManager.Instance.gameDifficulty)
+        {
+            case GameDifficulty.Easy:
+                FullnessDrainRate = 0.25f;
+                break;
+            case GameDifficulty.Normal:
+                FullnessDrainRate = 0.3f;
+                break;
+            case GameDifficulty.Hard:
+                FullnessDrainRate = 0.35f;
+                break;
+            case GameDifficulty.Nightmare:
+                FullnessDrainRate = 0.4f;
+                break;
+            case GameDifficulty.Hell:
+                FullnessDrainRate = 0.45f;
+                break;
+        }
     }
 
     private void OnDisable()
@@ -797,17 +849,6 @@ public class Player_Test : Singleton<Player_Test>
 
         Debug.Log($"패링 시간 종료");
     }
-
-    /// <summary>
-    /// 인스펙터에서 확인하기 위한 변수
-    /// </summary>
-    public bool isFall = false;
-
-    /// <summary>
-    /// 배부름 게이지 초당 감소량
-    /// </summary>
-    //private const float FullnessDrainRate = 0.172f;
-    private const float FullnessDrainRate = 1f;
 
     private void Update()
     {
