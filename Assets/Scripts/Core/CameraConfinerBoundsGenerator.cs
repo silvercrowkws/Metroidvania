@@ -56,7 +56,7 @@ public class CameraConfinerBoundsGenerator : MonoBehaviour
             new Vector2( half, -half)
         };
 
-        polygonCollider.pathCount = 1;
+        polygonCollider.pathCount = 1; 
         polygonCollider.SetPath(0, points);
     }
 }
