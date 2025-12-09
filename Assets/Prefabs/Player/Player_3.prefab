@@ -129,6 +129,7 @@ MonoBehaviour:
   dashPower: 15
   isGround: 0
   jumpCount: 0
+  isFall: 0
   playerDie: 0
   maxHP: 100
   maxFullness: 100
@@ -142,7 +143,6 @@ MonoBehaviour:
   xpGrowthRate: 20
   hasAllKeys: 0
   isPlayerReady: 0
-  isFall: 0
 --- !u!50 &7081139375339651205
 Rigidbody2D:
   serializedVersion: 4

@@ -405,7 +405,7 @@ public class GameManager : Singleton<GameManager>
 
         // 폴더에서 보스 찾기
         bosses = new GameObject[5];
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 5; i++)
         {
             string path = $"GameObjects/Boss_{i + 1}";
             bosses[i] = Resources.Load<GameObject>(path);

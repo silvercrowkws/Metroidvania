@@ -7,8 +7,8 @@ public class BossMonster_5 : BossMonsterBase
     protected override void OnEnable()
     {
         bossDieMoney = 1000;
-        currentHP = 3000f;
-        maxHP = currentHP;
+        maxHP = 3000f;
+        HP = maxHP;
         //bossAttackPower = 10.0f;
         bossType = BossType.HellBoss;
         base.OnEnable();

@@ -79,14 +79,22 @@ public class BossMonsterBase : MonoBehaviour
             {
                 //currentHP = value;
                 currentHP = Mathf.Clamp(value, 0, maxHP);
-                bossHealthSlider.value = currentHP / maxHP;
+
+                if(bossHealthSlider!= null)
+                {
+                    bossHealthSlider.value = currentHP / maxHP;
+                }
+
                 if (currentHP < 1)
                 {
                     currentHP = 0;
                     
                     onBossDie?.Invoke();          // 보스 몬스터가 죽었다고 델리게이트로 알림
-                    //Destroy(gameObject);        // 게임 오브젝트 파괴
                     Debug.Log("보스 몬스터 사망");
+
+                    // 사망 연출 필요
+                    Debug.Log("사망 연출 후 파괴 필요");
+                    Destroy(gameObject);        // 게임 오브젝트 파괴
                 }
             }
         }
@@ -205,6 +213,11 @@ public class BossMonsterBase : MonoBehaviour
     /// </summary>
     private GameObject[] chaseMissileObject;
 
+    /// <summary>
+    /// 보스 몬스터 피격 처리용 콜라이더
+    /// </summary>
+    BoxCollider2D boxCollider2D;
+
     protected void Awake()
     {
         // Resources.Load는 리소스를 로드하는 메서드
@@ -251,6 +264,8 @@ public class BossMonsterBase : MonoBehaviour
                 Debug.Log($"{path} 로드 성공!");
             }
         }
+
+        boxCollider2D = GetComponent<BoxCollider2D>();
     }
 
     protected virtual void OnEnable()
@@ -258,7 +273,7 @@ public class BossMonsterBase : MonoBehaviour
         // 초기화
         isDead = false;
         damageCoolDown = false;
-        maxHP = currentHP;
+        //maxHP = HP;   => 세분화된 BossMonster_1 같은 곳에서 처리됨
 
         gameManager = GameManager.Instance;
         
@@ -282,6 +297,9 @@ public class BossMonsterBase : MonoBehaviour
         bossHealthSlider = child.GetChild(0).GetComponent<Slider>();
 
         rb2d = GetComponent<Rigidbody2D>();
+
+        // 슬라이더 초기화
+        bossHealthSlider.value = 1;
     }
 
     protected virtual void OnDisable()
@@ -742,5 +760,46 @@ public class BossMonsterBase : MonoBehaviour
                 StartCoroutine(ChaseMissileCoroutine());
                 break;
         }
+    }
+
+    
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // 만약 충돌한 대상이 플레이어의 공격 범위이고
+        if (collision.CompareTag("AttackRange"))
+        {
+            // 데미지 쿨다운이 안돌아가고 있으면
+            if (!damageCoolDown)
+            {
+                // 쿨타임 돌리고
+                damageCoolDown = true;
+
+                // 피격 처리
+                Debug.Log("플레이어 공격에 맞음");
+
+                if (player_test != null)
+                {
+                    HP -= player_test.playerAttackPower;
+                    Debug.Log($"{this.gameObject.name}의 남은 HP: {HP}");
+                }
+                else
+                {
+                    Debug.LogWarning("플레이어 테스트도 없는데?");
+                }
+
+                StartCoroutine(DamageCooldown());
+            }
+        }
+    }
+
+    /// <summary>
+    /// 공격 받은 후 일정 시간동안 공격 받지 않도록 하는 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator DamageCooldown()
+    {
+        yield return new WaitForSeconds(1.0f);
+        damageCoolDown = false;
     }
 }
