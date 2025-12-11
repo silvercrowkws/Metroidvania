@@ -92,9 +92,7 @@ public class BossMonsterBase : MonoBehaviour
                     onBossDie?.Invoke();          // 보스 몬스터가 죽었다고 델리게이트로 알림
                     Debug.Log("보스 몬스터 사망");
 
-                    // 사망 연출 필요
-                    Debug.Log("사망 연출 후 파괴 필요");
-                    Destroy(gameObject);        // 게임 오브젝트 파괴
+                    //Destroy(gameObject);        // 게임 오브젝트 파괴
                 }
             }
         }
@@ -103,7 +101,7 @@ public class BossMonsterBase : MonoBehaviour
     /// <summary>
     /// 몬스터가 죽었다고 알리는 델리게이트
     /// </summary>
-    protected Action onBossDie;
+    public Action onBossDie;
 
     /// <summary>
     /// 몬스터가 죽었는지 확인하는 bool 변수
@@ -218,6 +216,21 @@ public class BossMonsterBase : MonoBehaviour
     /// </summary>
     BoxCollider2D boxCollider2D;
 
+    /// <summary>
+    /// 낙하 오브젝트 부모
+    /// </summary>
+    GameObject fallingObjectParent;
+
+    /// <summary>
+    /// 추적 미사일 오브젝트 부모
+    /// </summary>
+    GameObject chaseMissileObjectParent;
+
+    /// <summary>
+    /// 바운스 오브젝트 부모
+    /// </summary>
+    GameObject bounceObjectParent;
+
     protected void Awake()
     {
         // Resources.Load는 리소스를 로드하는 메서드
@@ -319,6 +332,56 @@ public class BossMonsterBase : MonoBehaviour
     private void OnBossDie()
     {
         // 여기서 경험치, 돈, 아이템등 추가 필요
+
+        // 보스 몬스터가 죽었으니 코루틴 모두 정지 시키고
+        // 정지되는 것: 레이저 회전, 미사일 재생성
+        StopAllCoroutines();
+
+        // 레이저 파괴 부분
+        StartCoroutine(DestroyLaser());
+
+        // 이미 생성된 미사일, 낙하 오브젝트, 바운스 오브젝트 파괴하는 부분
+        if (fallingObjectParent != null)
+        {
+            Destroy(fallingObjectParent);
+            Debug.Log("낙하 오브젝트 전체 파괴");
+        }
+
+        if (bounceObjectParent != null)
+        {
+            Destroy(bounceObjectParent);
+            Debug.Log("튕기는 오브젝트 전체 파괴");
+        }
+
+        if (chaseMissileObjectParent != null)
+        {
+            Destroy(chaseMissileObjectParent);
+            Debug.Log("추적 미사일 전체 파괴");
+        }
+
+        // 보스 사망 연출 부분
+    }
+
+    IEnumerator DestroyLaser()
+    {
+        // onBossDie 델리게이트로 Laser 클래스도 받아서 데미지 0으로 바꾸는 부분있는데,
+        // 먼저 파괴가 되어버릴 지 몰라서 0.1초 늦춤
+
+        yield return new WaitForSeconds(0.1f);
+
+        // 가로 레이저가 있으면
+        if (horizontalLaserInstance != null)
+        {
+            Debug.Log("가로 레이저 파괴");
+            Destroy(horizontalLaserInstance);
+        }
+
+        // 세로 레이저가 있으면
+        else if (crossLaserInstance != null)
+        {
+            Debug.Log("세로 레이저 파괴");
+            Destroy(crossLaserInstance);
+        }
     }
 
     /// <summary>
@@ -542,7 +605,7 @@ public class BossMonsterBase : MonoBehaviour
     {
         //yield return null;
 
-        GameObject fallingObjectParent = new GameObject("FallingObjectParent");
+        fallingObjectParent = new GameObject("FallingObjectParent");
         fallingObjectParent.transform.SetParent(transform);         // 이 보스의 자식으로 설정
         fallingObjectParent.transform.localPosition = Vector3.zero; // 위치 초기화
 
@@ -581,6 +644,11 @@ public class BossMonsterBase : MonoBehaviour
     /// </summary>
     private void BounceObjectInstantiate()
     {
+        // 부모 오브젝트 생성 및 설정
+        bounceObjectParent = new GameObject("BounceObjectParent");
+        bounceObjectParent.transform.SetParent(transform);
+        bounceObjectParent.transform.localPosition = Vector3.zero;
+
         int count = 0;
         switch (bossType)
         {
@@ -597,7 +665,7 @@ public class BossMonsterBase : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            bounceObjectInstance = Instantiate(bounceObject, transform);
+            bounceObjectInstance = Instantiate(bounceObject, bounceObjectParent.transform);
             //bounceObjectInstance.transform.localPosition = new Vector2(0, (2 * i) + 2);   // 0, 4 6 8에 생성
 
             // x 좌표 계산
@@ -627,7 +695,7 @@ public class BossMonsterBase : MonoBehaviour
     /// <returns></returns>
     private IEnumerator ChaseMissileCoroutine()
     {
-        GameObject chaseMissileObjectParent = new GameObject("ChaseMissileObjectParent");
+        chaseMissileObjectParent = new GameObject("ChaseMissileObjectParent");
         chaseMissileObjectParent.transform.SetParent(transform);         // 이 보스의 자식으로 설정
         chaseMissileObjectParent.transform.localPosition = Vector3.zero; // 위치 초기화
 

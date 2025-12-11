@@ -10,10 +10,13 @@ public class Test_15_PlayerUI : TestBase
 
     Player_Test player_test;
 
+    Door door;
+
     private void Start()
     {
         gameManager = GameManager.Instance;
         player_test = gameManager.Player_Test;
+        door = FindAnyObjectByType<Door>();
     }
 
     protected override void OnTest1(InputAction.CallbackContext context)
@@ -24,7 +27,10 @@ public class Test_15_PlayerUI : TestBase
 
     protected override void OnTest2(InputAction.CallbackContext context)
     {
-        player_test.Fullness += 10;
+        player_test.onKeyCountChanged(3);
+        //player_test.hasAllKeys = true;
+        door.transform.position = player_test.transform.position;
+        //player_test.Fullness += 10;
     }
 
     protected override void OnTest3(InputAction.CallbackContext context)

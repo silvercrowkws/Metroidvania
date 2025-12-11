@@ -23,6 +23,7 @@ TagManager:
   - TopWall
   - BounceObject
   - ChaseMissile
+  - Effect
   layers:
   - Default
   - TransparentFX
@@ -107,4 +108,7 @@ TagManager:
     locked: 0
   - name: ChaseMissile
     uniqueID: 955641353
+    locked: 0
+  - name: Effect
+    uniqueID: 3692450761
     locked: 0

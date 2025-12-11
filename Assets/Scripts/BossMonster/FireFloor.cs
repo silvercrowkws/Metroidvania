@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -58,6 +59,7 @@ public class FireFloor : MonoBehaviour
         player_test = GameManager.Instance.Player_Test;
 
         bossMonsterBase = FindAnyObjectByType<BossMonsterBase>();
+        bossMonsterBase.onBossDie += OnBossDie;
 
         // 미사일로 생성된 경우
         if (source == FireFloorSource.Missile)
@@ -88,6 +90,13 @@ public class FireFloor : MonoBehaviour
 
 
         StartCoroutine(LifeDuration());
+    }
+
+    private void OnBossDie()
+    {
+        // 보스가 죽었으니 장판의 데미지, 지속시간 0으로 변경
+        damage = 0;
+        duration = 0;
     }
 
     /// <summary>

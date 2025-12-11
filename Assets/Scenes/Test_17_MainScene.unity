@@ -293,7 +293,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 883017453465086737, guid: c25edad9161934543999f4ae4641cdf6, type: 3}
       propertyPath: gameDifficulty
-      value: 0
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3396186832114020763, guid: c25edad9161934543999f4ae4641cdf6, type: 3}
       propertyPath: m_AnchorMax.x

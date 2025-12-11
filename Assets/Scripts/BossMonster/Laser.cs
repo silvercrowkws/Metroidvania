@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,9 +34,16 @@ public class Laser : MonoBehaviour
     private void Start()
     {
         bossMonsterBase = GetComponentInParent<BossMonsterBase>();
+        bossMonsterBase.onBossDie += OnBossDie;
         player_test = GameManager.Instance.Player_Test;
 
         CalculateLaserDamage();
+    }
+
+    private void OnBossDie()
+    {
+        // 혹시 맞을 지도 모르니 레이저 데미지 0으로 변경
+        laserDamage = 0;
     }
 
     /// <summary>
@@ -90,5 +98,10 @@ public class Laser : MonoBehaviour
             Debug.Log("플레이어와 레이저가 충돌 감지");
             ApplyLaserDamage();
         }
+    }
+
+    private void OnDestroy()
+    {
+        bossMonsterBase.onBossDie -= OnBossDie;
     }
 }
