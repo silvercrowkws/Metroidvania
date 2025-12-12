@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 707988119601679831}
   - component: {fileID: 9162732641305758698}
   - component: {fileID: 1410537396639230809}
-  - component: {fileID: 2964329581721351654}
-  m_Layer: 0
+  - component: {fileID: 5076642623016741016}
+  m_Layer: 22
   m_Name: BossDieExplosion
   m_TagString: Effect
   m_Icon: {fileID: 0}
@@ -107,7 +107,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2964329581721351654
+--- !u!114 &5076642623016741016
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

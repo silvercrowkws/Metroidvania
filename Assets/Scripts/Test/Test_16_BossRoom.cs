@@ -37,5 +37,10 @@ public class Test_16_BossRoom : TestBase
         bossMonsterBase.HP -= 100;
     }
 
+    protected override void OnTest3(InputAction.CallbackContext context)
+    {
+        bossMonsterBase.HP -= 500;
+    }
+
 #endif
 }

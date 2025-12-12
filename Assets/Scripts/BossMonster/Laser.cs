@@ -26,13 +26,17 @@ public class Laser : MonoBehaviour
     /// </summary>
     bool canApplyDamage = true;
 
+    SpriteRenderer spriteRenderer;
+
     private void Awake()
     {
-        
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Start()
     {
+        canApplyDamage = true;
+
         bossMonsterBase = GetComponentInParent<BossMonsterBase>();
         bossMonsterBase.onBossDie += OnBossDie;
         player_test = GameManager.Instance.Player_Test;
@@ -43,7 +47,42 @@ public class Laser : MonoBehaviour
     private void OnBossDie()
     {
         // 혹시 맞을 지도 모르니 레이저 데미지 0으로 변경
+        canApplyDamage = false;
         laserDamage = 0;
+
+        // 레이저 바로 사라지지 않고 알파값 줄어들다가 없어지는 것으로 수정
+        StartCoroutine(FadeOutLaser());
+    }
+
+    /// <summary>
+    /// 레이저를 알파값 감소시키며 사라지게 하는 코루틴
+    /// </summary>
+    IEnumerator FadeOutLaser()
+    {
+        float duration = 0.8f;   // 페이드 아웃 시간
+        float elapsed = 0f;
+
+        Color color = spriteRenderer.color;
+
+        /*// 사라지는 동안 충돌 비활성화 (선택사항)
+        Collider2D col = GetComponent<Collider2D>();
+        if (col != null) col.enabled = false;*/
+
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+            color.a = Mathf.Lerp(1f, 0f, t);
+            spriteRenderer.color = color;
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        // 완전히 투명한 상태로
+        color.a = 0f;
+        spriteRenderer.color = color;
+
+        Destroy(gameObject);
     }
 
     /// <summary>

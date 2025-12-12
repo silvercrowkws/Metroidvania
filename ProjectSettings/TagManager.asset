@@ -47,7 +47,7 @@ TagManager:
   - BounceObject
   - IgnoreGround
   - Missile
-  - 
+  - Effect
   - 
   - 
   - 
@@ -100,6 +100,9 @@ TagManager:
   - name: Item
     uniqueID: 2670099869
     locked: 0
+  - name: Effect
+    uniqueID: 3692450761
+    locked: 0
   - name: FallingObject
     uniqueID: 2277970119
     locked: 0
@@ -108,7 +111,4 @@ TagManager:
     locked: 0
   - name: ChaseMissile
     uniqueID: 955641353
-    locked: 0
-  - name: Effect
-    uniqueID: 3692450761
     locked: 0

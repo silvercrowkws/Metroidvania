@@ -231,6 +231,11 @@ public class BossMonsterBase : MonoBehaviour
     /// </summary>
     GameObject bounceObjectParent;
 
+    /// <summary>
+    /// 보스 사망 연출용 오브젝트
+    /// </summary>
+    GameObject bossDieExplosionParent;
+
     protected void Awake()
     {
         // Resources.Load는 리소스를 로드하는 메서드
@@ -279,6 +284,8 @@ public class BossMonsterBase : MonoBehaviour
         }
 
         boxCollider2D = GetComponent<BoxCollider2D>();
+
+        bossDieExplosionParent = Resources.Load<GameObject>("GameObjects/BossDieExplosionParent");
     }
 
     protected virtual void OnEnable()
@@ -337,7 +344,7 @@ public class BossMonsterBase : MonoBehaviour
         // 정지되는 것: 레이저 회전, 미사일 재생성
         StopAllCoroutines();
 
-        // 레이저 파괴 부분
+        // 레이저 부모 파괴 부분
         StartCoroutine(DestroyLaser());
 
         // 이미 생성된 미사일, 낙하 오브젝트, 바운스 오브젝트 파괴하는 부분
@@ -360,6 +367,83 @@ public class BossMonsterBase : MonoBehaviour
         }
 
         // 보스 사망 연출 부분
+        StartCoroutine(BossDieSequence());
+
+    }
+
+    /// <summary>
+    /// 보스 사망 연출 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator BossDieSequence()
+    {
+        BossDieExplosionParent explosionComponent = null;
+
+        if (bossDieExplosionParent != null)
+        {
+            GameObject explosionInstance = Instantiate(bossDieExplosionParent, transform.position, Quaternion.identity, transform);
+            Debug.Log("보스 사망 연출 실행");
+
+            explosionComponent = explosionInstance.GetComponent<BossDieExplosionParent>();
+        }
+
+        // 보스 사망 연출이 끝날때까지 대기
+        if (explosionComponent != null)
+        {
+            while (!explosionComponent.isBossDieSequenceEnd)
+            {
+                yield return null;
+            }
+            Debug.Log("보스 사망 연출 끝난것 확인");
+
+            // 보스 페이드 아웃 및 파괴
+            SpriteRenderer[] sprites = GetComponentsInChildren<SpriteRenderer>();
+            float duration = 1.2f;
+            float elapsed = 0f;
+
+            // 충돌 비활성화
+            Collider2D[] cols = GetComponentsInChildren<Collider2D>();
+            foreach (var col in cols)
+                col.enabled = false;
+
+            while (elapsed < duration)
+            {
+                float t = elapsed / duration;
+                float alpha = Mathf.Lerp(1f, 0f, t);
+
+                // 모든 스프라이트 알파값 변경
+                foreach (var s in sprites)
+                {
+                    if (s != null)
+                    {
+                        Color c = s.color;
+                        c.a = alpha;
+                        s.color = c;
+                    }
+                }
+
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            // 마지막으로 알파값 0 고정
+            foreach (var s in sprites)
+            {
+                if (s != null)
+                {
+                    Color c = s.color;
+                    c.a = 0f;
+                    s.color = c;
+                }
+            }
+
+            Destroy(gameObject);
+        }
+        else
+        {
+            Debug.LogError("BossDieExplosionParent 컴포넌트를 찾을 수 없습니다! 폭발 프리팹에 컴포넌트가 붙어 있는지 확인하세요.");
+        }
+
     }
 
     IEnumerator DestroyLaser()
@@ -373,14 +457,14 @@ public class BossMonsterBase : MonoBehaviour
         if (horizontalLaserInstance != null)
         {
             Debug.Log("가로 레이저 파괴");
-            Destroy(horizontalLaserInstance);
+            //Destroy(horizontalLaserInstance);
         }
 
         // 세로 레이저가 있으면
         else if (crossLaserInstance != null)
         {
             Debug.Log("세로 레이저 파괴");
-            Destroy(crossLaserInstance);
+            //Destroy(crossLaserInstance);
         }
     }
 
