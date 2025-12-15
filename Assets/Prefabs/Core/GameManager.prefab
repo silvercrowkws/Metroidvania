@@ -520,7 +520,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameState: 0
-  gameDifficulty: 0
+  gameDifficulty: 4
   itemDatabase: {fileID: 11400000, guid: b225602c95f780446b01330690cd183c, type: 2}
   shakeTime: 3
   shakePower: 5

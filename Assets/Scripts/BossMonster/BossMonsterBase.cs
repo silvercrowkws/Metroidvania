@@ -50,12 +50,12 @@ public class BossMonsterBase : MonoBehaviour
     /// <summary>
     /// 보스가 죽었을 때 주는 돈
     /// </summary>
-    protected float bossDieMoney = 1.0f;
+    protected int bossDieMoney = 1;
 
     /// <summary>
     /// 보스가 죽었을 때 주는 경험치
     /// </summary>
-    protected float bossDieieXP = 1.0f;
+    protected float bossDieXP = 1.0f;
 
     /// <summary>
     /// 몬스터의 최대 체력
@@ -339,6 +339,8 @@ public class BossMonsterBase : MonoBehaviour
     private void OnBossDie()
     {
         // 여기서 경험치, 돈, 아이템등 추가 필요
+        player_test.Money += bossDieMoney;
+        player_test.XP += bossDieXP;
 
         // 보스 몬스터가 죽었으니 코루틴 모두 정지 시키고
         // 정지되는 것: 레이저 회전, 미사일 재생성

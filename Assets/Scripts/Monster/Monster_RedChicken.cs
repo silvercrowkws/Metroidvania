@@ -8,6 +8,7 @@ public class Monster_RedChicken : MonsterBase
     {
         moveSpeed = 3.0f;
         dieMoney = 10;
+        dieXP = 10;
         currentHP = 50.0f;
         maxHP = currentHP;
         attackPower = 10.0f;

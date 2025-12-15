@@ -81,6 +81,7 @@ public class Test_12_PlayerState : TestBase
         Debug.Log($"str : {loadPlayerData.str}");
         Debug.Log($"dex : {loadPlayerData.dex}");
         Debug.Log($"hp : {loadPlayerData.hp}");
+        Debug.Log($"money : {loadPlayerData.money}");
 
         if (loadPlayerData.inventoryItems != null && loadPlayerData.inventoryItems.Count > 0)
         {
@@ -117,6 +118,7 @@ public class Test_12_PlayerState : TestBase
         tempPlayerData.str = 1;
         tempPlayerData.dex = 1;
         tempPlayerData.hp = 1;
+        tempPlayerData.money = 0;
     }
 
     protected override void OnTest2(InputAction.CallbackContext context)
@@ -264,6 +266,7 @@ public class Test_12_PlayerState : TestBase
         player_Test.Strength = loadPlayerData.str;
         player_Test.Dexterity = loadPlayerData.dex;
         player_Test.Health = loadPlayerData.hp;
+        player_Test.Money = loadPlayerData.money;
 
         Debug.Log($"'{loadPlayerData.name}' (Lv.{loadPlayerData.level}) 데이터 적용 완료!");
 

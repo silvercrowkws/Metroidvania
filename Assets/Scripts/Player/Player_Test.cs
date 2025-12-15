@@ -42,6 +42,8 @@ public class Player_Test : Singleton<Player_Test>
     /// </summary>
     public int StatePoint { get; set; }
 
+    public int Money { get; set; }
+
     // 플레이어 조작 관련 --------------------------------------------------
 
     /// <summary>

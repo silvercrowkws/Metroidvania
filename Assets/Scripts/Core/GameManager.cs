@@ -14,10 +14,16 @@ using UnityEngine.UI;
 /// </summary>
 public enum GameState
 {
-    Main = 0,                   // 메인
+    PressAnyKey = 0,                   // 메인
     MazeExploration,            // 미궁 탐색
     BossRoom,                   // 보스 룸
-    GameComplete,               // 게임 완료
+    Lobby,                      // 로비 씬
+
+    // 메인씬은 PressAnyKey 느낌이고
+    // 메인 => 로비 씬으로 이동 후 로비씬에서 난이도, 아이템, 등 조절
+    // 로비 => 미궁 으로 이동해서 탐색하고
+    // 미궁 => 보스 으로 이동해서 보스전
+    // 보스 => 로비로 이동
 }
 
 /// <summary>
@@ -43,7 +49,7 @@ public class GameManager : Singleton<GameManager>
     /// <summary>
     /// 현재 게임상태
     /// </summary>
-    public GameState gameState = GameState.Main;
+    public GameState gameState = GameState.PressAnyKey;
 
     /// <summary>
     /// 현재 게임상태 변경시 알리는 프로퍼티
@@ -58,7 +64,7 @@ public class GameManager : Singleton<GameManager>
                 gameState = value;
                 switch (gameState)
                 {
-                    case GameState.Main:
+                    case GameState.PressAnyKey:
                         Debug.Log("메인 상태");
                         break;
                     case GameState.MazeExploration:
@@ -69,7 +75,7 @@ public class GameManager : Singleton<GameManager>
                         Debug.Log("보스 룸 상태");
                         onBossRoom?.Invoke();
                         break;
-                    case GameState.GameComplete:
+                    case GameState.Lobby:
                         Debug.Log("게임 완료 상태");
                         onGameComplete?.Invoke();
                         break;
@@ -337,7 +343,7 @@ public class GameManager : Singleton<GameManager>
     /// <summary>
     /// 메인씬에서 탐색씬으로 이동하는 버튼 클래스
     /// </summary>
-    MainSceneBusson mainSceneBusson;
+    MainSceneButton mainSceneBusson;
 
     /// <summary>
     /// 클로우즈 도어 게임오브젝트
@@ -466,13 +472,22 @@ public class GameManager : Singleton<GameManager>
         switch(scene.buildIndex)
         {
             case 0:
-                Debug.Log("메인 씬");
-                gameState = GameState.Main;
+                Debug.Log("PressAnyKey 씬");
+                gameState = GameState.PressAnyKey;
+                PressAnyKey pressAnyKey = FindAnyObjectByType<PressAnyKey>();
+                pressAnyKey.onSceneChangeAnyKey += OnSceneChange;
 
-                mainSceneBusson = FindAnyObjectByType<MainSceneBusson>();
+                break;
+
+            case 1:
+                Debug.Log("로비 씬");
+                gameState = GameState.Lobby;
+
+                mainSceneBusson = FindAnyObjectByType<MainSceneButton>();
                 mainSceneBusson.onSceneChangeButton += OnSceneChange;
                 break;
-            case 1:
+
+            case 2:
                 Debug.Log("미궁 탐색 씬");
                 gameState = GameState.MazeExploration;
 
@@ -521,7 +536,8 @@ public class GameManager : Singleton<GameManager>
                 StartCoroutine(DataRecoverCoroutine());
 
                 break;
-            case 2:
+
+            case 3:
                 Debug.Log("보스 방 씬");
                 gameState = GameState.BossRoom;
 
@@ -530,10 +546,6 @@ public class GameManager : Singleton<GameManager>
                 StartCoroutine(DataRecoverCoroutine());
 
 
-                break;
-            case 3:
-                Debug.Log("전투 완료 씬");
-                gameState = GameState.GameComplete;
                 break;
         }
 
@@ -736,6 +748,7 @@ public class GameManager : Singleton<GameManager>
         Debug.Log($"str : {loadPlayerData.str}");
         Debug.Log($"dex : {loadPlayerData.dex}");
         Debug.Log($"hp : {loadPlayerData.hp}");
+        Debug.Log($"money : {loadPlayerData.money}");
 
         if (loadPlayerData.inventoryItems != null && loadPlayerData.inventoryItems.Count > 0)
         {
@@ -820,6 +833,7 @@ public class GameManager : Singleton<GameManager>
             tempPlayerData.str = Player_Test.Strength;
             tempPlayerData.dex = Player_Test.Dexterity;
             tempPlayerData.hp = Player_Test.Health;
+            tempPlayerData.money = Player_Test.Money;
         }
 
         // 순서가 반영된 리스트가 담긴 PlayerData를 저장
@@ -863,6 +877,7 @@ public class GameManager : Singleton<GameManager>
             Player_Test.Strength = loadPlayerData.str;
             Player_Test.Dexterity = loadPlayerData.dex;
             Player_Test.Health = loadPlayerData.hp;
+            Player_Test.Money = loadPlayerData.money;
         }
 
         // 1. 필수 요소들이 준비되었는지 확인

@@ -88,6 +88,7 @@ public class Test_11_Json : TestBase
         Debug.Log($"str : {loadPlayerData.str}");
         Debug.Log($"dex : {loadPlayerData.dex}");
         Debug.Log($"hp : {loadPlayerData.hp}");
+        Debug.Log($"money : {loadPlayerData.money}");
 
         if (loadPlayerData.inventoryItems != null && loadPlayerData.inventoryItems.Count > 0)
         {
@@ -124,6 +125,7 @@ public class Test_11_Json : TestBase
         tempPlayerData.str = 1;
         tempPlayerData.dex = 1;
         tempPlayerData.hp = 1;
+        tempPlayerData.money = 0;
         /*tempPlayerData.inventorySlots = new List<ItemSlot>
         {
         new ItemSlot { itemId = "sword_1", count = 1 },
@@ -141,6 +143,7 @@ public class Test_11_Json : TestBase
         tempPlayerData.str = 2;
         tempPlayerData.dex = 2;
         tempPlayerData.hp = 2;
+        tempPlayerData.money = 0;
         /*tempPlayerData.inventorySlots = new List<ItemSlot>
         {
         new ItemSlot { itemId = "sword_2", count = 2 },
@@ -158,6 +161,7 @@ public class Test_11_Json : TestBase
         tempPlayerData.str = 3;
         tempPlayerData.dex = 3;
         tempPlayerData.hp = 3;
+        tempPlayerData.money = 0;
         /*tempPlayerData.inventorySlots = new List<ItemSlot>
         {
         new ItemSlot { itemId = "sword_3", count = 3 },
@@ -300,6 +304,7 @@ public class Test_11_Json : TestBase
         player_Test.Strength = loadPlayerData.str;
         player_Test.Dexterity = loadPlayerData.dex;
         player_Test.Health = loadPlayerData.hp;
+        player_Test.Money = loadPlayerData.money;
 
         Debug.Log($"'{loadPlayerData.name}' (Lv.{loadPlayerData.level}) 데이터 적용 완료!");
 

@@ -51,7 +51,9 @@ public class MonsterBase : MonoBehaviour
     /// <summary>
     /// 몬스터가 죽었을 때 주는 돈
     /// </summary>
-    protected float dieMoney = 1.0f;
+    protected int dieMoney = 1;
+
+    protected float dieXP = 1f;
 
     /// <summary>
     /// 몬스터의 최대 체력
@@ -867,6 +869,10 @@ public class MonsterBase : MonoBehaviour
 
         //Debug.Log("OnMonsterDie 실행");
         isDead = true;
+
+        // 플레이어에게 경험치 및 돈 추가
+        player_test.Money += dieMoney;
+        player_test.XP += dieXP;
 
         if (animator != null)
         {

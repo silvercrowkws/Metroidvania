@@ -81,6 +81,7 @@ public class Test_14_GameDifficulty : TestBase
         Debug.Log($"str : {loadPlayerData.str}");
         Debug.Log($"dex : {loadPlayerData.dex}");
         Debug.Log($"hp : {loadPlayerData.hp}");
+        Debug.Log($"money : {loadPlayerData.money}");
 
         if (loadPlayerData.inventoryItems != null && loadPlayerData.inventoryItems.Count > 0)
         {
@@ -135,6 +136,7 @@ public class Test_14_GameDifficulty : TestBase
         tempPlayerData.str = 1;
         tempPlayerData.dex = 1;
         tempPlayerData.hp = 1;
+        tempPlayerData.money = 0;
     }
 
     protected override void OnTest6(InputAction.CallbackContext context)
@@ -215,6 +217,7 @@ public class Test_14_GameDifficulty : TestBase
         player_test.Strength = loadPlayerData.str;
         player_test.Dexterity = loadPlayerData.dex;
         player_test.Health = loadPlayerData.hp;
+        player_test.Money = loadPlayerData.money;
 
         Debug.Log($"'{loadPlayerData.name}' (Lv.{loadPlayerData.level}) 데이터 적용 완료!");
 

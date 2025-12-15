@@ -56,7 +56,10 @@ public class PlayerData
     /// </summary>
     public int hp;
 
-    //public string[] items;
+    /// <summary>
+    /// 플레이어의 소지금
+    /// </summary>
+    public int money;
 
     /// <summary>
     /// 인벤토리 아이템 리스트

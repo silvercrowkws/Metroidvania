@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MainSceneBusson : MonoBehaviour
+public class MainSceneButton : MonoBehaviour
 {
     /// <summary>
     /// 시작 버튼
