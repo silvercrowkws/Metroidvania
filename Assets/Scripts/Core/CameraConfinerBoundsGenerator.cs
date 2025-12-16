@@ -43,10 +43,10 @@ public class CameraConfinerBoundsGenerator : MonoBehaviour
         float totalSize = roomsPerSide * roomTileSize;
         float half = totalSize / 2f;
 
-        Debug.Log($"roomGenerator로부터 받은 radius : {radius}");
+        /*Debug.Log($"roomGenerator로부터 받은 radius : {radius}");
         Debug.Log($"roomsPerSide : 2 * radius + 1 = {roomsPerSide}");
         Debug.Log($"totalSize : roomsPerSide * roomTileSize = {roomsPerSide}");
-        Debug.Log($"half : totalSize / 2f = {half} ");
+        Debug.Log($"half : totalSize / 2f = {half} ");*/
 
         Vector2[] points = new Vector2[]
         {

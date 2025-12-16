@@ -856,10 +856,14 @@ public class Player_Test : Singleton<Player_Test>
     {
         if (playerDie) return;
 
-        // 배부름이 0보다 클 때만 감소
-        if (currentFullness > 0)
+        // 현재 게임 상태가 미궁 탐색 or 보스 전이면
+        if (GameManager.Instance.GameState == GameState.MazeExploration || GameManager.Instance.GameState == GameState.BossRoom)
         {
-            Fullness -= FullnessDrainRate * Time.deltaTime;
+            // 배부름이 0보다 클 때만 감소
+            if (currentFullness > 0)
+            {
+                Fullness -= FullnessDrainRate * Time.deltaTime;
+            }
         }
     }
 
@@ -1383,8 +1387,22 @@ public class Player_Test : Singleton<Player_Test>
 
         // 게임매니저에서 처리하도록 수정
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);       // 현재 실행 중인 씬 +1 로 이동
-        onSceneChange?.Invoke(2);
 
+        // 현재 게임 상태가 미궁 탐색씬
+        if(GameManager.Instance.GameState == GameState.MazeExploration)
+        {
+            // 보스 방으로 이동
+            onSceneChange?.Invoke(3);
+        }
+        // 만약 게임 상태가 보스 룸씬이면
+        else if(GameManager.Instance.GameState == GameState.BossRoom)
+        {
+            // 로비 씬으로 이동
+            onSceneChange?.Invoke(1);
+        }
+        
+        rb.velocity = Vector2.zero;
+        rb.angularVelocity = 0f;
         this.gameObject.transform.position = new Vector3(0,-9.05f, 0);
         //inputActions.Actions.Enable();        => 씬 이동 후 활성화하도록 변경
     }
@@ -1613,5 +1631,29 @@ public class Player_Test : Singleton<Player_Test>
             isPlayerReady = false;
             rb.gravityScale = 0;
         }
+    }
+
+    /// <summary>
+    /// 플레이어의 속도와 위치를 조정하는 함수
+    /// </summary>
+    public  void ResetMotionAndPosition()
+    {
+        if (rb != null)
+        {
+            // 1. 선속도 (Linear Velocity, 일반적인 이동 속도/낙하 속도)를 0으로 설정
+            // 각속도(Angular Velocity)와 함께, 오브젝트의 움직임(관성 포함)을 멈춥니다.
+            // 요청하신 '낙하할 때 속도'는 이 '선속도'에 해당합니다.
+            rb.velocity = Vector2.zero;
+            rb.gravityScale = 0;
+
+            // 2. 각속도 (Angular Velocity, 회전 속도)를 0으로 설정
+            // 오브젝트의 회전 움직임을 멈춥니다.
+            rb.angularVelocity = 0f;
+        }
+
+        // 3. 오브젝트의 위치(Position)를 (0, 0, 0)으로 설정 (2D에서는 Z축 무시)
+        this.transform.position = Vector3.zero;
+
+        Debug.Log("플레이어의 움직임과 위치가 초기화");
     }
 }

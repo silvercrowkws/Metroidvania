@@ -147,7 +147,7 @@ public class RoomGenerator : MonoBehaviour
         GenerateMazeWithInitialOpening();
         SpawnDoorInRandomRoom();    // 미로 생성 후 랜덤 Room에 Door 생성
         SpawnKeyInRandomRoom();     // 미로 생성 후 랜덤 Room에 Key 생성
-        SpawnMonsterInRandomRoom(); // 미로 생성 후 랜덤 Room에 Monster_0 생성
+        //SpawnMonsterInRandomRoom(); // 미로 생성 후 랜덤 Room에 Monster_0 생성    => 미로 생성 후 길 구운 다음에 생성으로 변경
 
         // 미로 생성 완료 후 길 굽기
         onRoomGenerated?.Invoke();
@@ -162,6 +162,8 @@ public class RoomGenerator : MonoBehaviour
         // 미니맵 이미지 생성
         //GenerateMiniMapTexture();
         //CaptureMiniMap();
+
+        SpawnMonsterInRandomRoom();     // 미로 생성 후 랜덤 Room에 Monster_ 생성
 
         StartCoroutine(CaptureMiniMapNextFrame());
 
@@ -610,7 +612,7 @@ public class RoomGenerator : MonoBehaviour
         {
             monster_RedChicken,
             monster_Skeleton,
-            monster_FlyingEye,
+            monster_FlyingEye,      // 가끔 버그로 몬스터가 생성이 안됨
             monster_Goblin,
             monster_Mushroom
         };

@@ -439,6 +439,8 @@ public class BossMonsterBase : MonoBehaviour
                 }
             }
 
+            // 이 오브젝트 파괴하기 전에 new Vector3(0,-9.05f, 0); 에 로비로 돌아가는 문 생성
+
             Destroy(gameObject);
         }
         else

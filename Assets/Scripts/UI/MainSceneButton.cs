@@ -30,6 +30,8 @@ public class MainSceneButton : MonoBehaviour
     private void GameStart()
     {
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        onSceneChangeButton?.Invoke(1);
+
+        // 2번 미궁 탐색 씬으로 이동
+        onSceneChangeButton?.Invoke(2);
     }
 }

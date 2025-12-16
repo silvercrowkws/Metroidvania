@@ -38,6 +38,12 @@ public class Notification : MonoBehaviour
         canvasGroup.alpha = 0f;
     }
 
+    private void OnDisable()
+    {
+        gameManager.onNotificationActive -= OnNotificationActive;
+        gameManager.onNotificationText -= OnNotificationText;
+    }
+
     /// <summary>
     /// 게임 매니저의 델리게이트를 받아 캔버스 그룹을 조절하는 함수
     /// </summary>

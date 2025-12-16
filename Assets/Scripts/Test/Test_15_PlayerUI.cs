@@ -22,7 +22,7 @@ public class Test_15_PlayerUI : TestBase
     protected override void OnTest1(InputAction.CallbackContext context)
     {
         player_test.transform.position = new Vector3(0, -9.05f, 0);
-        gameManager.OnSceneChange(2);
+        gameManager.OnSceneChange(3);
     }
 
     protected override void OnTest2(InputAction.CallbackContext context)

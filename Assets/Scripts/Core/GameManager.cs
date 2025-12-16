@@ -165,6 +165,15 @@ public class GameManager : Singleton<GameManager>
                 player_test.onKeyCountChanged += OnKeyCountChanged;
                 player_test.onSceneChange += OnSceneChange;
             }
+
+            if(player_test != null)
+            {
+                //Debug.Log("게임매니저는 플레이어를 잘 찾았다");
+            }
+            else
+            {
+                //Debug.Log("게임매니저는 플레이어를 잘 찾지 못했다");
+            }
             return player_test;
         }
     }
@@ -485,11 +494,6 @@ public class GameManager : Singleton<GameManager>
 
                 mainSceneBusson = FindAnyObjectByType<MainSceneButton>();
                 mainSceneBusson.onSceneChangeButton += OnSceneChange;
-                break;
-
-            case 2:
-                Debug.Log("미궁 탐색 씬");
-                gameState = GameState.MazeExploration;
 
                 // 메인씬에는 인벤토리 관련이 없으므로 미궁 탐색씬에서 찾음
                 inventoryViewer = FindObjectOfType<InventoryViewer>();
@@ -506,6 +510,46 @@ public class GameManager : Singleton<GameManager>
                     Inventory.Instance.OnNewItemAdded += (itemData) => OnDataSave();
                     Inventory.Instance.OnItemChanged += (itemData, count) => OnDataSave();
                 }
+
+                // 데이터 복구
+                StartCoroutine(DataRecoverCoroutine());
+
+                // 이 시점에는 아직 플레이어의 프로퍼티를 찾지 못해서 그쪽 함수를 실행할 수 없음
+                // 그래서 프로퍼티를 호출하여 객체를 찾고 player_test 필드에 할당
+                Player_Test player = Player_Test;
+
+                if (player != null)
+                {
+                    Debug.Log("플레이어의 속도와 위치 조정");
+                    player.ResetMotionAndPosition();
+                }
+                else
+                {
+                    // 씬 1에 플레이어가 없거나 찾지 못했을 때만 이 메시지가 나와야 함
+                    Debug.LogWarning("플레이어를 씬에서 찾지 못했습니다.");
+                }
+
+                break;
+
+            case 2:
+                Debug.Log("미궁 탐색 씬");
+                gameState = GameState.MazeExploration;
+
+                /*// 메인씬에는 인벤토리 관련이 없으므로 미궁 탐색씬에서 찾음
+                inventoryViewer = FindObjectOfType<InventoryViewer>();
+                if (inventoryViewer != null)
+                {
+                    inventoryViewer.OnInventoryOrderChanged += OnDataSave;
+                }
+
+                // Inventory 인스턴스에 접근
+                if (Inventory.Instance != null)
+                {
+                    // **이전에 구독 해지했는지 확인하고 다시 구독해야 합니다.
+                    // Start()에서 실패했더라도 여기서 다시 시도해야 합니다.**
+                    Inventory.Instance.OnNewItemAdded += (itemData) => OnDataSave();
+                    Inventory.Instance.OnItemChanged += (itemData, count) => OnDataSave();
+                }*/
 
 
                 // 미궁 탐색 씬으로 넘어왔으면 RoomGenerator를 찾고
@@ -549,24 +593,28 @@ public class GameManager : Singleton<GameManager>
                 break;
         }
 
-        // 만약 이동한 씬에 플레이어가 있으면
-        if(player_test != null)
+        // 만약 미궁 탐색씬 or 보스방 씬이면
+        if(scene.buildIndex == 2 || scene.buildIndex == 3)
         {
-            // 피격 범위를 일단 끄고
-            player_test.OnColliderControll(false);
-            player_test.DisableFC();        // 움직임 비활성화
-            Debug.Log("이동한 씬에 플레이어가 있다");
+            // 만약 이동한 씬에 플레이어가 있으면
+            if(player_test != null)
+            {
+                // 피격 범위를 일단 끄고
+                player_test.OnColliderControll(false);
+                player_test.DisableFC();        // 움직임 비활성화
+                Debug.Log("이동한 씬에 플레이어가 있다");
+            }
+
+            // 씬 이동 후 로딩 바를 50% 로
+            onLoadingBar?.Invoke(0.5f);
+
+            // 데이터 복구를 SceneInitCoroutine 코루틴에서 처리
+            //StartCoroutine(DataRecoverCoroutine());
+
+            // 이 후 3/4, 4/4 는 코루틴에서 처리
+            StartCoroutine(SceneInitCoroutine());
+            Debug.Log("OnSceneLoaded 호출");
         }
-
-        // 씬 이동 후 로딩 바를 50% 로
-        onLoadingBar?.Invoke(0.5f);
-
-        // 데이터 복구를 SceneInitCoroutine 코루틴에서 처리
-        //StartCoroutine(DataRecoverCoroutine());
-
-        // 이 후 3/4, 4/4 는 코루틴에서 처리
-        StartCoroutine(SceneInitCoroutine());
-        Debug.Log("OnSceneLoaded 호출");
     }
 
     /// <summary>
@@ -704,9 +752,13 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void OnSceneChange(int index)
     {
-        // 여기 직전에 패널 활성화
-        onPanelActive?.Invoke(true);
-        onLoadingBar?.Invoke(0.25f);
+        // 만약 미궁, 보스 씬이면
+        if(index == 2 || index == 3)
+        {
+            // 여기 직전에 패널 활성화
+            onPanelActive?.Invoke(true);
+            onLoadingBar?.Invoke(0.25f);
+        }
 
         SceneManager.LoadScene(index);       // index 번째 씬으로 이동
     }
