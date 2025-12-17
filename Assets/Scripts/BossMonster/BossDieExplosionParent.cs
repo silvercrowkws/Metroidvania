@@ -45,6 +45,6 @@ public class BossDieExplosionParent : MonoBehaviour
         }
 
         isBossDieSequenceEnd = true;
-        Debug.Log($"isBossDieSequenceEnd: {isBossDieSequenceEnd}");
+        //Debug.Log($"isBossDieSequenceEnd: {isBossDieSequenceEnd}");
     }
 }

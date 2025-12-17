@@ -29,7 +29,8 @@ public class Test_15_PlayerUI : TestBase
     {
         player_test.onKeyCountChanged(3);
         //player_test.hasAllKeys = true;
-        door.transform.position = player_test.transform.position;
+        door.transform.position = new Vector2(player_test.transform.position.x, player_test.transform.position.y + 0.75f);
+        player_test.canEnterDoor = true;
         //player_test.Fullness += 10;
     }
 

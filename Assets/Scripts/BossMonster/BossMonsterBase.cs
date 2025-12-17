@@ -236,6 +236,11 @@ public class BossMonsterBase : MonoBehaviour
     /// </summary>
     GameObject bossDieExplosionParent;
 
+    /// <summary>
+    /// 보스 사망 연출 후 플레이어가 이동할 수 있는 문 오브젝트
+    /// </summary>
+    GameObject bossDieDoor;
+
     protected void Awake()
     {
         // Resources.Load는 리소스를 로드하는 메서드
@@ -286,6 +291,8 @@ public class BossMonsterBase : MonoBehaviour
         boxCollider2D = GetComponent<BoxCollider2D>();
 
         bossDieExplosionParent = Resources.Load<GameObject>("GameObjects/BossDieExplosionParent");
+
+        bossDieDoor = Resources.Load<GameObject>("GameObjects/BossDieDoor");
     }
 
     protected virtual void OnEnable()
@@ -440,6 +447,9 @@ public class BossMonsterBase : MonoBehaviour
             }
 
             // 이 오브젝트 파괴하기 전에 new Vector3(0,-9.05f, 0); 에 로비로 돌아가는 문 생성
+            Instantiate(bossDieDoor, new Vector3(0, -8.35f, 0), Quaternion.identity);
+            
+            Debug.Log("문 생성 완료");
 
             Destroy(gameObject);
         }

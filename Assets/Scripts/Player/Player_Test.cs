@@ -553,7 +553,7 @@ public class Player_Test : Singleton<Player_Test>
     /// <summary>
     /// 문과 상호작용할 수 있는지 확인하는 bool 변수
     /// </summary>
-    private bool canEnterDoor = false;
+    public bool canEnterDoor = false;
 
     /// <summary>
     /// 문의 중앙 위치
@@ -606,6 +606,17 @@ public class Player_Test : Singleton<Player_Test>
             Destroy(gameObject);
             return;
         }
+
+        /*var players = FindObjectsOfType<Player_Test>();
+
+        foreach (var player in players)
+        {
+            // 이미 다른 인스턴스가 존재하면 그 인스턴스를 파괴하고 자신은 남음
+            if (player != this)
+            {
+                Destroy(player.gameObject);
+            }
+        }*/
 
         // 씬 전환 시 이 게임오브젝트가 파괴되지 않도록 설정
         DontDestroyOnLoad(gameObject);
@@ -1609,8 +1620,8 @@ public class Player_Test : Singleton<Player_Test>
                 // BackWalk 애니메이터 실행
                 // n초 후 씬 전환
                 canEnterDoor = true;
-                doorCenter = collision.transform;       // 문의 중앙은 충돌한 문의 위치
             }
+            doorCenter = collision.transform;       // 문의 중앙은 충돌한 문의 위치
         }
     }
 
@@ -1624,6 +1635,7 @@ public class Player_Test : Singleton<Player_Test>
             box2D.enabled = true;
             isPlayerReady = true;
             rb.gravityScale = 1;
+            canEnterDoor = false;       // 문과의 상호작용 초기화
         }
         else
         {

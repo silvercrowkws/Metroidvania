@@ -99,6 +99,9 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IP
 
         if (inventoryPanel != null)
             inventoryPanel.onButtonsActiveFalse -= OnButtonsActiveFalse;
+
+        // 인벤토리 이벤트 해제 반드시 포함
+        UnsubscribeEvent();
     }
 
     public void Init(ItemDataSO item)
@@ -111,23 +114,43 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IP
         Inventory.Instance.OnItemChanged += HandleItemAdded;
     }
 
+    /// <summary>
+    /// 공통된 이벤트 해제 로직
+    /// </summary>
+    private void UnsubscribeEvent()
+    {
+        if (Inventory.Instance != null)
+        {
+            Inventory.Instance.OnItemChanged -= HandleItemAdded;
+        }
+    }
+
     private void HandleItemAdded(ItemDataSO item, int count)
     {
+        // 1. 이미 파괴된 오브젝트라면 실행 중단
+        if (this == null) return;
+
         if (currentSaveItem == item)
         {
-            //카운트가 0이라면?
-            if (count == 0)
+            // 카운트가 0이라면?
+            if (count <= 0)
             {
-                //이벤트 구독을 먼저 해제 -> Inventory.Clear() 루프의 다음 호출 때 이 슬롯에 접근하지 않기 위해
+                /*//이벤트 구독을 먼저 해제 -> Inventory.Clear() 루프의 다음 호출 때 이 슬롯에 접근하지 않기 위해
                 if (Inventory.Instance != null)
                 {
                     Inventory.Instance.OnItemChanged -= HandleItemAdded;
-                }
+                }*/
 
-                //슬롯 없에기
-                Destroy(gameObject);
+                // 이벤트 해제
+                UnsubscribeEvent();
+
+                // 슬롯 없에기
+                if (gameObject != null)
+                {
+                    Destroy(gameObject);
+                }
             }
-            //아니라면?
+            // 아니라면?
             else
             {
                 //텍스트 갱신
@@ -136,15 +159,6 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IP
 
         }
     }
-
-    /*private void OnDestroy()
-    {
-        if (Inventory.Instance != null)
-        {
-            //이벤트 구독 해제
-            Inventory.Instance.OnItemChanged -= HandleItemAdded;
-        }
-    }*/
 
     // 이 오브젝트위에서 마우스를 눌렀다면?
     // IPointerDownHandler에 정의되어있음
