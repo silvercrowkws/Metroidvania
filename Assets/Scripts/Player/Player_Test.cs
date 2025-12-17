@@ -563,7 +563,7 @@ public class Player_Test : Singleton<Player_Test>
     /// <summary>
     /// 문까지 걸어가는 bool 변수
     /// </summary>
-    private bool isWalkingToDoor = false;
+    public bool isWalkingToDoor = false;
 
     /// <summary>
     /// 타겟 문의 위치
@@ -1408,8 +1408,13 @@ public class Player_Test : Singleton<Player_Test>
         // 만약 게임 상태가 보스 룸씬이면
         else if(GameManager.Instance.GameState == GameState.BossRoom)
         {
-            // 로비 씬으로 이동
-            onSceneChange?.Invoke(1);
+            // 로비 씬2 으로 이동
+            onSceneChange?.Invoke(4);
+
+            // 이동 후 HP, 배부름 초기화
+            
+            HP = maxHP;
+            Fullness = maxFullness;
         }
         
         rb.velocity = Vector2.zero;
@@ -1636,6 +1641,7 @@ public class Player_Test : Singleton<Player_Test>
             isPlayerReady = true;
             rb.gravityScale = 1;
             canEnterDoor = false;       // 문과의 상호작용 초기화
+            isWalkingToDoor = false;    // 문과의 초기화2
         }
         else
         {

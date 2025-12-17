@@ -591,10 +591,18 @@ public class GameManager : Singleton<GameManager>
 
 
                 break;
+
+            case 4:
+                Debug.Log("로비 씬");
+                gameState = GameState.Lobby;
+
+                mainSceneBusson = FindAnyObjectByType<MainSceneButton>();
+                mainSceneBusson.onSceneChangeButton += OnSceneChange;
+                break;
         }
 
-        // 만약 미궁 탐색씬 or 보스방 씬이면
-        if(scene.buildIndex == 2 || scene.buildIndex == 3)
+        // 만약 미궁 탐색씬 or 보스방 씬이면 or 로비씬2 이면
+        if(scene.buildIndex == 2 || scene.buildIndex == 3 || scene.buildIndex == 4)
         {
             // 만약 이동한 씬에 플레이어가 있으면
             if(player_test != null)
@@ -695,26 +703,30 @@ public class GameManager : Singleton<GameManager>
             onLoadingBar?.Invoke(1f);
         }
 
-
+        
         // 만약 이동한 씬에 플레이어가 있으면
         if (player_test != null)
         {
-            // 피격 범위를 일단 켜고
-            player_test.OnColliderControll(true);
-
-            if(GameObject.FindObjectOfType<CloseDoor>() == null)
+            if(gameState == GameState.MazeExploration || gameState == GameState.BossRoom)
             {
-                // 플레이어의 위치에 CloseDoor 생성
-                Vector3 spawnCloseDoor = new Vector3(player_test.transform.position.x, player_test.transform.position.y + 0.7f, player_test.transform.position.z);
+                // 피격 범위를 일단 켜고
+                player_test.OnColliderControll(true);
 
-                GameObject newCloseDoorObject = Instantiate(closeDoorObject, spawnCloseDoor, Quaternion.identity);
-                closeDoor = newCloseDoorObject.GetComponent<CloseDoor>();
-                //Debug.Log("플레이어의 위치에 CloseDoor 생성");
+                if(GameObject.FindObjectOfType<CloseDoor>() == null)
+                {
+                    // 플레이어의 위치에 CloseDoor 생성
+                    Vector3 spawnCloseDoor = new Vector3(player_test.transform.position.x, player_test.transform.position.y + 0.7f, player_test.transform.position.z);
+
+                    GameObject newCloseDoorObject = Instantiate(closeDoorObject, spawnCloseDoor, Quaternion.identity);
+                    closeDoor = newCloseDoorObject.GetComponent<CloseDoor>();
+                    //Debug.Log("플레이어의 위치에 CloseDoor 생성");
+                }
+                else
+                {
+                    //Debug.Log("이미 맵에 CloseDoor가 있으니 생성 안함");
+                }
             }
-            else
-            {
-                //Debug.Log("이미 맵에 CloseDoor가 있으니 생성 안함");
-            }
+
 
             // 패널 종료 후 가능하도록 수정
             //player_test.EnableFC();     // 움직임 가능하도록 변경
@@ -730,8 +742,11 @@ public class GameManager : Singleton<GameManager>
         onPanelActive?.Invoke(false);
         onLoadingBar?.Invoke(0f);
 
-        // 패널 종료하고 일정 시간 후에 문 닫히고 사라지는 연출 필요
-        closeDoor.OnAnimationStart();
+        if(closeDoor != null)
+        {
+            // 패널 종료하고 일정 시간 후에 문 닫히고 사라지는 연출 필요
+            closeDoor.OnAnimationStart();
+        }
 
         player_test.EnableFC();     // 움직임 가능하도록 변경
     }
@@ -753,7 +768,7 @@ public class GameManager : Singleton<GameManager>
     public void OnSceneChange(int index)
     {
         // 만약 미궁, 보스 씬이면
-        if(index == 2 || index == 3)
+        if(index == 2 || index == 3 || index == 4)
         {
             // 여기 직전에 패널 활성화
             onPanelActive?.Invoke(true);

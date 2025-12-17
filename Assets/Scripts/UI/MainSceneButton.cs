@@ -16,20 +16,28 @@ public class MainSceneButton : MonoBehaviour
 
     public Action<int> onSceneChangeButton;
 
+    Player_Test player_test;
+
     private void Awake()
     {
         button = GetComponent<Button>();
-        button.onClick.AddListener(GameStart);
     }
 
     private void Start()
     {
         gameManager = GameManager.Instance;
+        player_test = gameManager.Player_Test;
+        player_test.ResetMotionAndPosition();
+
+        Debug.Log("게임매니저 찾음");
+        button.onClick.AddListener(GameStart);
     }
 
     private void GameStart()
     {
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        Debug.Log("버튼 누름");
+
 
         // 2번 미궁 탐색 씬으로 이동
         onSceneChangeButton?.Invoke(2);

@@ -98,6 +98,7 @@ public class BossDieDoor : MonoBehaviour
         {
             // 플레이어와 충돌
             player_test.canEnterDoor = true;
+            Debug.Log("플레이어와 충돌");
         }
     }
 }
