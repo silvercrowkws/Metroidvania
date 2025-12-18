@@ -66,7 +66,7 @@ public class BossDieDoor : MonoBehaviour
     {
         float timer = 0f;
 
-        // 1초 동안 페이드 인
+        // fadeDuration초 동안 페이드 인
         while (timer < fadeDuration)
         {
             timer += Time.deltaTime;

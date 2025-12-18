@@ -1047,28 +1047,32 @@ public class Player_Test : Singleton<Player_Test>
     /// <param name="context"></param>
     private void OnMove(InputAction.CallbackContext context)
     {
-        // 지금은 AD 로만 작동하는데 밧줄 같은거 넣을거면 WS 도 넣어야 할듯?
-        moveInput = context.ReadValue<Vector2>();
-        animator.speed = 1f;                        // 애니메이션 재생
-
-        // 가드 중이 아닐때만
-        if (!isGuard)
+        // 로비에서는 움직임 불가
+        if(GameManager.Instance.GameState != GameState.Lobby)
         {
-            // 애니메이션 처리
-            if (moveInput.magnitude > 0.1f)
+            // 지금은 AD 로만 작동하는데 밧줄 같은거 넣을거면 WS 도 넣어야 할듯?
+            moveInput = context.ReadValue<Vector2>();
+            animator.speed = 1f;                        // 애니메이션 재생
+
+            // 가드 중이 아닐때만
+            if (!isGuard)
             {
-                if (isGround)               // 땅에 있고
+                // 애니메이션 처리
+                if (moveInput.magnitude > 0.1f)
                 {
-                    ResetTrigger();
-                    animator.SetTrigger("Run");
+                    if (isGround)               // 땅에 있고
+                    {
+                        ResetTrigger();
+                        animator.SetTrigger("Run");
+                    }
                 }
-            }
-            else
-            {
-                if (isGround)
+                else
                 {
-                    ResetTrigger();
-                    animator.SetTrigger("Idle");
+                    if (isGround)
+                    {
+                        ResetTrigger();
+                        animator.SetTrigger("Idle");
+                    }
                 }
             }
         }
@@ -1663,6 +1667,8 @@ public class Player_Test : Singleton<Player_Test>
             // 요청하신 '낙하할 때 속도'는 이 '선속도'에 해당합니다.
             rb.velocity = Vector2.zero;
             rb.gravityScale = 0;
+            jumpCount = 0;          // 점프 불가하도록
+            isGround = false;       // 땅 판정이 있었더라도 취소
 
             // 2. 각속도 (Angular Velocity, 회전 속도)를 0으로 설정
             // 오브젝트의 회전 움직임을 멈춥니다.

@@ -24,6 +24,8 @@ TagManager:
   - BounceObject
   - ChaseMissile
   - Effect
+  - CreateZone
+  - DeadZone
   layers:
   - Default
   - TransparentFX
@@ -48,7 +50,7 @@ TagManager:
   - IgnoreGround
   - Missile
   - Effect
-  - 
+  - NPC
   - 
   - 
   - 
@@ -111,4 +113,7 @@ TagManager:
     locked: 0
   - name: ChaseMissile
     uniqueID: 955641353
+    locked: 0
+  - name: NPC
+    uniqueID: 2668571711
     locked: 0

@@ -150,7 +150,7 @@ public class QuantityPanel : MonoBehaviour
 
         if (quantityItemCount > maxItemCount)
         {
-            Debug.Log("판매하려는 개수가 최대 개수보다 크다");
+            Debug.Log("버리려는 개수가 최대 개수보다 크다");
             return;
         }
 

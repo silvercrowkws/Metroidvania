@@ -9,19 +9,21 @@ public enum ItemType
 {
     Consumable,     // 소모품
     General,        // 일반 아이템
+    important,      // 중요 아이템
     //Material,       // 재료
     //Equipment,      // 장비
     //QuestItem       // 퀘스트 아이템
 }
 
 /// <summary>
-/// 아이템의 증가량(체력, 배부름 등등..)
+/// 아이템의 증가량(체력, 배부름, 부활 등등..)
 /// </summary>
 public enum RecoveryType
 {
     None = 0,
     HP,
     Fullness,
+    Resurrection,   // 죽어도 1번 부활
 }
 
 [System.Serializable]
