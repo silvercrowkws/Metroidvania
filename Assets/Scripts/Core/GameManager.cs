@@ -335,7 +335,7 @@ public class GameManager : Singleton<GameManager>
     /// <summary>
     /// 데이터가 복구되었는지 확인하는 bool 변수
     /// </summary>
-    private bool isDataRecovered = false;
+    public bool isDataRecovered = false;
 
     // 씬 전환시 패널 부분 끝 ------------------------------------------------------------
 

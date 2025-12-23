@@ -42,7 +42,23 @@ public class Player_Test : Singleton<Player_Test>
     /// </summary>
     public int StatePoint { get; set; }
 
-    public int Money { get; set; }
+    private int money;
+    public int Money
+    {
+        get => money;
+        set
+        {
+            money = value;
+            // 돈이 바뀔 때마다 등록된 함수(UI 갱신 등)를 모두 실행!
+            onMoneyChanged?.Invoke(money);
+            Debug.Log($"플레이어의 돈 변경 : {Money}");
+        }
+    }
+
+    /// <summary>
+    /// 돈 변경 시 발생하는 이벤트
+    /// </summary>
+    public Action<int> onMoneyChanged;
 
     // 플레이어 조작 관련 --------------------------------------------------
 

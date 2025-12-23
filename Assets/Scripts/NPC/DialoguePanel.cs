@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.UI;
@@ -52,6 +53,20 @@ public class DialoguePanel : MonoBehaviour
     /// </summary>
     PurchaseQuantityPanel purchaseQuantityPanel;
 
+    /// <summary>
+    /// NPC가 판매하는 아이템들의 데이터 (인스펙터에서 할당)
+    /// </summary>
+    [SerializeField] private ItemDataSO[] sellableItems;
+
+    /// <summary>
+    /// 최대로 겹칠 수 있는 카운트(인벤토리에 해당 아이템을 몇개까지 가지고 있을 수 있는지)
+    /// </summary>
+    int maxStackCount = 0;
+
+    TextMeshProUGUI moneyText;
+
+    Player_Test player_test;
+
     private void Awake()
     {
         Transform child = transform.GetChild(3);
@@ -87,26 +102,11 @@ public class DialoguePanel : MonoBehaviour
         cancelButton = transform.GetChild(5).GetChild(0).GetComponent<Button>();
         cancelButton.onClick.AddListener(OnCancelButton);
 
+        child = transform.GetChild(4);
+        moneyText = child.GetChild(0).GetChild(2).GetComponent<TextMeshProUGUI>();
+
         canvasGroup = GetComponent<CanvasGroup>();
         //  OnCanvasGroup(false);       // 캔버스 그룹 조절 => Start로 이동
-    }
-
-    /// <summary>
-    /// 아이템 클릭으로 실행되는 함수(난이도 포함)
-    /// </summary>
-    /// <param name="index">아이템 번호</param>
-    private void OnItemButtonClick(int index)
-    {
-        Debug.Log($"{index} 번 버튼 클릭됨");
-        
-        // 빵, 포션, 허브, 사과, 바나나, 체리인 경우
-        if(index < 6)
-        {
-            if(purchaseQuantityPanel != null )
-            {
-                purchaseQuantityPanel.gameObject.SetActive(true);
-            }
-        }
     }
 
     private void Start()
@@ -121,8 +121,83 @@ public class DialoguePanel : MonoBehaviour
         // 구매 수량 패널 찾기
         purchaseQuantityPanel = FindAnyObjectByType<PurchaseQuantityPanel>();
         purchaseQuantityPanel.gameObject.SetActive(false);
-        
+
         OnCanvasGroup(false);       // 캔버스 그룹 조절
+
+        player_test = GameManager.Instance.Player_Test;
+        player_test.onMoneyChanged += OnMoneyChanged;
+
+        StartCoroutine(firstMonsyChange());
+    }
+
+    /// <summary>
+    /// 처음 게임매니저의 데이터 복구 후 소지금을 반영하는 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator firstMonsyChange()
+    {
+        while (!GameManager.Instance.isDataRecovered)
+        {
+            yield return null;
+        }
+        moneyText.text = player_test.Money.ToString();
+    }
+
+    private void OnDisable()
+    {
+        player_test.onMoneyChanged -= OnMoneyChanged;
+    }
+
+    /// <summary>
+    /// 플레이어의 소지금 변경 시 바뀔 UI
+    /// </summary>
+    /// <param name="money"></param>
+    private void OnMoneyChanged(int money)
+    {
+        moneyText.text = money.ToString();
+    }
+
+    /// <summary>
+    /// 아이템 클릭으로 실행되는 함수(난이도 포함)
+    /// </summary>
+    /// <param name="index">아이템 번호</param>
+    private void OnItemButtonClick(int index)
+    {
+        // 1. 유효한 아이템 인덱스인지 확인 (0~5번 버튼만 아이템 판매)
+        if (index < 6)// && index < sellableItems.Length && sellableItems[index] != null)
+        {
+            ItemDataSO selectedItem = sellableItems[index];
+
+            // 2. SO에서 최대 겹침 수 가져오기
+            int maxStack = selectedItem.MaxStackCount;
+
+            // 선택한 아이템의 가격
+            int price = selectedItem.SelliPrice;
+
+            // 3. 내 인벤토리에 현재 해당 아이템이 몇 개 있는지 가져오기
+            // Inventory.Instance.GetItemCount()가 있다고 가정합니다.
+            int currentOwnedCount = Inventory.Instance.GetItemCount(selectedItem);
+
+            // 4. 구매 가능한 수량 계산 (최대치 - 현재 보유량)
+            // 결과가 0보다 작아지지 않도록 Mathf.Max를 사용합니다.
+            int buyableCount = Mathf.Max(0, maxStack - currentOwnedCount);
+
+            maxStackCount = buyableCount;
+
+            Debug.Log($"{selectedItem.ItemName} 클릭됨. 최대: {maxStack}, 보유: {currentOwnedCount}, 구매가능: {buyableCount}");
+
+            if (purchaseQuantityPanel != null)
+            {
+                purchaseQuantityPanel.gameObject.SetActive(true);
+
+                // 5. 계산된 수량을 패널에 전달
+                purchaseQuantityPanel.Show(maxStackCount, price);
+            }
+        }
+        else
+        {
+            Debug.Log($"sellableItems 인스펙터에서 비었는지 봐라");
+        }
     }
 
     private void OnDestroy()

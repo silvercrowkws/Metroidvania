@@ -62,6 +62,12 @@ public class QuantityPanel : MonoBehaviour
 
         inputField = child.GetComponent<TMP_InputField>();
 
+        // 오직 양의 정수(0~9)만 입력 가능하게 설정 (마이너스, 문자 차단)
+        inputField.contentType = TMP_InputField.ContentType.IntegerNumber;
+
+        // (선택) 아예 숫자 Validation을 Digit으로 고정
+        inputField.characterValidation = TMP_InputField.CharacterValidation.Digit;
+
         quantityText = inputField.transform.GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>();
 
         child = transform.GetChild(2);

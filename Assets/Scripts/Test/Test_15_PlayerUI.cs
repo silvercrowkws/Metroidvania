@@ -36,6 +36,6 @@ public class Test_15_PlayerUI : TestBase
 
     protected override void OnTest3(InputAction.CallbackContext context)
     {
-        player_test.Fullness -= 10;
+        player_test.Money += 1;
     }
 }
