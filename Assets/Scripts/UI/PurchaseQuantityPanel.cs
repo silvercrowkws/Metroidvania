@@ -52,6 +52,14 @@ public class PurchaseQuantityPanel : MonoBehaviour
 
     Player_Test player_test;
 
+    // 1. 선택된 아이템 데이터를 저장할 변수 추가
+    private ItemDataSO selectedItemData;
+
+    /// <summary>
+    /// 아이템 구매 여부를 알리는 델리게이트
+    /// </summary>
+    public Action<bool> onItemPurchased;
+
     private void Awake()
     {
         Transform child = transform.GetChild(3);
@@ -95,8 +103,11 @@ public class PurchaseQuantityPanel : MonoBehaviour
     /// 인풋필드에 최대 개수를 미리 입력해 놓는 함수
     /// </summary>
     /// <param name="maxCount"></param>
-    public void Show(int maxCount, int price)
+    public void Show(ItemDataSO data, int maxCount, int price)
     {
+        // 전달받은 데이터 저장
+        selectedItemData = data;
+
         // 아이템 최대 수량 기록
         maxItemCount = maxCount;
 
@@ -119,33 +130,40 @@ public class PurchaseQuantityPanel : MonoBehaviour
 
     private void Cancel()
     {
+        onItemPurchased?.Invoke(false);
         this.gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// 아이템 구매 버튼
+    /// </summary>
     public void Confirm()
     {
-        if(player_test.Money >= totalCost)
+        // 1. 인풋 필드에서 현재 입력된 숫자를 가져옴
+        if (int.TryParse(inputField.text, out int buyCount))
         {
-            // 4. 돈 차감
-            player_test.Money -= totalCost;
+            // OnInputFieldValueChanged에서 계산된 totalCost를 그대로 사용하거나 여기서 다시 계산
+            totalCost = buyCount * itemPrice;
 
-            /*// 5. 인벤토리에 아이템 추가
-            // DialoguePanel에서 현재 선택된 아이템 데이터를 가져와야 합니다.
-            // 이를 위해 Show 함수를 약간 수정하여 ItemDataSO를 받아두는 것이 좋습니다.
-            if (selectedItemData != null)
+            // 2. 총액이 0 초과이고, 플레이어의 소지금이 총액 이상이면
+            if (player_test.Money >= totalCost && buyCount > 0)
             {
-                // 인벤토리에 아이템을 추가하는 실제 함수 호출
-                Inventory.Instance.AddItem(selectedItemData, quantityItemCount);
-                Debug.Log($"{selectedItemData.ItemName}을(를) {quantityItemCount}개 구매했습니다.");
-            }
+                // 돈 차감
+                player_test.Money -= totalCost;
 
-            // 6. 패널 닫기
-            gameObject.SetActive(false);
-        }
-        else
-        {
-            Debug.Log("돈이 부족합니다!");
-            // 여기서 유저에게 "돈이 부족합니다"라는 텍스트를 띄워주면 더 좋습니다.*/
+                // 인벤토리에 아이템과 개수 추가
+                Inventory.Instance.AddItem(selectedItemData, buyCount);
+
+                Debug.Log($"{selectedItemData.ItemName}을 {buyCount}개 구매했습니다.");
+
+                // 3. 구매 완료 후 패널 닫기
+                onItemPurchased?.Invoke(true);
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                Debug.Log("플레이어의 돈이 부족하거나 수량이 0입니다.");
+            }
         }
     }
 

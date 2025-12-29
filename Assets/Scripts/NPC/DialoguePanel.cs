@@ -54,6 +54,11 @@ public class DialoguePanel : MonoBehaviour
     PurchaseQuantityPanel purchaseQuantityPanel;
 
     /// <summary>
+    /// 미궁 난이도 확인 패널
+    /// </summary>
+    MazeDifficultyPanel mazeDifficultyPanel;
+
+    /// <summary>
     /// NPC가 판매하는 아이템들의 데이터 (인스펙터에서 할당)
     /// </summary>
     [SerializeField] private ItemDataSO[] sellableItems;
@@ -120,12 +125,18 @@ public class DialoguePanel : MonoBehaviour
 
         // 구매 수량 패널 찾기
         purchaseQuantityPanel = FindAnyObjectByType<PurchaseQuantityPanel>();
+        purchaseQuantityPanel.onItemPurchased += OnItemPurchased;
         purchaseQuantityPanel.gameObject.SetActive(false);
+
+        mazeDifficultyPanel = FindAnyObjectByType<MazeDifficultyPanel>();
+        mazeDifficultyPanel.onMazeCanceled += OnMazeCanceled;
+        mazeDifficultyPanel.gameObject.SetActive(false);
 
         OnCanvasGroup(false);       // 캔버스 그룹 조절
 
         player_test = GameManager.Instance.Player_Test;
         player_test.onMoneyChanged += OnMoneyChanged;
+        player_test.ResetMotionAndPosition();
 
         StartCoroutine(firstMonsyChange());
     }
@@ -146,6 +157,7 @@ public class DialoguePanel : MonoBehaviour
     private void OnDisable()
     {
         player_test.onMoneyChanged -= OnMoneyChanged;
+        purchaseQuantityPanel.onItemPurchased -= OnItemPurchased;
     }
 
     /// <summary>
@@ -166,6 +178,7 @@ public class DialoguePanel : MonoBehaviour
         // 1. 유효한 아이템 인덱스인지 확인 (0~5번 버튼만 아이템 판매)
         if (index < 6)// && index < sellableItems.Length && sellableItems[index] != null)
         {
+            // 인덱스로 아이템 추출
             ItemDataSO selectedItem = sellableItems[index];
 
             // 2. SO에서 최대 겹침 수 가져오기
@@ -191,8 +204,46 @@ public class DialoguePanel : MonoBehaviour
                 purchaseQuantityPanel.gameObject.SetActive(true);
 
                 // 5. 계산된 수량을 패널에 전달
-                purchaseQuantityPanel.Show(maxStackCount, price);
+                purchaseQuantityPanel.Show(selectedItem, maxStackCount, price);
             }
+        }
+
+        // indxe가 6 7 8 9 10 인 경우
+        else if (5 < index && index < 11)
+        {
+            switch (index)
+            {
+                case 6:
+                    Debug.Log("이지 난이도 선택");
+                    mazeDifficultyPanel.targetDifficultyName = "Easy";
+                    GameManager.Instance.GameDifficulty = GameDifficulty.Easy;
+                    break;
+
+                case 7:
+                    Debug.Log("노말 난이도 선택");
+                    mazeDifficultyPanel.targetDifficultyName = "Normal";
+                    GameManager.Instance.GameDifficulty = GameDifficulty.Normal;
+                    break;
+
+                case 8:
+                    Debug.Log("하드 난이도 선택");
+                    mazeDifficultyPanel.targetDifficultyName = "Hard";
+                    GameManager.Instance.GameDifficulty = GameDifficulty.Hard;
+                    break;
+
+                case 9:
+                    Debug.Log("나이트메어 난이도 선택");
+                    mazeDifficultyPanel.targetDifficultyName = "Nightmare";
+                    GameManager.Instance.GameDifficulty = GameDifficulty.Nightmare;
+                    break;
+
+                case 10:
+                    Debug.Log("헬 난이도 선택");
+                    mazeDifficultyPanel.targetDifficultyName = "Hell";
+                    GameManager.Instance.GameDifficulty = GameDifficulty.Hell;
+                    break;
+            }
+            mazeDifficultyPanel.gameObject.SetActive(true);
         }
         else
         {
@@ -282,7 +333,9 @@ public class DialoguePanel : MonoBehaviour
                 nameText.text = "미궁 문지기";
                 dialogueText.text =
                     @"미궁에 들어갈거야?
-좋아, 난이도를 선택해줘.";
+좋아, 네가 선택한 난이도를 확인하는 중이야.";
+                // 미궁 확인 : ㅇㅇ 난이도 맞지? 무사귀환을 빌게??
+                // 미궁 취소 : 역시 그건 무리지???
                 break;
         }
 
@@ -303,6 +356,7 @@ public class DialoguePanel : MonoBehaviour
             }
 
             purchaseQuantityPanel.gameObject.SetActive(false);
+            mazeDifficultyPanel.gameObject.SetActive(false);
         }
         else
         {
@@ -318,5 +372,51 @@ public class DialoguePanel : MonoBehaviour
     private void OnCancelButton()
     {
         OnCanvasGroup(false);
+    }
+
+    /// <summary>
+    /// 아이템 구매 여부로 NPC 대사를 바꾸는 함수
+    /// </summary>
+    /// <param name="purchased">구매했으면 true, 아니면 false</param>
+    private void OnItemPurchased(bool purchased)
+    {
+        // 1. NPC 이미지(Sprite)를 비교하여 대사 결정
+        if (NPCImage.sprite == npcSprites[0]) // Bearded
+        {
+            dialogueText.text = purchased ? "맛있게 먹고 힘내시게, 허허." : "허허, 힘내고 싶으면 하나 사가지 그래.";
+        }
+        else if (NPCImage.sprite == npcSprites[1]) // HatMan
+        {
+            dialogueText.text = purchased ? "좋네, 사갔구만. 힘이 빠지면 또 들르게." : "허허, 안 살 거야? 어쩔 수 없지. 다음에 또 들르게.";
+        }
+        else if (NPCImage.sprite == npcSprites[2]) // OldMan
+        {
+            dialogueText.text = purchased ? "허허, 잘 샀네. 이게 있으면 쓰러져도 금방 일어날 걸세." : "가격도 싸게 줄 테니 너무 부담 갖지 말게.";
+        }
+        else if (NPCImage.sprite == npcSprites[3]) // Woman
+        {
+            dialogueText.text = purchased ? "고마워~ 맛있게 먹어!" : "괜찮아, 다음에 또 올 거지? 기다리고 있을게~";
+        }
+    }
+
+
+    /// <summary>
+    /// 미궁 이동 여부로 대사를 변경하는 함수
+    /// </summary>
+    /// <param name="go">true: 미궁 진입, false: 취소</param>
+    private void OnMazeCanceled(bool go)
+    {
+        if (!go)
+        {
+            dialogueText.text =
+                    @"조금 더 준비하고 싶은 거지? 알겠어.
+충분히 준비가 되면 언제든 다시 말해줘. 여기서 기다릴테니까.";
+        }
+        else
+        {
+            dialogueText.text =
+            @"위험한 곳이지만 너라면 충분히 해낼 수 있을 거야.
+다치지 않게 조심해서 다녀와!";
+        }
     }
 }

@@ -352,7 +352,12 @@ public class GameManager : Singleton<GameManager>
     /// <summary>
     /// 메인씬에서 탐색씬으로 이동하는 버튼 클래스
     /// </summary>
-    MainSceneButton mainSceneBusson;
+    //MainSceneButton mainSceneBusson;
+
+    /// <summary>
+    /// 미궁 씬으로 이동하는 패널
+    /// </summary>
+    MazeDifficultyPanel mazeDifficultyPanel;
 
     /// <summary>
     /// 클로우즈 도어 게임오브젝트
@@ -492,8 +497,10 @@ public class GameManager : Singleton<GameManager>
                 Debug.Log("로비 씬");
                 gameState = GameState.Lobby;
 
-                mainSceneBusson = FindAnyObjectByType<MainSceneButton>();
-                mainSceneBusson.onSceneChangeButton += OnSceneChange;
+                //mainSceneBusson = FindAnyObjectByType<MainSceneButton>();
+                //mainSceneBusson.onSceneChangeButton += OnSceneChange;
+                mazeDifficultyPanel = FindAnyObjectByType<MazeDifficultyPanel>();
+                mazeDifficultyPanel.onSceneChangeButton += OnSceneChange;
 
                 // 메인씬에는 인벤토리 관련이 없으므로 미궁 탐색씬에서 찾음
                 inventoryViewer = FindObjectOfType<InventoryViewer>();
@@ -596,8 +603,11 @@ public class GameManager : Singleton<GameManager>
                 Debug.Log("로비 씬");
                 gameState = GameState.Lobby;
 
-                mainSceneBusson = FindAnyObjectByType<MainSceneButton>();
-                mainSceneBusson.onSceneChangeButton += OnSceneChange;
+                /*mainSceneBusson = FindAnyObjectByType<MainSceneButton>();
+                mainSceneBusson.onSceneChangeButton += OnSceneChange;*/
+
+                mazeDifficultyPanel = FindAnyObjectByType<MazeDifficultyPanel>();
+                mazeDifficultyPanel.onSceneChangeButton += OnSceneChange;
                 break;
         }
 

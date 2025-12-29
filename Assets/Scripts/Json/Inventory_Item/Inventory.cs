@@ -130,6 +130,23 @@ public class Inventory : Singleton<Inventory>
         }
     }
 
+    public void AddItem(ItemDataSO itemData, int count)
+    {
+        if (itemContainer.ContainsKey(itemData))
+        {
+            // 기존 아이템이 있으면 수량 추가 (최대 중첩 제한은 필요에 따라 체크)
+            itemContainer[itemData] += count;
+            OnItemChanged?.Invoke(itemData, itemContainer[itemData]);
+        }
+        else
+        {
+            // 새로운 아이템 추가
+            itemContainer.Add(itemData, count);
+            OnNewItemAdded?.Invoke(itemData);
+            OnItemChanged?.Invoke(itemData, count);
+        }
+    }
+
     public void RemoveItem(ItemDataSO item, Vector2 pos, int removeCount = 1)
     {
         // 아이템이 존재한다면?
