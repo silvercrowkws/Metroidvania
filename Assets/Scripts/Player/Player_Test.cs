@@ -126,6 +126,12 @@ public class Player_Test : Singleton<Player_Test>
     /// 캐릭터가 대쉬 중인지 확인하기 위한 bool 변수
     /// </summary>
     bool isDash = false;
+
+    /// <summary>
+    /// 대쉬 가능한지 확인하는 bool 변수
+    /// </summary>
+    bool isDashAble = true;
+
     float dashTime = 0.2f;
     float dashTimer = 0f;
 
@@ -222,6 +228,8 @@ public class Player_Test : Singleton<Player_Test>
 
                         ResetTrigger();
                         animator.SetTrigger("Die");
+
+                        StartCoroutine(PlayerDieCoroutine());       // 플레이어 사망 후 씬 이동시 처리 부분
                         OnDisable();
                     }
                 }
@@ -1202,7 +1210,7 @@ public class Player_Test : Singleton<Player_Test>
             return;
         }
 
-        //if ()
+        if (isDashAble)
         {
             isDash = true;
             ResetTrigger();
@@ -1727,9 +1735,14 @@ public class Player_Test : Singleton<Player_Test>
             rb.gravityScale = 1;
             canEnterDoor = false;       // 문과의 상호작용 초기화
             isWalkingToDoor = false;    // 문과의 초기화2
+            hasAllKeys = false;         // 3
+            keyCount = 0;               // 4
+            moveSpeed = defaultMoveSpeed;
+            isDashAble = true;
         }
         else
         {
+            isDashAble = false;
             box2D.enabled = false;
             isPlayerReady = false;
             rb.gravityScale = 0;
@@ -1750,6 +1763,7 @@ public class Player_Test : Singleton<Player_Test>
             rb.gravityScale = 0;
             jumpCount = 0;          // 점프 불가하도록
             isGround = false;       // 땅 판정이 있었더라도 취소
+            isDashAble = false;
 
             // 2. 각속도 (Angular Velocity, 회전 속도)를 0으로 설정
             // 오브젝트의 회전 움직임을 멈춥니다.
@@ -1760,5 +1774,33 @@ public class Player_Test : Singleton<Player_Test>
         this.transform.position = Vector3.zero;
 
         Debug.Log("플레이어의 움직임과 위치가 초기화");
+    }
+
+    /// <summary>
+    /// 플레이어가 죽고 하는 행동들
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator PlayerDieCoroutine()
+    {
+        yield return new WaitForSeconds(3);
+
+        // 로비 씬2 으로 이동
+        onSceneChange?.Invoke(4);
+
+        // 이동 후에 플레이어 트리거 초기화
+        ResetTrigger();
+        animator.SetTrigger("Idle");
+
+        playerDie = false;
+        animator.SetBool("playerDie", false);
+
+
+        ResetMotionAndPosition();
+        moveSpeed = 0;
+
+        HP = maxHP;                 // 체력 초기화
+        Fullness = maxFullness;     // 배부름 초기화
+
+        OnEnable();
     }
 }

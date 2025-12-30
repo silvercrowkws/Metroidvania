@@ -86,6 +86,8 @@ public class BossDieDoor : MonoBehaviour
         // 페이드 인 완료 후 애니메이션 시작
         animator.speed = 1;
 
+        animator.SetTrigger("Open");
+
         // 충돌 가능하도록
         box2D.enabled = true;
     }
