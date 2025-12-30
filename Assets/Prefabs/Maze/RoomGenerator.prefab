@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5290302993390346651
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4992339037515617646}
+  - component: {fileID: 8065862812489673825}
+  m_Layer: 0
+  m_Name: RoomGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4992339037515617646
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5290302993390346651}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8065862812489673825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5290302993390346651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cba63c7b8952784a938e3e8dd5b4d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roomPrefab: {fileID: 5889566246396743836, guid: f52e35863899e0d46aeb8fd3b0015362, type: 3}
+  roomParent: {fileID: 0}
+  doorPrefab: {fileID: 546653982712998797, guid: 7c37505655047504db4b077aadcdb91a, type: 3}
+  keyPrefab: {fileID: 6023572433624502454, guid: 967c60376a83e474e80cb1c1b9253040, type: 3}
+  miniMapIconPrefab: {fileID: 4033203309736756292, guid: 29bc600557921ee479469cf45f8cdf25, type: 3}
+  miniMapParent: {fileID: 0}
+  miniMapScale: 3.5
+  miniMapCamera: {fileID: 0}
+  miniMapRT: {fileID: 0}
+  miniMapPanelImage: {fileID: 0}
+  monster_RedChicken: {fileID: 1642112140218739397, guid: f1d674cc5b9f87143b285b129246ceec, type: 3}
+  monster_Skeleton: {fileID: 8232463299656261448, guid: c9293299fd29a3a44a18a9510c08b34f, type: 3}
+  monster_FlyingEye: {fileID: 3273290790659399757, guid: ed6df46cef82f8148ba1187aaf945978, type: 3}
+  monster_Goblin: {fileID: 5988642764991914433, guid: 2917e9110767cef4bab39e8986fab23a, type: 3}
+  monster_Mushroom: {fileID: 5295843686814726671, guid: f232d6517c1e8ed45b7ae49a2161ad81, type: 3}
+  itemBox: {fileID: 7635394317331963768, guid: 06ded611bac4baa42af25dfffa19b356, type: 3}
+  radius: 6
+  seed: -1
+  onRoomReady: 0
+  testMiniMapSprite: {fileID: 0}

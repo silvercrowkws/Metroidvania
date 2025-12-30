@@ -965,7 +965,7 @@ public class BossMonsterBase : MonoBehaviour
     /// <returns></returns>
     IEnumerator DamageCooldown()
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.5f);
         damageCoolDown = false;
     }
 }

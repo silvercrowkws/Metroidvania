@@ -150,6 +150,11 @@ public class Player_Test : Singleton<Player_Test>
     /// </summary>
     private float currentHP;
 
+    /// <summary>
+    /// 무적시 보일 실드
+    /// </summary>
+    GameObject shield;
+
     public float HP
     {
         get => currentHP;
@@ -157,12 +162,21 @@ public class Player_Test : Singleton<Player_Test>
         {
             if (currentHP != value)
             {
+                // --- 추가: 무적 상태일 때 데미지 무시 로직 ---
+                // 새로 들어온 값(value)이 현재 체력보다 낮다면 데미지를 입는 상황임
+                if (isInvincible && value < currentHP)
+                {
+                    Debug.Log("무적 상태이므로 데미지를 무시합니다.");
+                    return; // 체력을 깎지 않고 종료
+                }
+                // ------------------------------------------
+
                 //currentHP = value;
                 currentHP = Mathf.Clamp(value, 0, maxHP);
 
                 Debug.Log($"플레이어의 남은 체력: {HP}");
 
-                // 만약 플레이어가 죽었고 부활하지 않았는데 회복되었으면
+                // 만약 플레이어가 죽었고 부활하지 않았는데 회복되었으면(나중에 초기화하는 경우인가)
                 if (playerDie)
                 {
                     playerDie = false;
@@ -174,25 +188,73 @@ public class Player_Test : Singleton<Player_Test>
 
                 if (currentHP < 1)
                 {
-                    currentHP = 0;
-                    playerDie = true;
-                    animator.SetBool("playerDie", true);
+                    // 1. 인벤토리에서 부활 아이템이 있는지 확인
+                    ItemDataSO resurrectionItem = Inventory.Instance.FindItemByRecoveryType(RecoveryType.Resurrection);
 
-                    onPlayerDie?.Invoke(currentHP);     // 플레이어가 죽었다고 델리게이트로 알림
-                    Debug.Log("플레이어 사망");
+                    if (resurrectionItem != null)
+                    {
+                        // 2. 아이템이 있다면 1개 사용
+                        Inventory.Instance.UseItem(resurrectionItem);
 
-                    // 사망 연출 실행 부분
-                    rb.velocity = Vector3.zero;
-                    //rb.Sleep();
+                        // 3. HP를 최대치로 회복 (자기 자신을 다시 호출하여 부활 로직 실행)
+                        HP = maxHP;
+                        Debug.Log($"{resurrectionItem.ItemName}을 사용하여 부활했습니다!");
 
-                    ResetTrigger();
-                    animator.SetTrigger("Die");
-                    OnDisable();
+                        // 4. 일정시간 무적 부여
+                        // 🔥 추가: 일정 시간 무적 부여
+                        StartCoroutine(BecomeInvincible(3.0f));     // 3초간 무적
+                        //return; // 사망 로직으로 가지 않고 종료
+                    }
+
+                    // 플레이어의 HP가 0이되었는데 부활 아이템이 없는 경우 사망 처리
+                    else
+                    {
+                        currentHP = 0;
+                        playerDie = true;
+                        animator.SetBool("playerDie", true);
+
+                        onPlayerDie?.Invoke(currentHP);     // 플레이어가 죽었다고 델리게이트로 알림
+                        Debug.Log("플레이어 사망");
+
+                        // 사망 연출 실행 부분
+                        rb.velocity = Vector3.zero;
+                        //rb.Sleep();
+
+                        ResetTrigger();
+                        animator.SetTrigger("Die");
+                        OnDisable();
+                    }
                 }
 
                 heartPanel.UpdateHearts(currentHP);
             }
         }
+    }
+
+    // Player_Test 클래스 상단 변수 선언부에 추가
+    private bool isInvincible = false;
+
+    /// <summary>
+    /// 무적 연출 코루틴
+    /// </summary>
+    /// <param name="duration"></param>
+    /// <returns></returns>
+    private IEnumerator BecomeInvincible(float duration)
+    {
+        isInvincible = true;
+        Debug.Log("무적 시작");
+
+        // 시각적 효과 추가
+        if (shield != null)
+        {
+            shield.gameObject.SetActive(true);
+
+            yield return new WaitForSeconds(duration);
+
+            shield.gameObject.SetActive(false);
+        }
+        Debug.Log("무적 종료");
+        isInvincible = false;
     }
 
     /// <summary>
@@ -657,6 +719,9 @@ public class Player_Test : Singleton<Player_Test>
 
         // 배부름 초기화
         Fullness = maxFullness;
+
+        shield = transform.GetChild(3).gameObject;
+        shield.gameObject.SetActive(false);
     }
 
     private void OnEnable()

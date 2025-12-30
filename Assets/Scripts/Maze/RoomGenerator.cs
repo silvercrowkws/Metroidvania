@@ -31,8 +31,13 @@ public class RoomGenerator : MonoBehaviour
     [SerializeField] private GameObject monster_Goblin;
     [SerializeField] private GameObject monster_Mushroom;
 
+    [SerializeField] private GameObject itemBox;
+
     //[SerializeField] private NavMeshSurface navMeshSurface;
 
+    /// <summary>
+    /// 반지름 4: 이지, 5: 노말, 6: 하드, 7: 나이트메어, 8: 헬
+    /// </summary>
     [Tooltip("미로의 반지름(방 개수는 반지름에 따라 1:3², 2:5², 3:7², 4:9², 5:11², 6:13², 7:15², 8:17²... 뒷배경이 반지름 8까지 커버 가능함)")]
     [SerializeField] public int radius = 4;
 
@@ -164,6 +169,8 @@ public class RoomGenerator : MonoBehaviour
         //CaptureMiniMap();
 
         SpawnMonsterInRandomRoom();     // 미로 생성 후 랜덤 Room에 Monster_ 생성
+
+        SpawnBoxInRandomRoom();
 
         StartCoroutine(CaptureMiniMapNextFrame());
 
@@ -655,6 +662,57 @@ public class RoomGenerator : MonoBehaviour
 
     EndSpawn:
         Debug.Log("[Monster Spawn] 몬스터 배치 완료.");
+    }
+
+    /// <summary>
+    /// 랜덤한 위치에 아이템 상자를 스폰하는 함수
+    /// </summary>
+    private void SpawnBoxInRandomRoom()
+    {
+        // 1. radius에 따른 생성 개수 설정 (4->2, 5->4, 6->6, 7->8, 8->10)
+        // 공식: (radius - 3) * 2
+        int boxCount = (radius - 3) * 2;
+        if (boxCount <= 0) return;
+
+        // 2. 유효한 방 필터링 (0,0 제외 및 wallBottom이 활성화된 방)
+        var validRooms = roomDictionary
+            .Where(kv => kv.Key != Vector2Int.zero)
+            .Select(kv => kv.Value)
+            .Where(room => room.wallBottom != null && room.wallBottom.activeSelf)
+            .ToList();
+
+        // 3. 중복 방지: 이미 문(Door), 열쇠(Key), 몬스터(Monster)가 스폰된 방은 제외
+        // landObject(GetChild(1).GetChild(0)) 아래에 자식 오브젝트가 있는지 확인하여 필터링
+        var emptyValidRooms = validRooms
+            .Where(room => {
+                Transform landObject = room.transform.GetChild(1).GetChild(0);
+                return landObject.childCount == 0; // 자식이 없어야 비어있는 방으로 간주
+            })
+            .ToList();
+
+        // 4. 생성할 방 개수가 부족한 경우 처리
+        if (emptyValidRooms.Count < boxCount)
+        {
+            Debug.LogWarning($"아이템 박스를 배치할 빈 방이 부족합니다. (필요:{boxCount}, 가용:{emptyValidRooms.Count})");
+            boxCount = emptyValidRooms.Count;
+        }
+
+        // 5. 랜덤하게 방 섞기 및 배치
+        var selectedRooms = emptyValidRooms.OrderBy(_ => UnityEngine.Random.value).Take(boxCount).ToList();
+
+        for (int i = 0; i < selectedRooms.Count; i++)
+        {
+            Room selectedRoom = selectedRooms[i];
+            Transform landObjectTransform = selectedRoom.transform.GetChild(1).GetChild(0);
+
+            // 다른 오브젝트와 겹치지 않게 살짝 위쪽(y + 0.5f)에 생성
+            Vector3 spawnPosition = new Vector3(landObjectTransform.position.x, landObjectTransform.position.y + 0.5f, landObjectTransform.position.z);
+
+            GameObject boxObj = Instantiate(itemBox, spawnPosition, Quaternion.identity, landObjectTransform);
+            boxObj.name = $"ItemBox_{i + 1}";
+        }
+
+        Debug.Log($"[ItemBox Spawn] {boxCount}개의 아이템 박스 배치 완료.");
     }
 
     private float GetMiniMapIconSize(int radius)

@@ -274,6 +274,23 @@ public class Inventory : Singleton<Inventory>
         }
     }
 
+    /// <summary>
+    /// 인벤토리에서 아이템이 있는지 찾는 함수
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public ItemDataSO FindItemByRecoveryType(RecoveryType type)
+    {
+        foreach (var item in itemContainer.Keys)
+        {
+            foreach (var info in item.recoveryList)
+            {
+                if (info.type == type) return item;
+            }
+        }
+        return null;
+    }
+
     // 마찬가지로 싱글톤에서 처리
     /*private void OnDestroy()
     {
