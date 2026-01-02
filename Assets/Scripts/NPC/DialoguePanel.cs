@@ -135,7 +135,7 @@ public class DialoguePanel : MonoBehaviour
         OnCanvasGroup(false);       // 캔버스 그룹 조절
 
         player_test = GameManager.Instance.Player_Test;
-        player_test.onMoneyChanged += OnMoneyChanged;
+        player_test.onPlayerMoneyChange += OnMoneyChanged;
         player_test.ResetMotionAndPosition();
 
         StartCoroutine(firstMonsyChange());
@@ -156,7 +156,7 @@ public class DialoguePanel : MonoBehaviour
 
     private void OnDisable()
     {
-        player_test.onMoneyChanged -= OnMoneyChanged;
+        player_test.onPlayerMoneyChange -= OnMoneyChanged;
         purchaseQuantityPanel.onItemPurchased -= OnItemPurchased;
     }
 
@@ -190,6 +190,12 @@ public class DialoguePanel : MonoBehaviour
             // 3. 내 인벤토리에 현재 해당 아이템이 몇 개 있는지 가져오기
             // Inventory.Instance.GetItemCount()가 있다고 가정합니다.
             int currentOwnedCount = Inventory.Instance.GetItemCount(selectedItem);
+
+            // 인벤토리에 해당 아이템이 비었을 때 -1로 표시되는 듯
+            if(currentOwnedCount == -1)
+            {
+                currentOwnedCount = 0;
+            }
 
             // 4. 구매 가능한 수량 계산 (최대치 - 현재 보유량)
             // 결과가 0보다 작아지지 않도록 Mathf.Max를 사용합니다.

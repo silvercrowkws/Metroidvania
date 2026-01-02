@@ -50,7 +50,7 @@ public class Player_Test : Singleton<Player_Test>
         {
             money = value;
             // 돈이 바뀔 때마다 등록된 함수(UI 갱신 등)를 모두 실행!
-            onMoneyChanged?.Invoke(money);
+            onPlayerMoneyChange?.Invoke(money);
             Debug.Log($"플레이어의 돈 변경 : {Money}");
         }
     }
@@ -58,7 +58,7 @@ public class Player_Test : Singleton<Player_Test>
     /// <summary>
     /// 돈 변경 시 발생하는 이벤트
     /// </summary>
-    public Action<int> onMoneyChanged;
+    public Action<int> onPlayerMoneyChange;
 
     // 플레이어 조작 관련 --------------------------------------------------
 
@@ -601,6 +601,7 @@ public class Player_Test : Singleton<Player_Test>
     /// 플레이어의 최대 경험치가 변경했음을 알리는 델리게이트
     /// </summary>
     public Action<float> onPlayerMaxXPChange;
+
 
     /// <summary>
     /// 스프라이트 렌더러

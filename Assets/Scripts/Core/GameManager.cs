@@ -161,6 +161,7 @@ public class GameManager : Singleton<GameManager>
                 // 경험치 변경 시 저장
                 player_test.onPlayerXPChange += OnPlayerXPChange;
                 player_test.onPlayerMaxXPChange += OnPlayerMaxXPChange;
+                player_test.onPlayerMoneyChange += OnPlayerMoneyChange;
 
                 player_test.onKeyCountChanged += OnKeyCountChanged;
                 player_test.onSceneChange += OnSceneChange;
@@ -175,6 +176,18 @@ public class GameManager : Singleton<GameManager>
                 //Debug.Log("게임매니저는 플레이어를 잘 찾지 못했다");
             }
             return player_test;
+        }
+    }
+
+    /// <summary>
+    /// 플레이어의 소지금 변경 시 저장
+    /// </summary>
+    /// <param name="money"></param>
+    private void OnPlayerMoneyChange(int money)
+    {
+        if (isDataRecovered)
+        {
+            OnDataSave();
         }
     }
 
@@ -840,6 +853,11 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    public void OnDataSave2()
+    {
+        OnDataSave();
+    }
+
     /// <summary>
     /// 데이터를 저장하는 함수
     /// </summary>
@@ -942,6 +960,9 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     private void OnDataRecover()
     {
+        // 1. 복구 시작하니까 자동 저장 금지!
+        isDataRecovered = false;
+
         Debug.Log("<<<<< 불러온 데이터로 인벤토리 UI 복원 시작 >>>>>");
 
         if (Player_Test != null && loadPlayerData != null)
@@ -981,9 +1002,12 @@ public class GameManager : Singleton<GameManager>
             }
         }
 
+        // 2. 모든 할당이 끝난 후에 플래그를 ON
+        isDataRecovered = true;
+
         Debug.Log("<<<<< 인벤토리 UI 복원 완료 >>>>>");
 
-        isDataRecovered = true; // 복원 완료 플래그 ON
+        //isDataRecovered = true; // 복원 완료 플래그 ON
     }
 
     /// <summary>

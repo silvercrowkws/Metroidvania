@@ -12,6 +12,11 @@ public class Test_15_PlayerUI : TestBase
 
     Door door;
 
+    /// <summary>
+    /// 플레이어의 정보(저장용)
+    /// </summary>
+    PlayerData tempPlayerData;
+
     private void Start()
     {
         gameManager = GameManager.Instance;

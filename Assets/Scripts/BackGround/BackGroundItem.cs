@@ -27,14 +27,14 @@ public class BackGroundItem : MonoBehaviour
             hasNotified = true;
             if (middleGroundParent != null)
             {
-                Debug.Log("다음 생성 요청");
+                Debug.Log("뒷 배경 다음 생성 요청");
                 middleGroundParent.SpawnNext(transform.position);
             }
             else
             {
                 // 첫번째 충돌은 Start에서 부모를 찾는 것보다 충돌이 더 빨리 일어남
                 middleGroundParent = transform.parent.GetComponent<MiddleGroundParent>();
-                Debug.Log("다음 생성 요청2");
+                Debug.Log("뒷 배경 다음 생성 요청2");
                 middleGroundParent.SpawnNext(transform.position);
             }
         }
@@ -42,7 +42,7 @@ public class BackGroundItem : MonoBehaviour
         // DeadZone에 닿으면 파괴
         if (collision.CompareTag("DeadZone"))
         {
-            Debug.Log("파괴");
+            Debug.Log("뒷 배경 파괴");
             Destroy(gameObject);
         }
     }
